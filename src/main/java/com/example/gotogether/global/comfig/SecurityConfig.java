@@ -14,10 +14,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.nio.file.AccessDeniedException;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -65,6 +68,8 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler())//권한 에러 처리
+                .and()
                 .csrf().disable()
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -75,6 +80,8 @@ public class SecurityConfig {
                 .addFilterBefore(JwtExceptionFilter.of(jwtProvider, jwtProperties), UsernamePasswordAuthenticationFilter.class)
                 .build()
                 ;
+
+
 
     }
 
@@ -98,5 +105,9 @@ public class SecurityConfig {
         return source;
     }
 
+    private AccessDeniedHandler accessDeniedHandler(){
+        CustomAccessDeniedHandler accessDeniedHandler = new CustomAccessDeniedHandler();
+        return accessDeniedHandler;
+    }
 
 }
