@@ -1,4 +1,4 @@
-package com.example.gotogether.global.comfig;
+package com.example.gotogether.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
