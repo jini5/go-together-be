@@ -1,6 +1,5 @@
-package com.example.gotogether.global.comfig;
+package com.example.gotogether.global.config;
 
-import com.example.gotogether.auth.exception.ErrorCode;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;

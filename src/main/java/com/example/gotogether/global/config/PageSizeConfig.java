@@ -1,4 +1,4 @@
-package com.example.gotogether.global.comfig;
+package com.example.gotogether.global.config;
 
 public class PageSizeConfig {
 

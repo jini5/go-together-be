@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.gotogether.global.comfig.PageSizeConfig.User_List_Size;
+import static com.example.gotogether.global.config.PageSizeConfig.User_List_Size;
 
 @Api(tags = {"관리자 서비스"}, description = "관리자 권한 부여,")
 @RestController
