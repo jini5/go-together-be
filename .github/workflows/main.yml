@@ -1,4 +1,4 @@
-name: jwt practice server CI/CD
+name: gotogether server CI/CD
 
 
 on:
