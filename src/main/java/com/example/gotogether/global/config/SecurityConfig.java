@@ -78,7 +78,6 @@ public class SecurityConfig {
                 ;
 
 
-
     }
 
     @Bean
@@ -101,7 +100,7 @@ public class SecurityConfig {
         return source;
     }
 
-    private AccessDeniedHandler accessDeniedHandler(){
+    private AccessDeniedHandler accessDeniedHandler() {
         CustomAccessDeniedHandler accessDeniedHandler = new CustomAccessDeniedHandler();
         return accessDeniedHandler;
     }
