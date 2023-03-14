@@ -52,13 +52,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        //시큐리티 필터는 보호막 같은 놈.
-
         return http
                 .cors() // cors 관련 추가
                 .and()
                 .authorizeRequests()
-                .mvcMatchers(PUBLIC_URLS).permitAll() // 가입 및 인증 주소는 누구나 접근가능
+                .mvcMatchers(PUBLIC_URLS).permitAll()
                 .and()
                 .authorizeRequests()
                 .mvcMatchers(ADMIN_URLS).hasRole("ADMIN")// Admin 권한만 접근 가능
@@ -78,7 +76,6 @@ public class SecurityConfig {
                 .addFilterBefore(JwtExceptionFilter.of(jwtProvider, jwtProperties), UsernamePasswordAuthenticationFilter.class)
                 .build()
                 ;
-
 
 
     }
@@ -103,7 +100,7 @@ public class SecurityConfig {
         return source;
     }
 
-    private AccessDeniedHandler accessDeniedHandler(){
+    private AccessDeniedHandler accessDeniedHandler() {
         CustomAccessDeniedHandler accessDeniedHandler = new CustomAccessDeniedHandler();
         return accessDeniedHandler;
     }

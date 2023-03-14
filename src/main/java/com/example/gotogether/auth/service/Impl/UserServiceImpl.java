@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseDTO<?> editUser(UserDTO.UserAccessDTO userAccessDTO) {
+    public ResponseDTO<?> checkUserInfo(UserDTO.UserAccessDTO userAccessDTO) {
         try {
             if (userAccessDTO != null) {
                 User user = userRepository.findByEmail(userAccessDTO.getEmail())

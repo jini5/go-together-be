@@ -13,9 +13,10 @@ import java.io.IOException;
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        setErrorResponse(response,accessDeniedException.getMessage());
+        setErrorResponse(response, accessDeniedException.getMessage());
     }
-    public void setErrorResponse(HttpServletResponse response,String message) throws IOException {
+
+    public void setErrorResponse(HttpServletResponse response, String message) throws IOException {
 
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
