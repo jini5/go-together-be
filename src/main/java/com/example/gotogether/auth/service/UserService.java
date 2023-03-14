@@ -10,7 +10,7 @@ public interface UserService {
 
     ResponseDTO<?> login(UserDTO.LoginReqDTO loginReqDTO);
 
-    public ResponseDTO<?> editUser(UserDTO.UserAccessDTO userAccessDTO);
+    public ResponseDTO<?> checkUserInfo(UserDTO.UserAccessDTO userAccessDTO);
 
     public ResponseDTO<?> updateUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.PatchUserReqDTO patchUserReqDTO);
 

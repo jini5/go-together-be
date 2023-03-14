@@ -45,8 +45,8 @@ public class AuthController {
     @GetMapping("/user/myInfo")
     @ApiOperation(value = "회원정보 요청 (토큰 O)", notes = "회원정보 요청." +
             "현재 로그인회원의 정보를 반환한다.")
-    public ResponseDTO<?> editUser(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
-        return userService.editUser(userAccessDTO);
+    public ResponseDTO<?> checkUserInfo(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
+        return userService.checkUserInfo(userAccessDTO);
     }
 
     @PatchMapping("/user/myInfo")

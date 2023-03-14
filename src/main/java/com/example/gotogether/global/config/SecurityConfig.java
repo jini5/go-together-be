@@ -1,4 +1,4 @@
-package com.example.gotogether.global.comfig;
+package com.example.gotogether.global.config;
 
 import com.example.gotogether.auth.jwt.JwtExceptionFilter;
 import com.example.gotogether.auth.jwt.JwtFilter;
@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -51,19 +52,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        //시큐리티 필터는 보호막 같은 놈.
-
         return http
                 .cors() // cors 관련 추가
                 .and()
                 .authorizeRequests()
-                .mvcMatchers(PUBLIC_URLS).permitAll() // 가입 및 인증 주소는 누구나 접근가능
+                .mvcMatchers(PUBLIC_URLS).permitAll()
                 .and()
                 .authorizeRequests()
                 .mvcMatchers(ADMIN_URLS).hasRole("ADMIN")// Admin 권한만 접근 가능
                 .and()
                 .authorizeRequests()
                 .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler())//권한 에러 처리
                 .and()
                 .csrf().disable()
                 .httpBasic().disable()
@@ -75,6 +76,7 @@ public class SecurityConfig {
                 .addFilterBefore(JwtExceptionFilter.of(jwtProvider, jwtProperties), UsernamePasswordAuthenticationFilter.class)
                 .build()
                 ;
+
 
     }
 
@@ -98,5 +100,9 @@ public class SecurityConfig {
         return source;
     }
 
+    private AccessDeniedHandler accessDeniedHandler() {
+        CustomAccessDeniedHandler accessDeniedHandler = new CustomAccessDeniedHandler();
+        return accessDeniedHandler;
+    }
 
 }
