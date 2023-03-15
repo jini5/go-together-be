@@ -28,14 +28,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDTO<?> signup(UserDTO.SignupReqDTO signupReqDTO) {
-        if (userRepository.findByEmail(signupReqDTO.getEmail()).isEmpty()) {
-            String encodingPassword = encodingPassword(signupReqDTO.getPassword());
-            signupReqDTO.setPassword(encodingPassword);
-            userRepository.save(signupReqDTO.toEntity());
-            return new ResponseDTO<>(signupReqDTO.toString());
-        } else {
+        if (userRepository.findByEmail(signupReqDTO.getEmail()).isPresent()) {
             return new ResponseDTO<>(HttpStatus.BAD_REQUEST, null, "이미 존재하는 회원입니다.");
         }
+        if (!signupReqDTO.getPassword().equals(signupReqDTO.getPasswordConfirmation())) {
+            return new ResponseDTO<>(HttpStatus.BAD_REQUEST, null, "비밀번호가 일치하지 않습니다.");
+        }
+        String encodingPassword = encodingPassword(signupReqDTO.getPassword());
+        signupReqDTO.setPassword(encodingPassword);
+        userRepository.save(signupReqDTO.toEntity());
+        return new ResponseDTO<>(signupReqDTO.toString());
     }
 
     @Override
@@ -105,6 +107,13 @@ public class UserServiceImpl implements UserService {
         } catch (IllegalArgumentException e) {
             return new ResponseDTO<>(HttpStatus.UNAUTHORIZED, "기존 비밀번호가 일치하지 않습니다.");
         }
+    }
+
+    @Override
+    public ResponseDTO<?> emailDuplicationCheck(String email) {
+        if (userRepository.findByEmail(email).isEmpty()) {
+            return new ResponseDTO<>(HttpStatus.OK, true, "사용 가능한 이메일 입니다.");
+        } else return new ResponseDTO<>(HttpStatus.OK, false, "이미 존재하는 회원입니다.");
     }
 
     private String encodingPassword(String password) {
