@@ -28,14 +28,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDTO<?> signup(UserDTO.SignupReqDTO signupReqDTO) {
-        if (userRepository.findByEmail(signupReqDTO.getEmail()).isEmpty()) {
+        if (userRepository.findByEmail(signupReqDTO.getEmail()).isPresent()){
+            return new ResponseDTO<>(HttpStatus.BAD_REQUEST, null, "이미 존재하는 회원입니다.");
+        }
+        if (!signupReqDTO.getPassword().equals(signupReqDTO.getPasswordConfirmation())){
+            return new ResponseDTO<>(HttpStatus.BAD_REQUEST,null,"비밀번호가 일치하지 않습니다.");
+        }
             String encodingPassword = encodingPassword(signupReqDTO.getPassword());
             signupReqDTO.setPassword(encodingPassword);
             userRepository.save(signupReqDTO.toEntity());
             return new ResponseDTO<>(signupReqDTO.toString());
-        } else {
-            return new ResponseDTO<>(HttpStatus.BAD_REQUEST, null, "이미 존재하는 회원입니다.");
-        }
     }
 
     @Override
