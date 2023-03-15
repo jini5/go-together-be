@@ -71,7 +71,7 @@ public class AuthController {
     @GetMapping("/user/emailCheck")
     @ApiOperation(value = "이메일 중복 확인 API", notes = "이메일을 보내주면 이미 가입되어있는 회원인지 확인한다.")
     public ResponseDTO<?> emailDuplicationCheck(@RequestBody UserDTO.EmailOnly email) {
-        return null;
+        return userService.emailDuplicationCheck(email.getEmail());
     }
 
 
