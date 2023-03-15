@@ -66,7 +66,13 @@ public class AuthController {
     @ApiOperation(value = "토큰 리프레시", notes = "리프레시 토큰을 보내주면 유효성을 확인하고 엑세스토큰을 새로 발급")
     public ResponseDTO<?> validateRefreshToken(@RequestBody TokenDTO.RefreshTokenReqDTO refreshTokenReqDTO) {
         return tokenService.validateRefreshToken(refreshTokenReqDTO.getRefreshToken());
-
     }
+
+    @GetMapping("/user/emailCheck")
+    @ApiOperation(value = "이메일 중복 확인 API", notes = "이메일을 보내주면 이미 가입되어있는 회원인지 확인한다.")
+    public ResponseDTO<?> emailDuplicationCheck(@RequestBody UserDTO.EmailOnly email) {
+        return null;
+    }
+
 
 }
