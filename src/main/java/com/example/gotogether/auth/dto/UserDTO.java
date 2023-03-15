@@ -63,6 +63,8 @@ public class UserDTO {
         private String email;
         @ApiModelProperty(value = "비밀번호", required = true)
         private String password;
+        @ApiModelProperty(value = "비밀번호 확인", required = true)
+        private String passwordConfirmation;
         @ApiModelProperty(value = "이름", required = true)
         private String name;
         @ApiModelProperty(value = "생년월일", required = true)
