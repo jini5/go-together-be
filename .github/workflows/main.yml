@@ -4,8 +4,6 @@ name: gotogether server CI/CD
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 env:
   S3_BUCKET_NAME: gotogether-deploy
