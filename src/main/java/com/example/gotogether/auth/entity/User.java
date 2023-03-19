@@ -13,7 +13,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "member_test")
+@Table(name = "user")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,29 +22,31 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id
-    @Column(name = "member_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    @Column(name = "member_email")
+    @Column(name = "user_name")
+    private String name;
+    @Column(name = "user_email")
     private String email;
 
-    @Column(name = "member_pw")
+    @Column(name = "user_password")
     private String password;
 
-    @Column(name = "member_name")
-    private String name;
-
-    @Column(name = "member_birth")
-    private String birth;
-
-    @Column(name = "member_phone")
+    @Column(name = "user_phone_number")
     private String phone;
 
-    @Column(name = "deleteCheck")
+    @Column(name = "user_birthday")
+    private String birth;
+
+    @Column(name = "user_type")
+    private String type;
+
+    @Column(name = "delete_check")
     private String deleteCheck;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "user_role", nullable = false)
     private String role;
 
     @CreationTimestamp
