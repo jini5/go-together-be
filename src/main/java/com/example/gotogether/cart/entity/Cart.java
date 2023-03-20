@@ -40,9 +40,6 @@ public class Cart {
     @Column(name="single_number")
     private int singleNumber;
 
-    @Column(name="amount")
-    private int amount;
-
     @Column(name="travel_date")
     private String travelDate;
 
