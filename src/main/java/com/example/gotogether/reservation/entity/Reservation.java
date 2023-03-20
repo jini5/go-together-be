@@ -20,11 +20,11 @@ import java.time.LocalDateTime;
 public class Reservation {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "reservation_id")
     private Long reservationId;
 
     @Column(name = "reservation_date")
@@ -33,10 +33,10 @@ public class Reservation {
     @Column(name="payment_method")
     private String paymentMethod;
 
-    @Column(name="reservation_status")
-    private String reservationStatus;
+    @Column(name="status")
+    private String status;
 
-    @Column(name="reservation_total_amount")
-    private int reservationTotalAmount;
+    @Column(name="total_amount")
+    private int totalAmount;
 
 }

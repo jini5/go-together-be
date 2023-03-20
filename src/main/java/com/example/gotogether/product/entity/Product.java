@@ -15,40 +15,40 @@ import java.util.List;
 public class Product {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "product_id")
     private Long productId;
 
     @OneToMany(mappedBy = "product_category")
     private List<ProductCategory> productCategory = new ArrayList<>();
 
-    @Column(name="product_name")
-    private String productName;
+    @Column(name="name")
+    private String name;
 
-    @Column(name="product_summary")
-    private String productSummary;
+    @Column(name="summary")
+    private String summary;
 
-    @Column(name="product_area")
-    private String productArea;
+    @Column(name="area")
+    private String area;
 
-    @Column(name="product_feature")
-    private String productFeature;
+    @Column(name="feature")
+    private String feature;
 
-    @Column(name="product_airplane")
-    private String productAirplane;
+    @Column(name="airplane")
+    private String airplane;
 
-    @Column(name="product_single_room_price")
-    private int productSingleRoomPrice;
+    @Column(name="single_room_price")
+    private int singleRoomPrice;
 
-    @Column(name="product_price")
-    private int productPrice;
+    @Column(name="price")
+    private int price;
 
-    @Column(name="product_type")
-    private String productType;
+    @Column(name="type")
+    private String type;
 
-    @Column(name="product_thumbnail")
-    private String productThumbnail;
+    @Column(name="thumbnail")
+    private String thumbnail;
 
-    @Column(name="product_detail")
-    private String productDetail;
+    @Column(name="detail")
+    private String detail;
 
 }

@@ -22,31 +22,31 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long userId;
 
-    @Column(name = "user_name")
+    @Column(name = "name")
     private String name;
-    @Column(name = "user_email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "user_password")
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "user_phone_number")
+    @Column(name = "phone_number")
     private String phone;
 
-    @Column(name = "user_birthday")
+    @Column(name = "birthday")
     private String birth;
 
-    @Column(name = "user_type")
+    @Column(name = "type")
     private String type;
 
     @Column(name = "delete_check")
     private String deleteCheck;
 
-    @Column(name = "user_role", nullable = false)
+    @Column(name = "role", nullable = false)
     private String role;
 
     @CreationTimestamp

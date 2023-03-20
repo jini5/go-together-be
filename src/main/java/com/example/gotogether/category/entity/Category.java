@@ -28,11 +28,11 @@ public class Category {
     @OneToMany(mappedBy = "product_category")
     private List<ProductCategory> productCategory = new ArrayList<>();
 
-    @Column(name = "category_name")
-    private String categoryName;
+    @Column(name = "name")
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_parent")
+    @JoinColumn(name = "parent")
     private Category parent;
 
     @Column(name = "category_depth")

@@ -22,15 +22,15 @@ import java.time.LocalDateTime;
 public class Wishlist {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "wishlist_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long wishlistId;
 

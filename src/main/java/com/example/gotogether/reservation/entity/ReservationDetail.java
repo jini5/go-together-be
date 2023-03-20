@@ -20,26 +20,26 @@ import javax.persistence.*;
 public class ReservationDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Id
-    @Column(name="id")
+    @Column(name="reservation_detail_id")
     private Long reservationDetailId;
 
-    @Column(name="reservation_number")
-    private int reservationNumber;
+    @Column(name="number")
+    private int number;
 
-    @Column(name="reservation_single_number")
-    private int reservationSingleNumber;
+    @Column(name="single_number")
+    private int singleNumber;
 
-    @Column(name="reservation_travel_date")
-    private String reservationrTravelDate;
+    @Column(name="travel_date")
+    private String travelDate;
 
-    @Column(name="reservation_detail_total_price")
-    private int reservationDetailTotalPrice;
+    @Column(name="detail_total_price")
+    private int detailTotalPrice;
 }

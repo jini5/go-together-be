@@ -22,11 +22,11 @@ import java.time.LocalDateTime;
 public class Cart {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "productid")
     private Product product;
 
     @Id
@@ -34,11 +34,11 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
-    @Column(name="reservation_number")
-    private int reservationNumber;
+    @Column(name="number")
+    private int number;
 
-    @Column(name="reservation_single_number")
-    private int reservationSingleNumber;
+    @Column(name="single_number")
+    private int singleNumber;
 
     @Column(name="amount")
     private int amount;
