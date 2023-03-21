@@ -2,7 +2,6 @@ package com.example.gotogether.cart.entity;
 
 import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.product.entity.Product;
-import com.example.gotogether.product.entity.TravelDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
@@ -21,10 +20,6 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "cart")
 public class Cart {
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "travel_date")
-    private TravelDate travelDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

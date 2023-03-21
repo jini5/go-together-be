@@ -1,8 +1,10 @@
 package com.example.gotogether.product.entity;
 
+import com.example.gotogether.reservation.entity.ReservationStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,11 +23,6 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<ProductCategory> categories = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product",
-               fetch = FetchType.LAZY,
-                cascade = CascadeType.ALL)
-    private List<TravelDate> travelDates = new ArrayList<>();
 
     @Column(name="name")
     private String name;
@@ -48,6 +45,10 @@ public class Product {
     @Column(name="price")
     private int price;
 
+    @Column(name="travel_date")
+    @Convert(converter = StringListConverter.class)
+    private List<String> travelDate;
+
     @Column(name="type")
     private String type;
 
@@ -56,5 +57,10 @@ public class Product {
 
     @Column(name="detail")
     private String detail;
+
+    @Column(name="status")
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'UNDECIDED'")
+    private ProductStatus productStatus;
 
 }

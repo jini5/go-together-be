@@ -1,7 +1,6 @@
 package com.example.gotogether.reservation.entity;
 
 import com.example.gotogether.product.entity.Product;
-import com.example.gotogether.product.entity.TravelDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,10 +20,6 @@ public class ReservationDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "travel_date")
-    private TravelDate travelDate;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="reservation_detail_id")
@@ -38,4 +33,8 @@ public class ReservationDetail {
 
     @Column(name="detail_total_price")
     private int detailTotalPrice;
+
+    @Column(name="travel_date")
+    private String travelDate;
+
 }
