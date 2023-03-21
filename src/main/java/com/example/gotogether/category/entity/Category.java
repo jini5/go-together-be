@@ -3,7 +3,6 @@ package com.example.gotogether.category.entity;
 import com.example.gotogether.product.entity.ProductCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -12,12 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "category")
 @Getter
-@Setter
 @NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@Table(name = "category")
 public class Category {
 
     @Id

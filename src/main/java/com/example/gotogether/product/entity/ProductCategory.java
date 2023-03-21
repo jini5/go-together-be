@@ -8,7 +8,6 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "product_category")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "product_category")

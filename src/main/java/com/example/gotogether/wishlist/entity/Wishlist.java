@@ -15,12 +15,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "wishlist")
 @Getter
-@Setter
 @NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "wishlist")
 public class Wishlist {
 
     @ManyToOne(fetch = FetchType.LAZY)

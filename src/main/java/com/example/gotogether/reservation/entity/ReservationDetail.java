@@ -1,22 +1,16 @@
 package com.example.gotogether.reservation.entity;
 
-import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.product.entity.Product;
+import com.example.gotogether.product.entity.TravelDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "reservation_detail")
 @Getter
-@Setter
 @NoArgsConstructor
-@DynamicInsert
-@DynamicUpdate
+@Table(name = "reservation_detail")
 public class ReservationDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,7 +21,12 @@ public class ReservationDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "travel_date")
+    private TravelDate travelDate;
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="reservation_detail_id")
     private Long reservationDetailId;
 
@@ -36,9 +35,6 @@ public class ReservationDetail {
 
     @Column(name="single_number")
     private int singleNumber;
-
-    @Column(name="travel_date")
-    private String travelDate;
 
     @Column(name="detail_total_price")
     private int detailTotalPrice;

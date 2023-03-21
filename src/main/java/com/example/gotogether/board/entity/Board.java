@@ -3,8 +3,6 @@ package com.example.gotogether.board.entity;
 import com.example.gotogether.auth.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,12 +13,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "board")
 @Getter
-@Setter
 @NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "board")
 public class Board {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,13 +44,10 @@ public class Board {
 
     @CreatedDate
     @Column(name = "created_date")
-    private LocalDateTime created_date;
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
     @Column(name = "updated_date")
-    private LocalDateTime updated_date;
-
-
-
+    private LocalDateTime updatedDate;
 
 }

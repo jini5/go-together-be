@@ -8,17 +8,21 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user")
 @Getter
 @Setter
 @NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "user")
 public class User {
 
     @Id
@@ -46,6 +50,7 @@ public class User {
     @Column(name = "type")
     private String type;
 
+    //후에 수정
     @Column(name = "delete_check")
     private String deleteCheck;
 
