@@ -34,7 +34,9 @@ public class Reservation {
     private String paymentMethod;
 
     @Column(name="status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'UNDECIDED'")
+    private ReservationStatus reservationStatus;
 
     @Column(name="total_amount")
     private int totalAmount;
