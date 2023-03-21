@@ -40,6 +40,9 @@ public class User {
     @Column(name = "birthday")
     private String birth;
 
+    @Column(name = "gender")
+    private String gender;
+
     @Column(name = "type")
     private String type;
 
@@ -49,13 +52,13 @@ public class User {
     @Column(name = "role", nullable = false)
     private String role;
 
-    @CreationTimestamp
+    @CreatedDate
     @Column(name = "created_date")
-    private LocalDateTime created_date;
+    private LocalDateTime createdDate;
 
     @UpdateTimestamp
     @Column(name = "updated_date")
-    private LocalDateTime updated_date;
+    private LocalDateTime updatedDate;
 
     public void update(String password, String phone) {
         this.password = password;
