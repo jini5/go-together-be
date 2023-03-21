@@ -40,6 +40,9 @@ public class Cart {
     @Column(name="single_number")
     private int singleNumber;
 
+    @Column(name="travel_date")
+    private String travelDate;
+
     @CreatedDate
     @Column(name = "created_date")
     private LocalDateTime createdDate;
