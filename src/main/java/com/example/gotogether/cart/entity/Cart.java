@@ -22,6 +22,10 @@ import java.time.LocalDateTime;
 public class Cart {
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "travel_date")
+    private TravelDate travelDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -39,9 +43,6 @@ public class Cart {
 
     @Column(name="single_number")
     private int singleNumber;
-
-    @Column(name="travel_date")
-    private String travelDate;
 
     @CreationTimestamp
     @Column(name = "created_date")
