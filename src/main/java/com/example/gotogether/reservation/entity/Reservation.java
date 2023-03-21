@@ -9,6 +9,8 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,6 +28,11 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
     private Long reservationId;
+
+    @OneToMany(mappedBy = "reservation",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private List<ReservationDetail> reservationDetails = new ArrayList<>();
 
     @Column(name = "reservation_date")
     private LocalDateTime reservationDate;

@@ -19,8 +19,13 @@ public class Product {
     @Column(name = "product_id")
     private Long productId;
 
-    @OneToMany(mappedBy = "product_category")
-    private List<ProductCategory> productCategory = new ArrayList<>();
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ProductCategory> categories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product",
+               fetch = FetchType.LAZY,
+                cascade = CascadeType.ALL)
+    private List<TravelDate> travelDates = new ArrayList<>();
 
     @Column(name="name")
     private String name;

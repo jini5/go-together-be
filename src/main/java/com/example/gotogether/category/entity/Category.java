@@ -23,8 +23,8 @@ public class Category {
     @Column(name = "category_id")
     private Long categoryId;
 
-    @OneToMany(mappedBy = "product_category")
-    private List<ProductCategory> productCategory = new ArrayList<>();
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<ProductCategory> productCategories = new ArrayList<>();
 
     @Column(name = "name")
     private String name;

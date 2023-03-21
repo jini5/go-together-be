@@ -1,6 +1,5 @@
 package com.example.gotogether.product.entity;
 
-import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.category.entity.Category;
 import lombok.*;
 
@@ -25,6 +24,5 @@ public class ProductCategory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-
 
 }

@@ -30,9 +30,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "name")
+    @Column(name = "name",nullable = false)
     private String name;
-    @Column(name = "email")
+
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "password")
@@ -61,7 +62,7 @@ public class User {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
-    @UpdateTimestamp
+    @LastModifiedDate
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
