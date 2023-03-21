@@ -7,7 +7,9 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,11 +27,13 @@ public class Board {
     @JoinColumn(name = "user_id")
     private User user;
 
+//    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+//    private List<Comment> comments = new ArrayList<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
     private Long boardId;
-
 
     @Column(name="type")
     private String type;
@@ -40,11 +44,11 @@ public class Board {
     @Column(name="content")
     private String content;
 
-    @CreationTimestamp
+    @CreatedDate
     @Column(name = "created_date")
     private LocalDateTime created_date;
 
-    @UpdateTimestamp
+    @LastModifiedDate
     @Column(name = "updated_date")
     private LocalDateTime updated_date;
 
