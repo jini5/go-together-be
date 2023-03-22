@@ -34,8 +34,4 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long wishlistId;
 
-    @CreatedDate
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
-
 }

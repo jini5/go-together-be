@@ -43,8 +43,4 @@ public class Cart {
     @Column(name="travel_date")
     private String travelDate;
 
-    @CreatedDate
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
-
 }
