@@ -27,6 +27,9 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<ProductCategory> categories = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ProductDateOption> productDateOptions = new ArrayList<>();
+
     @Column(name="name")
     private String name;
 
@@ -47,10 +50,6 @@ public class Product {
 
     @Column(name="price")
     private int price;
-
-    @Column(name="travel_date_list")
-    @Convert(converter = StringListConverter.class)
-    private List<String> travelDateList;
 
     @Column(name="type")
     private String type;
