@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -20,6 +21,9 @@ public class ReservationDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column(name = "product_data_option_id")
+    private Long productDateOptionId;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="reservation_detail_id")
@@ -34,7 +38,10 @@ public class ReservationDetail {
     @Column(name="detail_total_price")
     private int detailTotalPrice;
 
-    @Column(name="travel_date")
-    private String travelDate;
+    @Column(name="start_date")
+    private LocalDate startDate;
+
+    @Column(name="end_date")
+    private LocalDate endDate;
 
 }
