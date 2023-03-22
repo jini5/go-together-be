@@ -37,8 +37,8 @@ public class Cart {
     @Column(name="number_of_people")
     private int numberOfPeople;
 
-    @Column(name="single_number")
-    private int singleNumber;
+    @Column(name="single_room_number")
+    private int singleRoomNumber;
 
     @Column(name="travel_date")
     private String travelDate;
