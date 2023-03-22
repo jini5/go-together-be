@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public class Reservation {
             cascade = CascadeType.ALL)
     private List<ReservationDetail> reservationDetails = new ArrayList<>();
 
+    @CreatedDate
     @Column(name = "reservation_date")
     private LocalDateTime reservationDate;
 

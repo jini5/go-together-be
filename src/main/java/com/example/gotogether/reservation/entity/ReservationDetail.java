@@ -25,8 +25,8 @@ public class ReservationDetail {
     @Column(name="reservation_detail_id")
     private Long reservationDetailId;
 
-    @Column(name="number")
-    private int number;
+    @Column(name="number_of_people")
+    private int numberOfPeople;
 
     @Column(name="single_number")
     private int singleNumber;

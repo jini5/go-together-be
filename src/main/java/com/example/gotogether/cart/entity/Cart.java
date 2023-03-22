@@ -34,8 +34,8 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
-    @Column(name="number")
-    private int number;
+    @Column(name="number_of_people")
+    private int numberOfPeople;
 
     @Column(name="single_number")
     private int singleNumber;
