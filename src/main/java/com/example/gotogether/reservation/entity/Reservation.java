@@ -51,7 +51,5 @@ public class Reservation {
     @ColumnDefault("'UNDECIDED'")
     private ReservationStatus reservationStatus;
 
-    @Column(name="total_amount")
-    private int totalAmount;
 
 }
