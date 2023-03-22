@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.List;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "reservation")
+@EntityListeners(AuditingEntityListener.class)
 public class Reservation {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,8 +28,8 @@ public class Reservation {
     private User user;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationId;
 
     @OneToMany(mappedBy = "reservation",

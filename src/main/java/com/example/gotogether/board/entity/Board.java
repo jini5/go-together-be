@@ -3,6 +3,7 @@ package com.example.gotogether.board.entity;
 import com.example.gotogether.auth.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
@@ -34,6 +35,7 @@ public class Board {
     private Long boardId;
 
     @Column(name="type")
+    @ColumnDefault("'여행 후기'")
     private String type;
 
     @Column(name="title")

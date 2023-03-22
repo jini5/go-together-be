@@ -19,8 +19,8 @@ import java.util.List;
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)

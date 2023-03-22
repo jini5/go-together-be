@@ -40,7 +40,7 @@ public class User {
     private String password;
 
     @Column(name = "phone_number")
-    private String phone;
+    private String phoneNumber;
 
     @Column(name = "birthday")
     private String birthday;
@@ -65,9 +65,9 @@ public class User {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
-    public void update(String password, String phone) {
+    public void update(String password, String phoneNumber) {
         this.password = password;
-        this.phone = phone;
+        this.phoneNumber = phoneNumber;
     }
 
     public void delete(String withdraw) {
@@ -75,12 +75,12 @@ public class User {
     }
 
     @Builder
-    public User(String email, String password, String name, String birth, String phone, String deleteCheck, String role) {
+    public User(String email, String password, String name, String birthday, String phoneNumber, String deleteCheck, String role) {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.birth = birth;
-        this.phone = phone;
+        this.birthday = birthday;
+        this.phoneNumber = phoneNumber;
         this.deleteCheck = deleteCheck;
         this.role = role;
     }
