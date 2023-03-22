@@ -43,7 +43,7 @@ public class User {
     private String phone;
 
     @Column(name = "birthday")
-    private String birth;
+    private String birthday;
 
     @Column(name = "gender")
     private String gender;
@@ -51,7 +51,6 @@ public class User {
     @Column(name = "type")
     private String type;
 
-    //후에 수정
     @Column(name = "delete_check")
     private String deleteCheck;
 

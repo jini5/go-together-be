@@ -45,9 +45,9 @@ public class Product {
     @Column(name="price")
     private int price;
 
-    @Column(name="travel_date")
+    @Column(name="travel_date_list")
     @Convert(converter = StringListConverter.class)
-    private List<String> travelDate;
+    private List<String> travelDateList;
 
     @Column(name="type")
     private String type;
@@ -60,7 +60,7 @@ public class Product {
 
     @Column(name="status")
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("'UNDECIDED'")
+    @ColumnDefault("'FOR_SALE'")
     private ProductStatus productStatus;
 
 }
