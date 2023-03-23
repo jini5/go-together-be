@@ -32,4 +32,10 @@ public class ProductDateOption {
     @Column(name="max_single_room")
     private int maxSingleRoom;
 
+    @Column(name="present_people_number")
+    private int PresentPeopleNumber;
+
+    @Column(name="present_single_room_number")
+    private int PresentSingleRoomNumber;
+
 }
