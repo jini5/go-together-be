@@ -143,28 +143,23 @@ public class UserServiceImpl implements UserService {
         return pwd;
     }
 
-    @Override
-    public void updatePassword(String tmpPassword, String userEmail) {
-
-        String encryptPassword = encodingPassword(tmpPassword);
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() ->
-                new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
-
-        user.updatePassword(encryptPassword);
-    }
 
     @Override
-    public ResponseEntity sendPwEmail(String userEmail){
+    @Transactional
+    public ResponseEntity<?> sendPwEmail(String userEmail){
 
-        if (userRepository.findByEmail(userEmail)!=null){
-            String tmpPassword = makePassword();
-            updatePassword(tmpPassword, userEmail);
-            MailDTO mailDTO = createMail(tmpPassword, userEmail);
-            sendMail(mailDTO);
-            return new ResponseEntity(HttpStatus.OK);
-        }else{
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        if (!userRepository.existsByEmail(userEmail)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        String tmpPassword = makePassword();
+        String encryptPassword = encodingPassword(tmpPassword);
+        User user = userRepository.findByEmail(userEmail).get();
+        user.updatePassword(encryptPassword);
+
+        MailDTO mailDTO = createMail(tmpPassword, userEmail);
+        sendMail(mailDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private final JavaMailSender mailSender;
