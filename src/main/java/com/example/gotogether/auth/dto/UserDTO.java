@@ -58,28 +58,35 @@ public class UserDTO {
     @ToString
     @ApiModel(value = "회원가입")
     public static class SignupReqDTO {
-
+        @ApiModelProperty(value = "이름", required = true)
+        private String userName;
         @ApiModelProperty(value = "이메일", required = true)
-        private String email;
+        private String userEmail;
         @ApiModelProperty(value = "비밀번호", required = true)
-        private String password;
+        private String userPassword;
         @ApiModelProperty(value = "비밀번호 확인", required = true)
         private String passwordConfirmation;
-        @ApiModelProperty(value = "이름", required = true)
-        private String name;
-        @ApiModelProperty(value = "생년월일", required = true)
-        private String birth;
         @ApiModelProperty(value = "전화번호", required = true)
-        private String phone;
+        private String userPhoneNumber;
+        @ApiModelProperty(value = "생년월일", required = true)
+        private String userBirth;
+        @ApiModelProperty(value = "성별", required = true)
+        private String userGender;
+        @ApiModelProperty(value = "sns 로그인 여부", required = true)
+        private String sns;
+
+
 
         public User toEntity() {
 
             return User.builder()
-                    .email(this.email)
-                    .password(this.password)
-                    .name(this.name)
-                    .birthday(this.birth)
-                    .phoneNumber(this.phone)
+                    .name(userName)
+                    .email(userEmail)
+                    .password(userPassword)
+                    .phoneNumber(userPhoneNumber)
+                    .birthday(userBirth)
+                    .gender(userGender)
+                    .sns(sns)
                     .role("ROLE_USER")
                     .build();
         }
@@ -95,11 +102,13 @@ public class UserDTO {
     public static class PatchUserReqDTO {
 
         @ApiModelProperty(value = "기존 비밀번호", required = true)
-        private String oldPassword;
+        private String userPassword;
         @ApiModelProperty(value = "새로운 비밀번호")
-        private String newPassword;
-        @ApiModelProperty(value = "전화번호")
-        private String phone;
+        private String changePassword;
+        @ApiModelProperty(value = "새로운 비밀번호 재입력")
+        private String passwordConfirmation;
+        @ApiModelProperty(value = "전화번호",required = true)
+        private String userPhoneNumber;
 
     }
 
@@ -155,6 +164,24 @@ public class UserDTO {
 
         @ApiModelProperty(value = "이메일 ", required = true)
         private String email;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ToString
+    @ApiModel(value = "회원리스트 출력")
+    public static class UserListDto{
+        private Long userId;
+        private String email;
+        private String name;
+
+        public UserListDto(User user){
+            this.userId=user.getUserId();
+            this.email=user.getEmail();
+            this.name=user.getName();
+        }
     }
 
 
