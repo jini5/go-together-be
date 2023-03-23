@@ -59,8 +59,8 @@ public class AuthController {
 
     @Transactional
     @PostMapping("/find/password")
-    @ApiOperation(value = "비밀번호 변경 메일", notes="이메일과 이름이 일치 시 이메일로 비밀번호 변경 url 전송")
-    public ResponseEntity<?> findPassword(@RequestParam String email){
+    @ApiOperation(value = "비밀번호 변경 메일", notes="이메일을 작성 시 이메일로 비밀번호 변경 url 전송")
+    public ResponseEntity<?> sendPassword(@RequestParam String email){
         return userService.sendPwEmail(email);
     }
 
