@@ -8,56 +8,66 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "member_test")
 @Getter
 @Setter
 @NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "user")
 public class User {
 
     @Id
-    @Column(name = "member_id")
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long userId;
 
-    @Column(name = "member_email")
-    private String email;
-
-    @Column(name = "member_pw")
-    private String password;
-
-    @Column(name = "member_name")
+    @Column(name = "name",nullable = false)
     private String name;
 
-    @Column(name = "member_birth")
-    private String birth;
+    @Column(name = "email", nullable = false)
+    private String email;
 
-    @Column(name = "member_phone")
-    private String phone;
+    @Column(name = "password")
+    private String password;
 
-    @Column(name = "deleteCheck")
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "birthday")
+    private String birthday;
+
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "delete_check")
     private String deleteCheck;
 
     @Column(name = "role", nullable = false)
     private String role;
 
-    @CreationTimestamp
+    @CreatedDate
     @Column(name = "created_date")
-    private LocalDateTime created_date;
+    private LocalDateTime createdDate;
 
-    @UpdateTimestamp
+    @LastModifiedDate
     @Column(name = "updated_date")
-    private LocalDateTime updated_date;
+    private LocalDateTime updatedDate;
 
-    public void update(String password, String phone) {
+    public void update(String password, String phoneNumber) {
         this.password = password;
-        this.phone = phone;
+        this.phoneNumber = phoneNumber;
     }
 
     public void delete(String withdraw) {
@@ -65,12 +75,12 @@ public class User {
     }
 
     @Builder
-    public User(String email, String password, String name, String birth, String phone, String deleteCheck, String role) {
+    public User(String email, String password, String name, String birthday, String phoneNumber, String deleteCheck, String role) {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.birth = birth;
-        this.phone = phone;
+        this.birthday = birthday;
+        this.phoneNumber = phoneNumber;
         this.deleteCheck = deleteCheck;
         this.role = role;
     }
