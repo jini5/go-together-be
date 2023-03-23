@@ -34,8 +34,18 @@ public class Category {
     private Category parent;
 
     @Column(name = "category_depth")
-    private Long categoryDepth;
+    private int categoryDepth;
 
     @OneToMany(mappedBy = "parent")
     private List<Category> children = new ArrayList<>();
+    public Category(String name, Category parent, int categoryDepth) {
+        this.name = name;
+        this.parent = parent;
+        this.categoryDepth = categoryDepth;
+    }
+
+    public Category(String name, int categoryDepth) {
+        this.name = name;
+        this.categoryDepth = categoryDepth;
+    }
 }
