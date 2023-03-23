@@ -101,13 +101,20 @@ public class UserDTO {
     @ApiModel(value = "회원정보수정 입력")
     public static class PatchUserReqDTO {
 
+        @ApiModelProperty(value = "이름", required = true)
+        private String userName;
         @ApiModelProperty(value = "기존 비밀번호", required = true)
-        private String oldPassword;
+        private String userPassword;
         @ApiModelProperty(value = "새로운 비밀번호")
-        private String newPassword;
-        @ApiModelProperty(value = "전화번호")
-        private String phone;
-
+        private String changePassword;
+        @ApiModelProperty(value = "새로운 비밀번호 재입력")
+        private String passwordConfirmation;
+        @ApiModelProperty(value = "전화번호",required = true)
+        private String userPhoneNumber;
+        @ApiModelProperty(value = "생일",required = true)
+        private String userBirth;
+        @ApiModelProperty(value = "성별",required = true)
+        private String userGender;
     }
 
     @Getter

@@ -27,12 +27,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<?> signup(UserDTO.SignupReqDTO signupReqDTO) {
-        if (userRepository.findByEmail(signupReqDTO.getEmail()).isPresent() ||
-                !signupReqDTO.getPassword().equals(signupReqDTO.getPasswordConfirmation())) {
+        if (userRepository.findByEmail(signupReqDTO.getUserEmail()).isPresent() ||
+                !signupReqDTO.getUserPassword().equals(signupReqDTO.getPasswordConfirmation())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        String encodingPassword = encodingPassword(signupReqDTO.getPassword());
-        signupReqDTO.setPassword(encodingPassword);
+        String encodingPassword = encodingPassword(signupReqDTO.getUserPassword());
+        signupReqDTO.setUserPassword(encodingPassword);
         userRepository.save(signupReqDTO.toEntity());
         return new ResponseEntity<>(signupReqDTO.toString(),HttpStatus.CREATED);
     }
@@ -76,11 +76,9 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findByEmail(userAccessDTO.getEmail())
                     .orElseThrow(IllegalArgumentException::new);
 
-            passwordMustBeSame(patchUserReqDTO.getOldPassword(), user.getPassword());
-            patchUserReqDTO.setNewPassword(encodingPassword(patchUserReqDTO.getNewPassword()));
-
-            user.update(patchUserReqDTO.getNewPassword(), patchUserReqDTO.getPhone());
-
+            passwordMustBeSame(patchUserReqDTO.getUserPassword(), user.getPassword());
+            patchUserReqDTO.setChangePassword(encodingPassword(patchUserReqDTO.getChangePassword()));
+            user.update(patchUserReqDTO.getUserName(),patchUserReqDTO.getChangePassword(),patchUserReqDTO.getUserPhoneNumber(),patchUserReqDTO.getUserBirth(),patchUserReqDTO.getUserGender());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

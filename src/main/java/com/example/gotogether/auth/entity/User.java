@@ -1,9 +1,6 @@
 package com.example.gotogether.auth.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -66,9 +63,13 @@ public class User {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
-    public void update(String password, String phoneNumber) {
+
+    public void update(String name,String password, String phoneNumber,String birthday,String gender ) {
+        this.name = name;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.birthday = birthday;
+        this.gender = gender;
     }
 
     public void delete(String withdraw) {
