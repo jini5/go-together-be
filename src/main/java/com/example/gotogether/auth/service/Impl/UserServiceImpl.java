@@ -76,13 +76,19 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public ResponseEntity<?> updateUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.PatchUserReqDTO patchUserReqDTO) {
         try {
-            User user = userRepository.findByEmail(userAccessDTO.getEmail())
-                    .orElseThrow(IllegalArgumentException::new);
+            User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(IllegalArgumentException::new);
 
             passwordMustBeSame(patchUserReqDTO.getUserPassword(), user.getPassword());
+
+            if (!patchUserReqDTO.getChangePassword().equals(patchUserReqDTO.getPasswordConfirmation())){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
             patchUserReqDTO.setChangePassword(encodingPassword(patchUserReqDTO.getChangePassword()));
-            user.update(patchUserReqDTO.getUserName(),patchUserReqDTO.getChangePassword(),patchUserReqDTO.getUserPhoneNumber(),patchUserReqDTO.getUserBirth(),patchUserReqDTO.getUserGender());
+
+            user.update(patchUserReqDTO.getChangePassword(),patchUserReqDTO.getUserPhoneNumber());
             return new ResponseEntity<>(HttpStatus.OK);
+
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
