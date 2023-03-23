@@ -50,6 +50,9 @@ dependencies {
     //  redis dependencies
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // Spring-Cloud-AWS
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
+
 //	//  querydsl dependencies
 //	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 //	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
