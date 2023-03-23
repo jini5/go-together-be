@@ -1,18 +1,14 @@
 package com.example.gotogether.auth.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.*;
+import org.hibernate.annotations.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
@@ -39,18 +35,20 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "birthday")
+    @Column(name = "birthday", nullable = false)
     private String birthday;
 
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = false)
     private String gender;
 
     @Column(name = "type")
     private String type;
-
+    @Column(name = "sns")
+    @ColumnDefault("'none'")
+    private String sns;
     @Column(name = "delete_check")
     private String deleteCheck;
 
@@ -65,9 +63,13 @@ public class User {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
-    public void update(String password, String phoneNumber) {
+
+    public void update(String name,String password, String phoneNumber,String birthday,String gender ) {
+        this.name = name;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.birthday = birthday;
+        this.gender = gender;
     }
 
     public void delete(String withdraw) {
@@ -75,13 +77,14 @@ public class User {
     }
 
     @Builder
-    public User(String email, String password, String name, String birthday, String phoneNumber, String deleteCheck, String role) {
+    public User(String email, String password, String name, String birthday, String phoneNumber,String role,String gender,String sns ) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.birthday = birthday;
         this.phoneNumber = phoneNumber;
-        this.deleteCheck = deleteCheck;
+        this.gender = gender;
         this.role = role;
+        this.sns = sns;
     }
 }

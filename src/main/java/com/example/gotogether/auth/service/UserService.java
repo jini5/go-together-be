@@ -2,19 +2,19 @@ package com.example.gotogether.auth.service;
 
 
 import com.example.gotogether.auth.dto.UserDTO;
-import com.example.gotogether.global.response.ResponseDTO;
+import org.springframework.http.ResponseEntity;
 
 public interface UserService {
 
-    ResponseDTO<?> signup(UserDTO.SignupReqDTO signupReqDTO);
+    ResponseEntity<?> signup(UserDTO.SignupReqDTO signupReqDTO);
 
-    ResponseDTO<?> login(UserDTO.LoginReqDTO loginReqDTO);
+    ResponseEntity<?> login(UserDTO.LoginReqDTO loginReqDTO);
 
-    public ResponseDTO<?> checkUserInfo(UserDTO.UserAccessDTO userAccessDTO);
+    ResponseEntity<?> checkUserInfo(UserDTO.UserAccessDTO userAccessDTO);
 
-    public ResponseDTO<?> updateUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.PatchUserReqDTO patchUserReqDTO);
+    ResponseEntity<?> updateUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.PatchUserReqDTO patchUserReqDTO);
 
-    public ResponseDTO<?> deleteUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.DeleteUserReqDTO deleteUserReqDTO);
+    ResponseEntity<?> deleteUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.DeleteUserReqDTO deleteUserReqDTO);
 
-    public ResponseDTO<?> emailDuplicationCheck(String email);
+    ResponseEntity<?> emailDuplicationCheck(String email);
 }

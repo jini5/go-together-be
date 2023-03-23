@@ -2,13 +2,13 @@ package com.example.gotogether.auth.service;
 
 
 import com.example.gotogether.auth.dto.TokenDTO;
-import com.example.gotogether.global.response.ResponseDTO;
+import org.springframework.http.ResponseEntity;
 
 public interface TokenService {
 
-    ResponseDTO<?> logout(String header, TokenDTO.RefreshTokenReqDTO refreshTokenReqDTO);
+    ResponseEntity<?> logout(String header, TokenDTO.RefreshTokenReqDTO refreshTokenReqDTO);
 
-    ResponseDTO<?> validateRefreshToken(String refreshToken);
+    ResponseEntity<?> validateRefreshToken(String refreshToken);
 
     boolean checkToken(String token);
 }

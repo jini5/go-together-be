@@ -2,11 +2,11 @@ package com.example.gotogether.admin.controller;
 
 import com.example.gotogether.admin.service.AdminService;
 import com.example.gotogether.auth.dto.UserDTO;
-import com.example.gotogether.global.response.ResponseDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.example.gotogether.global.config.PageSizeConfig.User_List_Size;
@@ -20,21 +20,21 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    @PatchMapping("/setAdmin")
+    @PatchMapping("/setAdmin/{email}")
     @ApiOperation(value = "관리자 권한 부여", notes = "입력받은 email 을 통해 관리자 권한 부여")
-    public ResponseDTO<?> setAdmin(@RequestBody UserDTO.EmailOnly user) {
-        return new ResponseDTO<>(adminService.setUserToAdmin(user));
+    public ResponseEntity<?> setAdmin(@PathVariable String email) {
+        return adminService.setUserToAdmin(email);
     }
 
-    @PatchMapping("/deprivation")
+    @PatchMapping("/deprivation/{email}")
     @ApiOperation(value = "관리자 권한 박탈", notes = "입력받은 email 을 통해 관리자 권한 박탈")
-    public ResponseDTO<?> setUser(@RequestBody UserDTO.EmailOnly user) {
-        return new ResponseDTO<>(adminService.setAdminToUser(user));
+    public ResponseEntity<?> setUser(@PathVariable String email) {
+        return adminService.setAdminToUser(email);
     }
 
     @GetMapping("/userList")
     @ApiOperation(value = "회원 리스트 조회", notes = "관리자가 회원 목록 20명씩 조회")
-    public ResponseDTO<?> findUserList(@RequestParam(required = false, defaultValue = "1") String page) {
+    public ResponseEntity<?> findUserList(@RequestParam(required = false, defaultValue = "1") String page) {
         PageRequest pageRequest = null;
         try {
             int intPage = Integer.parseInt(page);
