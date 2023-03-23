@@ -19,8 +19,4 @@ public class CategoryController {
     public ResponseEntity<?> getCategories(){
         return categoryService.selectCate();
     }
-    @PatchMapping("/admin/categories/{categoryId}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDTO.UpdateCategory dto){
-        return categoryService.updateCate(categoryId,dto);
-    }
 }

@@ -61,6 +61,19 @@ public class CategoryServiceImpl implements CategoryService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<?> deleteCate(Long categoryId) {
+        try {
+            Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
+            if (category.getChildren().size()>0){
+                return new ResponseEntity<>("Delete Children Categories first",HttpStatus.BAD_REQUEST);
+            }
+            categoryRepository.delete(category);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 }
