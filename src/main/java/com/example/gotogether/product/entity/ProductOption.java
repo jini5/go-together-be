@@ -9,16 +9,16 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "product_date_option")
-public class ProductDateOption {
+@Table(name = "product_option")
+public class ProductOption {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
     @Id
-    @Column(name="product_date_option_id")
-    private Long ProductDateOptionId;
+    @Column(name="product_option_id")
+    private Long ProductOptionId;
 
     @Column(name="start_date")
     private LocalDate startDate;
