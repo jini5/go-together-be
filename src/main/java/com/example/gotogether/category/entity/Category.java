@@ -3,6 +3,7 @@ package com.example.gotogether.category.entity;
 import com.example.gotogether.product.entity.ProductCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
@@ -23,7 +25,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<ProductCategory> productCategories = new ArrayList<>();
 
     @Column(name = "name")
@@ -34,8 +36,18 @@ public class Category {
     private Category parent;
 
     @Column(name = "category_depth")
-    private Long categoryDepth;
+    private int categoryDepth;
 
     @OneToMany(mappedBy = "parent")
     private List<Category> children = new ArrayList<>();
+    public Category(String name, Category parent, int categoryDepth) {
+        this.name = name;
+        this.parent = parent;
+        this.categoryDepth = categoryDepth;
+    }
+
+    public Category(String name, int categoryDepth) {
+        this.name = name;
+        this.categoryDepth = categoryDepth;
+    }
 }
