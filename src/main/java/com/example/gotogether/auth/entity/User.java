@@ -76,6 +76,10 @@ public class User {
         this.deleteCheck = withdraw;
     }
 
+    public void updatePassword(String password){
+        this.password = password;
+    }
+
     @Builder
     public User(String email, String password, String name, String birthday, String phoneNumber,String role,String gender,String sns ) {
         this.email = email;

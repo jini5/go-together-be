@@ -56,10 +56,11 @@ public class AuthController {
         return userService.emailDuplicationCheck(userEmail);
     }
 
+
     @PostMapping("/find/password")
-    @ApiOperation(value = "비밀번호 찾기 API", notes = "이메일을 보내주면 해당 이메일로 비밀번호를 변경 할 수 있는 URL 을 제공한다.")
-    public ResponseEntity<?> findPassword(@RequestParam String email){
-        return new ResponseEntity<>(HttpStatus.OK);
+    @ApiOperation(value = "비밀번호 변경 메일", notes="이메일을 작성 시 이메일로 비밀번호 변경 url 전송")
+    public ResponseEntity<?> sendPassword(@RequestParam String email){
+        return userService.sendPwEmail(email);
     }
 
 

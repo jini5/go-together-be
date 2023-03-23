@@ -1,5 +1,6 @@
 package com.example.gotogether.auth.service.Impl;
 
+import com.example.gotogether.auth.dto.MailDTO;
 import com.example.gotogether.auth.dto.TokenDTO;
 import com.example.gotogether.auth.dto.UserDTO;
 import com.example.gotogether.auth.entity.User;
@@ -10,6 +11,8 @@ import com.example.gotogether.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -120,5 +123,72 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(requestPassword, password)) {
             throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public String makePassword(){
+        char[] charSet = new char[]{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+                'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+        String pwd = "";
+
+        /* 문자 배열 길이의 값을 랜덤으로 10개를 뽑아 조합 */
+        int idx = 0;
+        for(int i = 0; i < 10; i++){
+            idx = (int) (charSet.length * Math.random());
+            pwd += charSet[idx];
+        }
+
+        return pwd;
+    }
+
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> sendPwEmail(String userEmail){
+
+        if (!userRepository.existsByEmail(userEmail)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        String tmpPassword = makePassword();
+        String encryptPassword = encodingPassword(tmpPassword);
+        User user = userRepository.findByEmail(userEmail).get();
+        user.updatePassword(encryptPassword);
+
+        MailDTO mailDTO = createMail(tmpPassword, userEmail);
+        sendMail(mailDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private final JavaMailSender mailSender;
+    private static final String title = "고투게더 임시 비밀번호 안내 이메일입니다.";
+    private static final String message = "안녕하세요. 고투게더 임시 비밀번호 안내 메일입니다. "
+            +"\n" + "회원님의 임시 비밀번호는 아래와 같습니다. 로그인 후 반드시 비밀번호를 변경해주세요."+"\n";
+    private static final String fromAddress = "Go_TOGETHER";
+
+    public MailDTO createMail(String tmpPassword, String userEmail) {
+
+        MailDTO mailDto = MailDTO.builder()
+                .toAddress(userEmail)
+                .title(title)
+                .message(message + tmpPassword)
+                .fromAddress(fromAddress)
+                .build();
+
+        return mailDto;
+    }
+
+    public void sendMail(MailDTO mailDto) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(mailDto.getToAddress());
+        mailMessage.setSubject(mailDto.getTitle());
+        mailMessage.setText(mailDto.getMessage());
+        mailMessage.setFrom(mailDto.getFromAddress());
+        mailMessage.setReplyTo(mailDto.getFromAddress());
+
+        mailSender.send(mailMessage);
+
     }
 }
