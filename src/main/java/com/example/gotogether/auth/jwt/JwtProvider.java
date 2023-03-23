@@ -42,7 +42,7 @@ public class JwtProvider {
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
 
-        return TokenDTO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+        return TokenDTO.builder().accessToken(accessToken).refreshToken(refreshToken).role(user.getRole()).build();
     }
 
 

@@ -2,7 +2,6 @@ package com.example.gotogether.auth.controller;
 
 import com.example.gotogether.admin.service.AdminService;
 import com.example.gotogether.auth.dto.UserDTO;
-import com.example.gotogether.global.response.ResponseDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

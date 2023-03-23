@@ -13,6 +13,7 @@ public class TokenDTO {
 
     private final String accessToken;
     private final String refreshToken;
+    private final String role;
 
 
     @Getter

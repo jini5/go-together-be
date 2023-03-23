@@ -7,10 +7,9 @@ import com.example.gotogether.auth.jwt.JwtProvider;
 import com.example.gotogether.auth.repository.RedisTemplateRepository;
 import com.example.gotogether.auth.repository.UserRepository;
 import com.example.gotogether.auth.service.UserService;
-import com.example.gotogether.global.response.ResponseDTO;
-import com.example.gotogether.global.response.ResponseStatusCustomCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,57 +26,52 @@ public class UserServiceImpl implements UserService {
     private final RedisTemplateRepository redisTemplateRepository;
 
     @Override
-    public ResponseDTO<?> signup(UserDTO.SignupReqDTO signupReqDTO) {
-        if (userRepository.findByEmail(signupReqDTO.getEmail()).isPresent()) {
-            return new ResponseDTO<>(HttpStatus.BAD_REQUEST, null, "이미 존재하는 회원입니다.");
-        }
-        if (!signupReqDTO.getPassword().equals(signupReqDTO.getPasswordConfirmation())) {
-            return new ResponseDTO<>(HttpStatus.BAD_REQUEST, null, "비밀번호가 일치하지 않습니다.");
+    public ResponseEntity<?> signup(UserDTO.SignupReqDTO signupReqDTO) {
+        if (userRepository.findByEmail(signupReqDTO.getEmail()).isPresent() ||
+                !signupReqDTO.getPassword().equals(signupReqDTO.getPasswordConfirmation())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         String encodingPassword = encodingPassword(signupReqDTO.getPassword());
         signupReqDTO.setPassword(encodingPassword);
         userRepository.save(signupReqDTO.toEntity());
-        return new ResponseDTO<>(signupReqDTO.toString());
+        return new ResponseEntity<>(signupReqDTO.toString(),HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseDTO<?> login(UserDTO.LoginReqDTO loginReqDTO) {
+    public ResponseEntity<?> login(UserDTO.LoginReqDTO loginReqDTO) {
         try {
             User user = userRepository.findByEmail(loginReqDTO.getEmail())
                     .orElseThrow(IllegalArgumentException::new);
             if (withDrawCheck(user)) {
-                return new ResponseDTO<>(HttpStatus.BAD_REQUEST, null, "탈퇴한 회원입니다.");
+                return new ResponseEntity<>("withDraw",HttpStatus.UNAUTHORIZED);
             }
             passwordMustBeSame(loginReqDTO.getPassword(), user.getPassword());
             TokenDTO tokenDTO = jwtProvider.makeJwtToken(user);
             redisTemplateRepository.setDataExpire(tokenDTO.getRefreshToken(), user.getEmail(), jwtProvider.getExpiration(tokenDTO.getRefreshToken()));
-            if (user.getRole().equals("ROLE_ADMIN")) {
-                return new ResponseDTO<>(HttpStatus.OK, ResponseStatusCustomCode.ADMIN.getCode(), "관리자 권한 입니다.", tokenDTO);
-            }
-            return new ResponseDTO<>(tokenDTO);
+            return new ResponseEntity<>(tokenDTO,HttpStatus.OK);
         } catch (NoSuchElementException | IllegalArgumentException e) {
-            return new ResponseDTO<>(HttpStatus.NOT_FOUND, null, "로그인에 실패하였습니다.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
-    public ResponseDTO<?> checkUserInfo(UserDTO.UserAccessDTO userAccessDTO) {
+    public ResponseEntity<?> checkUserInfo(UserDTO.UserAccessDTO userAccessDTO) {
         try {
             if (userAccessDTO != null) {
                 User user = userRepository.findByEmail(userAccessDTO.getEmail())
                         .orElseThrow(IllegalArgumentException::new);
-                return new ResponseDTO<>(new UserDTO.PatchUserResDTO(user));
+                return new ResponseEntity<>(new UserDTO.PatchUserResDTO(user),HttpStatus.OK);
             } else {
                 throw new IllegalArgumentException();
             }
         } catch (IllegalArgumentException e) {
-            return new ResponseDTO<>(HttpStatus.NOT_FOUND, "로그인 정보가 없습니다.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
     @Transactional
-    public ResponseDTO<?> updateUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.PatchUserReqDTO patchUserReqDTO) {
+    public ResponseEntity<?> updateUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.PatchUserReqDTO patchUserReqDTO) {
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail())
                     .orElseThrow(IllegalArgumentException::new);
@@ -87,15 +81,15 @@ public class UserServiceImpl implements UserService {
 
             user.update(patchUserReqDTO.getNewPassword(), patchUserReqDTO.getPhone());
 
-            return new ResponseDTO<>(HttpStatus.OK, patchUserReqDTO, "회원정보 수정 성공하였습니다.");
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseDTO<>(HttpStatus.UNAUTHORIZED, "기존 비밀번호가 일치하지 않습니다.");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
     @Override
     @Transactional
-    public ResponseDTO<?> deleteUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.DeleteUserReqDTO deleteUserReqDTO) {
+    public ResponseEntity<?> deleteUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.DeleteUserReqDTO deleteUserReqDTO) {
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail())
                     .orElseThrow(IllegalArgumentException::new);
@@ -103,17 +97,17 @@ public class UserServiceImpl implements UserService {
             passwordMustBeSame(deleteUserReqDTO.getPassword(), user.getPassword());
             user.delete("withdraw");
 
-            return new ResponseDTO<>(HttpStatus.OK, user, "회원 탈퇴 성공.");
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseDTO<>(HttpStatus.UNAUTHORIZED, "기존 비밀번호가 일치하지 않습니다.");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
     @Override
-    public ResponseDTO<?> emailDuplicationCheck(String email) {
+    public ResponseEntity<?> emailDuplicationCheck(String email) {
         if (userRepository.findByEmail(email).isEmpty()) {
-            return new ResponseDTO<>(HttpStatus.OK, true, "사용 가능한 이메일 입니다.");
-        } else return new ResponseDTO<>(HttpStatus.OK, false, "이미 존재하는 회원입니다.");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     private String encodingPassword(String password) {

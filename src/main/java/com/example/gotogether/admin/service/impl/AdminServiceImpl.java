@@ -5,7 +5,6 @@ import com.example.gotogether.auth.dto.UserDTO;
 import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.auth.repository.UserRepository;
 import com.example.gotogether.global.response.PageResponseDTO;
-import com.example.gotogether.global.response.ResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
