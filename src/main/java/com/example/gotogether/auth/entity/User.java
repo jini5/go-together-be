@@ -63,15 +63,6 @@ public class User {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
-
-    public void update(String name,String password, String phoneNumber,String birthday,String gender ) {
-        this.name = name;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.birthday = birthday;
-        this.gender = gender;
-    }
-
     public void delete(String withdraw) {
         this.deleteCheck = withdraw;
     }
@@ -91,4 +82,10 @@ public class User {
         this.role = role;
         this.sns = sns;
     }
+
+    public void update(String changePassword, String phoneNumber) {
+        this.password = changePassword;
+        this.phoneNumber = phoneNumber;
+    }
+
 }
