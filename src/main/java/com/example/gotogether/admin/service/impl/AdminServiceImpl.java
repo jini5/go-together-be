@@ -21,9 +21,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> setUserToAdmin(UserDTO.EmailOnly dto) {
+    public ResponseEntity<?> setUserToAdmin(String email) {
         try {
-            User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(IllegalArgumentException::new);
+            User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
             user.setRole("ROLE_ADMIN");
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
@@ -33,9 +33,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> setAdminToUser(UserDTO.EmailOnly dto) {
+    public ResponseEntity<?> setAdminToUser(String email) {
         try {
-            User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(IllegalArgumentException::new);
+            User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
             user.setRole("ROLE_USER");
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
@@ -46,8 +46,8 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ResponseEntity<?> findUserList(Pageable pageable) {
         try {
-            Page<UserDTO.PatchUserResDTO> userList = userRepository.findAll(pageable)
-                    .map(UserDTO.PatchUserResDTO::new);
+            Page<UserDTO.UserListDto> userList = userRepository.findAll(pageable)
+                    .map(UserDTO.UserListDto::new);
             if (userList.getTotalElements()<1){
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

@@ -20,16 +20,16 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    @PatchMapping("/setAdmin")
+    @PatchMapping("/setAdmin/{email}")
     @ApiOperation(value = "관리자 권한 부여", notes = "입력받은 email 을 통해 관리자 권한 부여")
-    public ResponseEntity<?> setAdmin(@RequestBody UserDTO.EmailOnly user) {
-        return adminService.setUserToAdmin(user);
+    public ResponseEntity<?> setAdmin(@PathVariable String email) {
+        return adminService.setUserToAdmin(email);
     }
 
-    @PatchMapping("/deprivation")
+    @PatchMapping("/deprivation/{email}")
     @ApiOperation(value = "관리자 권한 박탈", notes = "입력받은 email 을 통해 관리자 권한 박탈")
-    public ResponseEntity<?> setUser(@RequestBody UserDTO.EmailOnly user) {
-        return adminService.setAdminToUser(user);
+    public ResponseEntity<?> setUser(@PathVariable String email) {
+        return adminService.setAdminToUser(email);
     }
 
     @GetMapping("/userList")

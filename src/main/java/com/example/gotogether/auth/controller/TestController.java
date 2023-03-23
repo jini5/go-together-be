@@ -47,6 +47,6 @@ public class TestController {
     @GetMapping("/selfAdmin")
     @ApiOperation(value = "개발 테스트용 관리자 승격", notes = "현재 사용자 관리자로 승격 (main 올릴땐 삭제)")
     public ResponseEntity<?> selfAdmin(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
-        return adminService.setUserToAdmin(new UserDTO.EmailOnly(userAccessDTO.getEmail()));
+        return adminService.setUserToAdmin(userAccessDTO.getEmail());
     }
 }

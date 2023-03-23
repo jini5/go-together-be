@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 
 public interface AdminService {
 
-    ResponseEntity<?> setUserToAdmin(UserDTO.EmailOnly dto);
+    ResponseEntity<?> setUserToAdmin(String email);
 
-    ResponseEntity<?> setAdminToUser(UserDTO.EmailOnly dto);
+    ResponseEntity<?> setAdminToUser(String email);
 
     ResponseEntity<?> findUserList(Pageable pageable);
 }

@@ -157,6 +157,24 @@ public class UserDTO {
         private String email;
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ToString
+    @ApiModel(value = "회원리스트 출력")
+    public static class UserListDto{
+        private Long userId;
+        private String email;
+        private String name;
+
+        public UserListDto(User user){
+            this.userId=user.getUserId();
+            this.email=user.getEmail();
+            this.name=user.getName();
+        }
+    }
+
 
 }
 
