@@ -1,0 +1,41 @@
+package com.example.gotogether.category.entity;
+
+import com.example.gotogether.product.entity.ProductCategory;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Getter
+@NoArgsConstructor
+@DynamicInsert
+@DynamicUpdate
+@Table(name = "category")
+public class Category {
+
+    @Id
+    @Column(name = "category_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long categoryId;
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<ProductCategory> productCategories = new ArrayList<>();
+
+    @Column(name = "name")
+    private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent")
+    private Category parent;
+
+    @Column(name = "category_depth")
+    private Long categoryDepth;
+
+    @OneToMany(mappedBy = "parent")
+    private List<Category> children = new ArrayList<>();
+}
