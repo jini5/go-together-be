@@ -20,7 +20,5 @@ public interface UserService {
 
     String makePassword();
 
-    void updatePassword(String tmpPassword, String userEmail);
-
     ResponseEntity sendPwEmail(String userEmail);
 }
