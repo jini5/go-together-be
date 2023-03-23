@@ -78,8 +78,8 @@ public class UserDTO {
                     .email(this.email)
                     .password(this.password)
                     .name(this.name)
-                    .birth(this.birth)
-                    .phone(this.phone)
+                    .birthday(this.birth)
+                    .phoneNumber(this.phone)
                     .role("ROLE_USER")
                     .build();
         }
@@ -127,8 +127,8 @@ public class UserDTO {
             this.email = user.getEmail();
             this.password = user.getPassword();
             this.name = user.getName();
-            this.birth = user.getBirth();
-            this.phone = user.getPhone();
+            this.birth = user.getBirthday();
+            this.phone = user.getPhoneNumber();
         }
     }
 
