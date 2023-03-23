@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -56,10 +57,11 @@ public class AuthController {
         return userService.emailDuplicationCheck(userEmail);
     }
 
+    @Transactional
     @PostMapping("/find/password")
-    @ApiOperation(value = "비밀번호 찾기 API", notes = "이메일을 보내주면 해당 이메일로 비밀번호를 변경 할 수 있는 URL 을 제공한다.")
+    @ApiOperation(value = "비밀번호 변경 메일", notes="이메일과 이름이 일치 시 이메일로 비밀번호 변경 url 전송")
     public ResponseEntity<?> findPassword(@RequestParam String email){
-        return new ResponseEntity<>(HttpStatus.OK);
+        return userService.sendPwEmail(email);
     }
 
 

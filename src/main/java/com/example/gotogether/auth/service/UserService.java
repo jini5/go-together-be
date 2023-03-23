@@ -17,4 +17,10 @@ public interface UserService {
     ResponseEntity<?> deleteUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.DeleteUserReqDTO deleteUserReqDTO);
 
     ResponseEntity<?> emailDuplicationCheck(String email);
+
+    String makePassword();
+
+    void updatePassword(String tmpPassword, String userEmail);
+
+    ResponseEntity sendPwEmail(String userEmail);
 }
