@@ -2,12 +2,13 @@ package com.example.gotogether.admin.service;
 
 import com.example.gotogether.auth.dto.UserDTO;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 public interface AdminService {
 
-    ResponseDTO<?> setUserToAdmin(UserDTO.EmailOnly dto);
+    ResponseEntity<?> setUserToAdmin(UserDTO.EmailOnly dto);
 
-    ResponseDTO<?> setAdminToUser(UserDTO.EmailOnly dto);
+    ResponseEntity<?> setAdminToUser(UserDTO.EmailOnly dto);
 
-    ResponseDTO<?> findUserList(Pageable pageable);
+    ResponseEntity<?> findUserList(Pageable pageable);
 }

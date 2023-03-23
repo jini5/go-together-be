@@ -5,6 +5,8 @@ import com.example.gotogether.auth.dto.UserDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,26 +27,26 @@ public class TestController {
     @PreAuthorize("hasAnyRole('USER')")
     /**유저 권한만 허용 **/
     @ApiOperation(value = "User 권한 확인", notes = "ROLE_USER 인 경우만 작동")
-    public ResponseDTO<?> checkUser(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
-        return new ResponseDTO<>(userAccessDTO.getEmail());
+    public ResponseEntity<?> checkUser(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
+        return new ResponseEntity<>(userAccessDTO.getEmail(), HttpStatus.OK);
     }
 
     @GetMapping("/admin")
     @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation(value = "ADMIN 권한 확인", notes = "ROLE_ADMIN 인 경우만 작동")
-    public ResponseDTO<?> checkAdmin(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
-        return new ResponseDTO<>(userAccessDTO.getEmail());
+    public ResponseEntity<?> checkAdmin(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
+        return new ResponseEntity<>(userAccessDTO.getEmail(),HttpStatus.OK);
     }
 
     @GetMapping("/role")
     @ApiOperation(value = "권한 확인", notes = "모든 권한에서 작동")
-    public String checkRole(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
-        return userAccessDTO.getRole();
+    public ResponseEntity<?> checkRole(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
+        return new ResponseEntity<>(userAccessDTO.getRole(),HttpStatus.OK);
     }
 
     @GetMapping("/selfAdmin")
     @ApiOperation(value = "개발 테스트용 관리자 승격", notes = "현재 사용자 관리자로 승격 (main 올릴땐 삭제)")
-    public ResponseDTO<?> selfAdmin(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
+    public ResponseEntity<?> selfAdmin(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
         return adminService.setUserToAdmin(new UserDTO.EmailOnly(userAccessDTO.getEmail()));
     }
 }
