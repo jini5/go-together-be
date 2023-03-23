@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public ResponseEntity<?> makeCate(CategoryDTO.makeCate dto){
+    public ResponseEntity<?> makeCate(CategoryDTO.MakeCategory dto){
         try {
             if (categoryRepository.existsByName(dto.getCategoryName())){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -41,10 +42,25 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<?> selectCate(){
-        List<CategoryDTO.ViewCate> list = categoryRepository.findAllByParentIsNull().stream().map(CategoryDTO.ViewCate::of).collect(Collectors.toList());
+        List<CategoryDTO.ViewCategory> list = categoryRepository.findAllByParentIsNull().stream().map(CategoryDTO.ViewCategory::of).collect(Collectors.toList());
         if (list.size()<1){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> updateCate(Long categoryId, CategoryDTO.UpdateCategory dto) {
+        try {
+            Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
+            category.setName(dto.getCategoryName());
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
 }

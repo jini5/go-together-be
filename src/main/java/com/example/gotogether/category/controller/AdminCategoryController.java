@@ -17,7 +17,7 @@ public class AdminCategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/makeCategory")
-    public ResponseEntity<?> makeCate(@RequestBody CategoryDTO.makeCate dto){
+    public ResponseEntity<?> makeCate(@RequestBody CategoryDTO.MakeCategory dto){
         return categoryService.makeCate(dto);
     }
 

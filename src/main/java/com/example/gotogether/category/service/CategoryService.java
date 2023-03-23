@@ -4,6 +4,8 @@ import com.example.gotogether.category.dto.CategoryDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface CategoryService {
-    ResponseEntity<?> makeCate(CategoryDTO.makeCate dto);
+    ResponseEntity<?> makeCate(CategoryDTO.MakeCategory dto);
     ResponseEntity<?> selectCate();
+
+    ResponseEntity<?> updateCate(Long categoryId,CategoryDTO.UpdateCategory dto);
 }

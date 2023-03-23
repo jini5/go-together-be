@@ -15,7 +15,7 @@ public class CategoryDTO {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class makeCate{
+    public static class MakeCategory {
         @ApiModelProperty(value = "생성할 카테고리 이름", required = true)
         private String categoryName;
         @ApiModelProperty(value = "생성할 카테고리 단계 ( 1: 대분류, 2: 중분류, 3: 소분류", required = true)
@@ -36,19 +36,27 @@ public class CategoryDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ViewCate{
+    public static class ViewCategory {
         private Long categoryId;
         private String categoryName;
         private int categoryDepth;
-        private List<ViewCate> children;
+        private List<ViewCategory> children;
 
-        public static ViewCate of(Category category){
-            return new ViewCate(
+        public static ViewCategory of(Category category){
+            return new ViewCategory(
                     category.getCategoryId(),
                     category.getName(),
                     category.getCategoryDepth(),
-                    category.getChildren().stream().map(ViewCate::of).collect(Collectors.toList())
+                    category.getChildren().stream().map(ViewCategory::of).collect(Collectors.toList())
             );
         }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateCategory{
+        @ApiModelProperty(value = "카테고리 새 이름", required = true)
+        private String categoryName;
     }
 }
