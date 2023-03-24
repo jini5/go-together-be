@@ -8,6 +8,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -76,7 +77,6 @@ public class UserDTO {
         private String sns;
 
 
-
         public User toEntity() {
 
             return User.builder()
@@ -107,7 +107,7 @@ public class UserDTO {
         private String changePassword;
         @ApiModelProperty(value = "새로운 비밀번호 재입력")
         private String passwordConfirmation;
-        @ApiModelProperty(value = "전화번호",required = true)
+        @ApiModelProperty(value = "전화번호", required = true)
         private String userPhoneNumber;
 
     }
@@ -172,18 +172,90 @@ public class UserDTO {
     @NoArgsConstructor
     @ToString
     @ApiModel(value = "회원리스트 출력")
-    public static class UserListDto{
+    public static class UserListDto {
         private Long userId;
         private String email;
         private String name;
 
-        public UserListDto(User user){
-            this.userId=user.getUserId();
-            this.email=user.getEmail();
-            this.name=user.getName();
+        public UserListDto(User user) {
+            this.userId = user.getUserId();
+            this.email = user.getEmail();
+            this.name = user.getName();
         }
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ToString
+    @ApiModel(value = "사용자 여행 유형 dto")
+    public static class UserType {
 
+        @ApiModelProperty(value = "사용자 여행 유형 ", required = true)
+        private String userType;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ToString
+    public static class UserDetailsForAdmin {
+        private Long userId;
+        private String name;
+        private String email;
+        private String phoneNumber;
+        private String birthday;
+        private String gender;
+        private String type;
+        private String sns;
+        private String deleteCheck;
+        private String role;
+        private LocalDateTime createdDate;
+        private LocalDateTime updatedDate;
+
+        public UserDetailsForAdmin(User user) {
+            this.userId = user.getUserId();
+            this.name = user.getName();
+            this.email = user.getEmail();
+            this.phoneNumber = user.getPhoneNumber();
+            this.birthday = user.getBirthday();
+            this.gender = user.getGender();
+            this.type = user.getType();
+            this.sns = user.getSns();
+            this.deleteCheck = user.getDeleteCheck();
+            this.role = user.getRole();
+            this.createdDate = user.getCreatedDate();
+            this.updatedDate = user.getUpdatedDate();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ToString
+    @ApiModel(value = "관리자의 회원정보수정 입력", description = "변경 하지 않는다면 기존 정보 입력 요망.")
+    public static class PatchUserByAdminReqDTO {
+        @ApiModelProperty(value = "사용자 이름 입력.", required = true)
+        private String userName;
+        @ApiModelProperty(value = "사용자 이메일 입력", required = true)
+        private String userEmail;
+        @ApiModelProperty(value = "사용자 전화번호 입력", required = true)
+        private String userPhoneNumber;
+        @ApiModelProperty(value = "사용자 생년월일 입력", required = true)
+        private String userBirthday;
+        @ApiModelProperty(value = "사용자 성별 입력\n male or female", required = true)
+        private String userGender;
+        @ApiModelProperty(value = "사용자 여행 유형 입력", required = true)
+        private String userType;
+        @ApiModelProperty(value = "사용자 권한 입력\n ROLE_ADMIN or ROLE_USER", required = true)
+        private String userRole;
+        @ApiModelProperty(value = "사용자 탈퇴여부 입력\n available or withdraw", required = true)
+        private String deleteCheck;
+        @ApiModelProperty(value = "소셜 로그인 여부 입력", required = true)
+        private String sns;
+    }
 }
 
