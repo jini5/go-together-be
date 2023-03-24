@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
@@ -76,8 +77,7 @@ public class BoardServiceImpl implements BoardService {
      * 게시글 추가
      *
      * @param userAccessDTO 토큰 정보
-     * @param addReqDTO 추가할 게시글 정보
-     * @return
+     * @param addReqDTO     추가할 게시글 정보
      */
     @Override
     public ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.AddReqDTO addReqDTO) {
@@ -92,5 +92,32 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    /**
+     * 게시글 수정
+     *
+     * @param userAccessDTO 토큰 정보
+     * @param modifyReqDTO  수정할 게시글 정보
+     */
+    @Transactional
+    @Override
+    public ResponseEntity<?> modifyPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId) {
+
+        try {
+            Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
+            if (!userAccessDTO.getRole().equals("ROLE_ADMIN")) {
+                if (!userAccessDTO.getEmail().equals(board.getUser().getEmail())) {
+
+                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                }
+            }
+            board.update(modifyReqDTO);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

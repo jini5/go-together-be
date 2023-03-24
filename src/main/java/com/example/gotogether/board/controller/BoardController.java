@@ -39,4 +39,12 @@ public class BoardController {
     public ResponseEntity<?> addPost(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @RequestBody BoardDTO.AddReqDTO addReqDTO) {
         return boardService.addPost(userAccessDTO, addReqDTO);
     }
+
+    @ApiOperation(value = "게시글 수정", notes = "게시글을 수정한다.\n" +
+            "code: 200 수정 성공, 400 잘못된 boardId 요청, 403 권한없는 사용자 접근")
+    @PatchMapping("/{boardId}")
+    public ResponseEntity<?> modifyPost(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,
+                                        @RequestBody BoardDTO.ModifyReqDTO modifyReqDTO, @PathVariable Long boardId) {
+        return boardService.modifyPost(userAccessDTO, modifyReqDTO, boardId);
+    }
 }

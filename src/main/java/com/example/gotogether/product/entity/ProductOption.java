@@ -1,5 +1,6 @@
 package com.example.gotogether.product.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ public class ProductOption {
 
     @Id
     @Column(name = "product_option_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ProductOptionId;
 
     @Column(name = "start_date")
@@ -38,4 +40,15 @@ public class ProductOption {
     @Column(name = "present_single_room_number")
     private int PresentSingleRoomNumber;
 
+
+    @Builder
+    public ProductOption(Product product, LocalDate startDate, LocalDate endDate, int maxPeople, int maxSingleRoom, int presentPeopleNumber, int presentSingleRoomNumber) {
+        this.product = product;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.maxPeople = maxPeople;
+        this.maxSingleRoom = maxSingleRoom;
+        this.PresentPeopleNumber = presentPeopleNumber;
+        this.PresentSingleRoomNumber = presentSingleRoomNumber;
+    }
 }

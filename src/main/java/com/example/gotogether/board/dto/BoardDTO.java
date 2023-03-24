@@ -5,7 +5,9 @@ import com.example.gotogether.board.entity.Board;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -96,5 +98,17 @@ public class BoardDTO {
                     .content(boardContent)
                     .build();
         }
+    }
+
+    @ApiModel(value = "게시글 수정 요청")
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class ModifyReqDTO {
+
+        @ApiModelProperty(value = "게시판 제목")
+        private String boardTitle;
+        @ApiModelProperty(value = "게시글 내용")
+        private String boardContent;
     }
 }
