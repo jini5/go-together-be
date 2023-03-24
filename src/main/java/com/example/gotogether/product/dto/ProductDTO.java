@@ -1,5 +1,6 @@
 package com.example.gotogether.product.dto;
 
+import com.example.gotogether.category.dto.CategoryDTO;
 import com.example.gotogether.product.entity.Product;
 import com.example.gotogether.product.entity.ProductCategory;
 import com.example.gotogether.product.entity.ProductStatus;
@@ -12,6 +13,7 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductDTO {
 
@@ -90,28 +92,31 @@ public class ProductDTO {
     @ApiModel(value = "상품 목록")
     public static class ProductListResDTO {
         @ApiModelProperty(value = "해당 상품 카테고리", required = true)
-        private List<ProductCategory> categories = new ArrayList<>();
+        private List<CategoryDTO.viewCategoryForProduct> categories = new ArrayList<>();
 
         @ApiModelProperty(value = "상품 ID", required = true)
         private Long productId;
         @ApiModelProperty(value = "상품 명", required = true)
-        private String name;
+        private String productName;
         @ApiModelProperty(value = "상품 요약", required = true)
-        private String summary;
+        private String productSummary;
         @ApiModelProperty(value = "여행 지역", required = true)
-        private String area;
+        private String productArea;
         @ApiModelProperty(value = "상품 썸네일", required = true)
-        private String thumbnail;
+        private String productThumbnail;
 
 
         private ProductStatus productStatus;
 
         public ProductListResDTO(Product product) {
-
+            this.categories = product.getCategories().stream()
+                    .map(e -> new CategoryDTO.viewCategoryForProduct(e.getCategory()))
+                    .collect(Collectors.toList());
             this.productId=product.getProductId();
-            this.name = product.getName();
-            this.area = product.getArea();
-            this.thumbnail = product.getThumbnail();
+            this.productName = product.getName();
+            this.productSummary=product.getSummary();
+            this.productArea = product.getArea();
+            this.productThumbnail = product.getThumbnail();
         }
     }
 
