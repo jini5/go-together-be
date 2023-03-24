@@ -16,7 +16,7 @@ public class CategoryDTO {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel(value = "카테고리 생성",description = "이름,단계,부모 입력")
+    @ApiModel(value = "카테고리 생성", description = "이름,단계,부모 입력")
     public static class MakeCategory {
         @ApiModelProperty(value = "생성할 카테고리 이름", required = true)
         private String categoryName;
@@ -26,12 +26,12 @@ public class CategoryDTO {
         private Long categoryParent;
 
 
-        public Category toChild(Category categoryParent){
-            return new Category(categoryName,categoryParent,categoryDepth);
+        public Category toChild(Category categoryParent) {
+            return new Category(categoryName, categoryParent, categoryDepth);
         }
 
-        public Category toParent(){
-            return new Category(categoryName,categoryDepth);
+        public Category toParent() {
+            return new Category(categoryName, categoryDepth);
         }
     }
 
@@ -44,7 +44,7 @@ public class CategoryDTO {
         private int categoryDepth;
         private List<ViewCategory> children;
 
-        public static ViewCategory of(Category category){
+        public static ViewCategory of(Category category) {
             return new ViewCategory(
                     category.getCategoryId(),
                     category.getName(),
@@ -58,7 +58,7 @@ public class CategoryDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel(value = "카테고리 이름 수정")
-    public static class UpdateCategory{
+    public static class UpdateCategory {
         @ApiModelProperty(value = "카테고리 새 이름", required = true)
         private String categoryName;
     }

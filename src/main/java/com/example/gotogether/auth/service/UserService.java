@@ -22,5 +22,5 @@ public interface UserService {
 
     ResponseEntity<?> sendPwEmail(String userEmail);
 
-    ResponseEntity<?> saveUserType(UserDTO.UserAccessDTO userAccessDTO,UserDTO.UserType userType);
+    ResponseEntity<?> saveUserType(UserDTO.UserAccessDTO userAccessDTO, UserDTO.UserType userType);
 }

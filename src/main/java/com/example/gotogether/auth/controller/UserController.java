@@ -43,8 +43,8 @@ public class UserController {
     @PatchMapping("/type")
     @ApiOperation(value = "사용자 여행 유형 저장 또는 수정", notes = "기존 유형이 없다면 저장, 있다면 수정.\n" +
             "code: 200 저장됨, 404 잘못된 사용자")
-    public ResponseEntity<?> saveUserType(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,@RequestBody UserDTO.UserType userType){
-       return userService.saveUserType(userAccessDTO,userType);
+    public ResponseEntity<?> saveUserType(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @RequestBody UserDTO.UserType userType) {
+        return userService.saveUserType(userAccessDTO, userType);
     }
 
 }

@@ -1,9 +1,9 @@
 package com.example.gotogether.auth.service.Impl;
 
-import com.example.gotogether.auth.service.AdminService;
 import com.example.gotogether.auth.dto.UserDTO;
 import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.auth.repository.UserRepository;
+import com.example.gotogether.auth.service.AdminService;
 import com.example.gotogether.global.response.PageResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -48,10 +48,10 @@ public class AdminServiceImpl implements AdminService {
         try {
             Page<UserDTO.UserListDto> userList = userRepository.findAll(pageable)
                     .map(UserDTO.UserListDto::new);
-            if (userList.getTotalElements()<1){
+            if (userList.getTotalElements() < 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(new PageResponseDTO(userList),HttpStatus.OK);
+            return new ResponseEntity<>(new PageResponseDTO(userList), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -61,8 +61,8 @@ public class AdminServiceImpl implements AdminService {
     public ResponseEntity<?> findUser(Long id) {
         try {
             User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-            return new ResponseEntity<>(new UserDTO.UserDetailsForAdmin(user),HttpStatus.OK);
-        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(new UserDTO.UserDetailsForAdmin(user), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -82,7 +82,7 @@ public class AdminServiceImpl implements AdminService {
             user.setDeleteCheck(dto.getDeleteCheck());
             user.setSns(dto.getSns());
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

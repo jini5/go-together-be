@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-
 @Getter
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
@@ -74,7 +73,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         JSONObject responseJson = new JSONObject();
-        responseJson.put("code",errorCode.getCode());
+        responseJson.put("code", errorCode.getCode());
         responseJson.put("message", errorCode.getMessage());
         response.getWriter().print(responseJson);
     }
@@ -84,8 +83,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     public enum TokenError {
 
         INVALID_TOKEN("T400", "유효하지 않은 토큰입니다."),
-        UNKNOWN_ERROR( "T404", "토큰이 존재하지 않습니다."),
-        EXPIRED_TOKEN( "T401", "만료된 토큰입니다.");
+        UNKNOWN_ERROR("T404", "토큰이 존재하지 않습니다."),
+        EXPIRED_TOKEN("T401", "만료된 토큰입니다.");
 
         private final String code;
         private final String message;

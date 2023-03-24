@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
         String encodingPassword = encodingPassword(signupReqDTO.getUserPassword());
         signupReqDTO.setUserPassword(encodingPassword);
         userRepository.save(signupReqDTO.toEntity());
-        return new ResponseEntity<>(signupReqDTO.toString(),HttpStatus.CREATED);
+        return new ResponseEntity<>(signupReqDTO.toString(), HttpStatus.CREATED);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
             passwordMustBeSame(loginReqDTO.getPassword(), user.getPassword());
             TokenDTO tokenDTO = jwtProvider.makeJwtToken(user);
             redisTemplateRepository.setDataExpire(tokenDTO.getRefreshToken(), user.getEmail(), jwtProvider.getExpiration(tokenDTO.getRefreshToken()));
-            return new ResponseEntity<>(tokenDTO,HttpStatus.OK);
+            return new ResponseEntity<>(tokenDTO, HttpStatus.OK);
         } catch (NoSuchElementException | IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
             if (userAccessDTO != null) {
                 User user = userRepository.findByEmail(userAccessDTO.getEmail())
                         .orElseThrow(IllegalArgumentException::new);
-                return new ResponseEntity<>(new UserDTO.PatchUserResDTO(user),HttpStatus.OK);
+                return new ResponseEntity<>(new UserDTO.PatchUserResDTO(user), HttpStatus.OK);
             } else {
                 throw new IllegalArgumentException();
             }
@@ -80,13 +80,13 @@ public class UserServiceImpl implements UserService {
 
             passwordMustBeSame(patchUserReqDTO.getUserPassword(), user.getPassword());
 
-            if (!patchUserReqDTO.getChangePassword().equals(patchUserReqDTO.getPasswordConfirmation())){
+            if (!patchUserReqDTO.getChangePassword().equals(patchUserReqDTO.getPasswordConfirmation())) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
 
             patchUserReqDTO.setChangePassword(encodingPassword(patchUserReqDTO.getChangePassword()));
 
-            user.update(patchUserReqDTO.getChangePassword(),patchUserReqDTO.getUserPhoneNumber());
+            user.update(patchUserReqDTO.getChangePassword(), patchUserReqDTO.getUserPhoneNumber());
             return new ResponseEntity<>(HttpStatus.OK);
 
         } catch (IllegalArgumentException e) {
@@ -130,8 +130,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String makePassword(){
-        char[] charSet = new char[]{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    public String makePassword() {
+        char[] charSet = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
                 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
 
         /* 문자 배열 길이의 값을 랜덤으로 10개를 뽑아 조합 */
         int idx = 0;
-        for(int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             idx = (int) (charSet.length * Math.random());
             pwd += charSet[idx];
         }
@@ -150,9 +150,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> sendPwEmail(String userEmail){
+    public ResponseEntity<?> sendPwEmail(String userEmail) {
 
-        if (!userRepository.existsByEmail(userEmail)){
+        if (!userRepository.existsByEmail(userEmail)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(IllegalArgumentException::new);
             user.setType(userType.getUserType());
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -181,7 +181,7 @@ public class UserServiceImpl implements UserService {
     private final JavaMailSender mailSender;
     private static final String title = "고투게더 임시 비밀번호 안내 이메일입니다.";
     private static final String message = "안녕하세요. 고투게더 임시 비밀번호 안내 메일입니다. "
-            +"\n" + "회원님의 임시 비밀번호는 아래와 같습니다. 로그인 후 반드시 비밀번호를 변경해주세요."+"\n";
+            + "\n" + "회원님의 임시 비밀번호는 아래와 같습니다. 로그인 후 반드시 비밀번호를 변경해주세요." + "\n";
     private static final String fromAddress = "Go_TOGETHER";
 
     public MailDTO createMail(String tmpPassword, String userEmail) {

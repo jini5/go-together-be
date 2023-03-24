@@ -7,9 +7,7 @@ import com.example.gotogether.auth.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -61,9 +59,9 @@ public class AuthController {
 
 
     @PostMapping("/find/password")
-    @ApiOperation(value = "비밀번호 변경 메일", notes="이메일을 작성 시 이메일로 비밀번호 변경 url 전송.\n" +
+    @ApiOperation(value = "비밀번호 변경 메일", notes = "이메일을 작성 시 이메일로 비밀번호 변경 url 전송.\n" +
             "code: 200 이메일 전송됨, 400 없는 이메일")
-    public ResponseEntity<?> sendPassword(@RequestParam String email){
+    public ResponseEntity<?> sendPassword(@RequestParam String email) {
         return userService.sendPwEmail(email);
     }
 

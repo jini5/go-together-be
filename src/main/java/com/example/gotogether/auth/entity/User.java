@@ -1,14 +1,17 @@
 package com.example.gotogether.auth.entity;
 
-import lombok.*;
-import org.hibernate.annotations.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,7 +29,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "name",nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "email", nullable = false)
@@ -64,12 +67,12 @@ public class User {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
-    public void updatePassword(String password){
+    public void updatePassword(String password) {
         this.password = password;
     }
 
     @Builder
-    public User(String email, String password, String name, String birthday, String phoneNumber,String role,String gender,String sns ) {
+    public User(String email, String password, String name, String birthday, String phoneNumber, String role, String gender, String sns) {
         this.email = email;
         this.password = password;
         this.name = name;

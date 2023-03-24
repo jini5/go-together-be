@@ -47,13 +47,13 @@ public class AdminUserController {
 
     @GetMapping("/user/{userId}")
     @ApiOperation(value = "회원 상세 정보 조회", notes = "관리자가 회원 상세 정보 조회.\n code: 200 조회 성공, 404 해당 사용자 없음")
-    public ResponseEntity<?> findUser(@PathVariable Long userId){
+    public ResponseEntity<?> findUser(@PathVariable Long userId) {
         return adminService.findUser(userId);
     }
 
     @PutMapping("/userDetail/{userId}")
-    @ApiOperation(value = "회원 상세 정보 조회", notes = "관리자가 회원 상세 정보 조회.\n code: 200 조회 성공, 404 해당 사용자 없음")
-    public ResponseEntity<?> updateUserInfo(@PathVariable Long userId, @RequestBody UserDTO.PatchUserByAdminReqDTO dto){
-        return adminService.updateUserInfo(userId,dto);
+    @ApiOperation(value = "회원 상세 정보 조회", notes = "관리자가 회원 상세 정보 수정.\n code: 200 수정 성공, 404 해당 사용자 없음")
+    public ResponseEntity<?> updateUserInfo(@PathVariable Long userId, @RequestBody UserDTO.PatchUserByAdminReqDTO dto) {
+        return adminService.updateUserInfo(userId, dto);
     }
 }

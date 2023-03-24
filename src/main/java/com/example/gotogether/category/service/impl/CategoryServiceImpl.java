@@ -20,14 +20,14 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public ResponseEntity<?> makeCate(CategoryDTO.MakeCategory dto){
+    public ResponseEntity<?> makeCate(CategoryDTO.MakeCategory dto) {
         try {
-            if (categoryRepository.existsByName(dto.getCategoryName())){
+            if (categoryRepository.existsByName(dto.getCategoryName())) {
                 return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
             if (dto.getCategoryDepth() != 1) {
                 Category parent = categoryRepository.findById(dto.getCategoryParent()).orElseThrow(IllegalArgumentException::new);
-                if (parent.getCategoryDepth()!=dto.getCategoryDepth()-1){
+                if (parent.getCategoryDepth() != dto.getCategoryDepth() - 1) {
                     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
                 categoryRepository.save(dto.toChild(parent));
@@ -35,31 +35,31 @@ public class CategoryServiceImpl implements CategoryService {
                 categoryRepository.save(dto.toParent());
             }
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
-    public ResponseEntity<?> selectCate(){
+    public ResponseEntity<?> selectCate() {
         List<CategoryDTO.ViewCategory> list = categoryRepository.findAllByParentIsNull().stream().map(CategoryDTO.ViewCategory::of).collect(Collectors.toList());
-        if (list.size()<1){
+        if (list.size() < 1) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(list,HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @Override
     @Transactional
     public ResponseEntity<?> updateCate(Long categoryId, CategoryDTO.UpdateCategory dto) {
         try {
-            if (categoryRepository.existsByName(dto.getCategoryName())){
+            if (categoryRepository.existsByName(dto.getCategoryName())) {
                 return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
             Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
             category.setName(dto.getCategoryName());
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -68,11 +68,11 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<?> deleteCate(Long categoryId) {
         try {
             Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
-            if (category.getChildren().size()>0){
+            if (category.getChildren().size() > 0) {
                 return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
             categoryRepository.delete(category);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.OK);
