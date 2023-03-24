@@ -21,19 +21,19 @@ public class AdminController {
     private final AdminService adminService;
 
     @PatchMapping("/setAdmin/{email}")
-    @ApiOperation(value = "관리자 권한 부여", notes = "입력받은 email 을 통해 관리자 권한 부여. code: 200 성공, 404 해당 이메일을 찾지 못함")
+    @ApiOperation(value = "관리자 권한 부여", notes = "입력받은 email 을 통해 관리자 권한 부여.\n code: 200 성공, 404 해당 이메일을 찾지 못함")
     public ResponseEntity<?> setAdmin(@PathVariable String email) {
         return adminService.setUserToAdmin(email);
     }
 
     @PatchMapping("/deprivation/{email}")
-    @ApiOperation(value = "관리자 권한 박탈", notes = "입력받은 email 을 통해 관리자 권한 박탈. code: 200 성공, 404 해당 이메일을 찾지 못함")
+    @ApiOperation(value = "관리자 권한 박탈", notes = "입력받은 email 을 통해 관리자 권한 박탈.\n code: 200 성공, 404 해당 이메일을 찾지 못함")
     public ResponseEntity<?> setUser(@PathVariable String email) {
         return adminService.setAdminToUser(email);
     }
 
     @GetMapping("/userList")
-    @ApiOperation(value = "회원 리스트 조회", notes = "관리자가 회원 목록 20명씩 조회. code: 200 조회 성공, 204 표시할 내용 없음, 500 서버에러")
+    @ApiOperation(value = "회원 리스트 조회", notes = "관리자가 회원 목록 20명씩 조회.\n code: 200 조회 성공, 204 표시할 내용 없음, 500 서버에러")
     public ResponseEntity<?> findUserList(@RequestParam(required = false, defaultValue = "1") String page) {
         PageRequest pageRequest = null;
         try {
