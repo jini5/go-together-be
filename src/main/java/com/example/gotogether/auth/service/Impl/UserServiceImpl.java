@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findByEmail(loginReqDTO.getEmail())
                     .orElseThrow(IllegalArgumentException::new);
             if (withDrawCheck(user)) {
-                return new ResponseEntity<>("withDraw",HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
             passwordMustBeSame(loginReqDTO.getPassword(), user.getPassword());
             TokenDTO tokenDTO = jwtProvider.makeJwtToken(user);
@@ -100,7 +100,6 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail())
                     .orElseThrow(IllegalArgumentException::new);
-
             passwordMustBeSame(deleteUserReqDTO.getPassword(), user.getPassword());
             user.setDeleteCheck("withdraw");
             return new ResponseEntity<>(HttpStatus.OK);
