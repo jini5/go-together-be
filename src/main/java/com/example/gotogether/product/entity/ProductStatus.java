@@ -10,7 +10,7 @@ public enum ProductStatus {
     @JsonProperty("FOR_SALE")
     FOR_SALE("판매중"),
     @JsonProperty("STOP_SELLING")
-    STOP_SELLING("판매중지") ,
+    STOP_SELLING("판매중지"),
     @JsonProperty("HIDING")
     HIDING("숨김");
 

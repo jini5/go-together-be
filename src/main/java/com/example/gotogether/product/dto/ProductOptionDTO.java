@@ -14,7 +14,7 @@ public class ProductOptionDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ToString
-    public static class ProductOptionCreateReqDTO{
+    public static class ProductOptionCreateReqDTO {
         @ApiModelProperty(value = "출발일", required = true)
         private LocalDate startDate;
         @ApiModelProperty(value = "도착일", required = true)
@@ -26,7 +26,7 @@ public class ProductOptionDTO {
     }
 
     @Getter
-    public static class ProductOptionReqDTO{
+    public static class ProductOptionReqDTO {
         @ApiModelProperty(value = "상품 기간 상세 ID", required = true)
         private Long ProductOptionId;
 
@@ -54,7 +54,7 @@ public class ProductOptionDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ProductOptionResDTO{
+    public static class ProductOptionResDTO {
 
         @ApiModelProperty(value = "상품 기간 상세 ID", required = true)
         private Long ProductOptionId;

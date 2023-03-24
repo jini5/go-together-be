@@ -62,4 +62,16 @@ public class CategoryDTO {
         @ApiModelProperty(value = "카테고리 새 이름", required = true)
         private String categoryName;
     }
+
+    @Getter
+    public static class viewCategoryForProduct {
+        private String categoryName;
+        private Long categoryId;
+
+        public viewCategoryForProduct(Category category) {
+            this.categoryName = category.getName();
+            this.categoryId = category.getCategoryId();
+        }
+    }
+
 }

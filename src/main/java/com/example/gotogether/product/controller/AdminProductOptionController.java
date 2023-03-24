@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-public class ProductOptionController {
-
-
+public class AdminProductOptionController {
 
 
 }
