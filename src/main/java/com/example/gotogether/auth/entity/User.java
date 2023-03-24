@@ -50,6 +50,7 @@ public class User {
     @ColumnDefault("'none'")
     private String sns;
     @Column(name = "delete_check")
+    @ColumnDefault("'available")
     private String deleteCheck;
 
     @Column(name = "role", nullable = false)
