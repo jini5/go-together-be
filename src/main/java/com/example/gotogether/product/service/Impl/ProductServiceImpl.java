@@ -34,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
 
     public ResponseEntity<?> createProduct(ProductDTO.ProductReqDTO productReqDTO) {
         try {
+            if (productRepository.existsByName(productReqDTO.getName()))return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             //상품 엔티티 생성
             Product product = productReqDTO.toEntity();
             //상품 카테고리 엔티티 생성 후 상품엔티티의 카테고리 리스트에 넣기
@@ -58,11 +59,10 @@ public class ProductServiceImpl implements ProductService {
                         .presentSingleRoomNumber(0)
                         .build());
             }
-
             productRepository.save(product);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
