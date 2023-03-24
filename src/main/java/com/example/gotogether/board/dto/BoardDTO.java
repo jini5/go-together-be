@@ -97,4 +97,16 @@ public class BoardDTO {
                     .build();
         }
     }
+
+    @ApiModel(value = "게시글 수정 요청")
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class ModifyReqDTO {
+
+        @ApiModelProperty(value = "게시판 제목")
+        private String boardTitle;
+        @ApiModelProperty(value = "게시글 내용")
+        private String boardContent;
+    }
 }
