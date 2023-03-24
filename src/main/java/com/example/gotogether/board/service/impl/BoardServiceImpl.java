@@ -1,5 +1,8 @@
 package com.example.gotogether.board.service.impl;
 
+import com.example.gotogether.auth.dto.UserDTO;
+import com.example.gotogether.auth.entity.User;
+import com.example.gotogether.auth.repository.UserRepository;
 import com.example.gotogether.board.dto.BoardDTO;
 import com.example.gotogether.board.entity.Board;
 import com.example.gotogether.board.repository.BoardRepository;
@@ -21,6 +24,7 @@ import static com.example.gotogether.global.config.PageSizeConfig.BOARD_LIST_SIZ
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     /**
      * 현 페이지의 게시글 목록 조회
@@ -29,6 +33,7 @@ public class BoardServiceImpl implements BoardService {
      */
     @Override
     public ResponseEntity<?> findAllList(int pageNumber) {
+
         try {
             PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
             Page<Board> boardPage = boardRepository.findAll(pageRequest);
@@ -65,5 +70,27 @@ public class BoardServiceImpl implements BoardService {
 
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    /**
+     * 게시글 추가
+     *
+     * @param userAccessDTO 토큰 정보
+     * @param boardAddReqDTO 추가할 게시글 정보
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.BoardAddReqDTO boardAddReqDTO) {
+
+        try {
+            User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
+            Board board = boardAddReqDTO.toEntity(user);
+            boardRepository.save(board);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
