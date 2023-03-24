@@ -25,10 +25,10 @@ public class Product {
     @Column(name = "product_id")
     private Long productId;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<ProductCategory> categories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<ProductOption> productOptions = new ArrayList<>();
 
     @Column(name="name")

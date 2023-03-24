@@ -20,6 +20,7 @@ public class ProductOption {
 
     @Id
     @Column(name="product_option_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ProductOptionId;
 
     @Column(name="start_date")
