@@ -22,4 +22,9 @@ public class BoardController {
         return boardService.findAllList(pageNumber);
     }
 
+    @ApiOperation(value = "게시글 상세 정보 조회", notes = "게시글 상세 정보를 조회한다.")
+    @GetMapping("/detail/{boardId}")
+    public ResponseEntity<?> findDetailInfo(@PathVariable Long boardId) {
+        return boardService.findDetailInfo(boardId);
+    }
 }
