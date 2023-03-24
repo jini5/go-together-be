@@ -1,5 +1,6 @@
 package com.example.gotogether.board.dto;
 
+import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.board.entity.Board;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -75,6 +76,27 @@ public class BoardDTO {
                     .boardContent(board.getContent())
                     .createdDate(board.getCreatedDate().toLocalDate())
                     .updatedDate(board.getUpdatedDate().toLocalDate())
+                    .build();
+        }
+    }
+
+    @ApiModel(value = "게시글 추가 요청")
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class BoardAddReqDTO {
+
+        @ApiModelProperty(value = "게시판 제목")
+        private String boardTitle;
+        @ApiModelProperty(value = "게시글 내용")
+        private String boardContent;
+
+        public Board toEntity(User user) {
+
+            return Board.builder()
+                    .user(user)
+                    .title(boardTitle)
+                    .content(boardContent)
                     .build();
         }
     }
