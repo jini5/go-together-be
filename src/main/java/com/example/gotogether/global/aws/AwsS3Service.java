@@ -30,7 +30,7 @@ public class AwsS3Service {
 
     public ResponseEntity<?> uploadFileV1(String category, MultipartFile multipartFile) {
         if (multipartFile.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         String fileName = CommonUtils.buildFileName(category, multipartFile.getOriginalFilename());
@@ -45,7 +45,7 @@ public class AwsS3Service {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(amazonS3Client.getUrl(bucketName, fileName).toString(),HttpStatus.CREATED);
+        return new ResponseEntity<>(amazonS3Client.getUrl(bucketName, fileName).toString(),HttpStatus.OK);
     }
     public static class CommonUtils{
         private static final String FILE_EXTENSION_SEPARATOR = ".";
