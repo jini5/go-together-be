@@ -1,6 +1,7 @@
 package com.example.gotogether.category.dto;
 
 import com.example.gotogether.category.entity.Category;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,12 +16,13 @@ public class CategoryDTO {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
+    @ApiModel(value = "카테고리 생성",description = "이름,단계,부모 입력")
     public static class MakeCategory {
         @ApiModelProperty(value = "생성할 카테고리 이름", required = true)
         private String categoryName;
-        @ApiModelProperty(value = "생성할 카테고리 단계 ( 1: 대분류, 2: 중분류, 3: 소분류", required = true)
+        @ApiModelProperty(value = "생성할 카테고리 단계 ( 1: 대분류, 2: 중분류, 3: 소분류 )", required = true)
         private int categoryDepth;
-        @ApiModelProperty(value = "생성할 카테고리 부모( 생성할 카테고리가 중분류, 소분류인 경우 필요, 대분류의 경우 아무값 넣어도 상관 없음.", required = true)
+        @ApiModelProperty(value = "생성할 카테고리 부모 ID( 생성할 카테고리가 중분류, 소분류인 경우 필요, 대분류의 경우 아무값 넣어도 상관 없음.)", required = true)
         private Long categoryParent;
 
 
@@ -55,6 +57,7 @@ public class CategoryDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    @ApiModel(value = "카테고리 이름 수정")
     public static class UpdateCategory{
         @ApiModelProperty(value = "카테고리 새 이름", required = true)
         private String categoryName;
