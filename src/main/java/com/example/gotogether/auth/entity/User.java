@@ -64,10 +64,6 @@ public class User {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
-    public void delete(String withdraw) {
-        this.deleteCheck = withdraw;
-    }
-
     public void updatePassword(String password){
         this.password = password;
     }

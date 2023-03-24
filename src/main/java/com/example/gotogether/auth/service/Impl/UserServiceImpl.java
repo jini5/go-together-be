@@ -102,8 +102,7 @@ public class UserServiceImpl implements UserService {
                     .orElseThrow(IllegalArgumentException::new);
 
             passwordMustBeSame(deleteUserReqDTO.getPassword(), user.getPassword());
-            user.delete("withdraw");
-
+            user.setDeleteCheck("withdraw");
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -122,7 +121,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean withDrawCheck(User user) {
-        return user.getDeleteCheck() != null;
+        return user.getDeleteCheck().equals("available");
     }
 
     private void passwordMustBeSame(String requestPassword, String password) {
