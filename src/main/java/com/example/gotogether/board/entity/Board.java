@@ -1,6 +1,7 @@
 package com.example.gotogether.board.entity;
 
 import com.example.gotogether.auth.entity.User;
+import com.example.gotogether.board.dto.BoardDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,5 +59,10 @@ public class Board {
         this.user = user;
         this.title = title;
         this.content = content;
+    }
+
+    public void update(BoardDTO.ModifyReqDTO modifyReqDTO) {
+        this.title = modifyReqDTO.getBoardTitle();
+        this.content = modifyReqDTO.getBoardContent();
     }
 }
