@@ -10,7 +10,7 @@ public interface AdminService {
 
     ResponseEntity<?> setAdminToUser(String email);
 
-    ResponseEntity<?> findUserList(Pageable pageable);
+    ResponseEntity<?> findUserList(int page);
 
     ResponseEntity<?> findUser(Long id);
 

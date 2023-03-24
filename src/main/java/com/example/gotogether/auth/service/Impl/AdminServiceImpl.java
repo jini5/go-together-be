@@ -7,12 +7,15 @@ import com.example.gotogether.auth.service.AdminService;
 import com.example.gotogether.global.response.PageResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+
+import static com.example.gotogether.global.config.PageSizeConfig.User_List_Size;
 
 @Service
 @RequiredArgsConstructor
@@ -44,8 +47,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ResponseEntity<?> findUserList(Pageable pageable) {
+    public ResponseEntity<?> findUserList(int page) {
         try {
+            PageRequest pageable = PageRequest.of(page-1,User_List_Size);
             Page<UserDTO.UserListDto> userList = userRepository.findAll(pageable)
                     .map(UserDTO.UserListDto::new);
             if (userList.getTotalElements() < 1) {

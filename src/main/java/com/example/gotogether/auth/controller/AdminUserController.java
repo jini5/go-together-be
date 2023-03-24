@@ -34,15 +34,8 @@ public class AdminUserController {
 
     @GetMapping("/userList")
     @ApiOperation(value = "회원 리스트 조회", notes = "관리자가 회원 목록 20명씩 조회.\n code: 200 조회 성공, 204 표시할 내용 없음, 500 서버에러")
-    public ResponseEntity<?> findUserList(@RequestParam(required = false, defaultValue = "1") String page) {
-        PageRequest pageRequest = null;
-        try {
-            int intPage = Integer.parseInt(page);
-            pageRequest = PageRequest.of(intPage - 1, User_List_Size);
-        } catch (IllegalArgumentException e) {
-            pageRequest = PageRequest.of(0, User_List_Size);
-        }
-        return adminService.findUserList(pageRequest);
+    public ResponseEntity<?> findUserList(@RequestParam(required = false, defaultValue = "1") int page) {
+        return adminService.findUserList(page);
     }
 
     @GetMapping("/user/{userId}")
