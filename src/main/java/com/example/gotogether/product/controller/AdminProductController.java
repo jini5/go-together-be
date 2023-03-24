@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = {"상품 서비스"}, description = "상품 추가, 상품수정, 상품삭제(숨김)")
+@Api(tags = {"관리자 상품 서비스"}, description = "상품 추가, 상품수정, 상품삭제(숨김)")
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
