@@ -11,4 +11,6 @@ public interface BoardService {
     ResponseEntity<?> findDetailInfo(Long boardId);
 
     ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.AddReqDTO addReqDTO);
+
+    ResponseEntity<?> modifyPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId);
 }
