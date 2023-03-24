@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 import static com.example.gotogether.global.config.PageSizeConfig.BOARD_LIST_SIZE;
 
 @RequiredArgsConstructor
@@ -46,4 +48,22 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
+    /**
+     * 게시글 상세 정보 조회
+     *
+     * @param boardId 조회할 게시글 아이디
+     */
+    @Override
+    public ResponseEntity<?> findDetailInfo(Long boardId) {
+
+        try {
+            Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
+            BoardDTO.BoardDetailInfoResDTO boardDetailInfoResDTO = new BoardDTO.BoardDetailInfoResDTO().toDTO(board);
+
+            return new ResponseEntity<>(boardDetailInfoResDTO, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
