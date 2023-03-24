@@ -88,6 +88,7 @@ public class UserDTO {
                     .gender(userGender)
                     .sns(sns)
                     .role("ROLE_USER")
+                    .deleteCheck("available")
                     .build();
         }
 
