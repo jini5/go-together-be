@@ -20,5 +20,7 @@ public interface UserService {
 
     String makePassword();
 
-    ResponseEntity sendPwEmail(String userEmail);
+    ResponseEntity<?> sendPwEmail(String userEmail);
+
+    ResponseEntity<?> saveUserType(UserDTO.UserAccessDTO userAccessDTO, UserDTO.UserType userType);
 }

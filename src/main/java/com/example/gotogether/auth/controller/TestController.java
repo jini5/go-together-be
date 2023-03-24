@@ -1,7 +1,7 @@
 package com.example.gotogether.auth.controller;
 
-import com.example.gotogether.admin.service.AdminService;
 import com.example.gotogether.auth.dto.UserDTO;
+import com.example.gotogether.auth.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +35,13 @@ public class TestController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation(value = "ADMIN 권한 확인", notes = "ROLE_ADMIN 인 경우만 작동")
     public ResponseEntity<?> checkAdmin(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
-        return new ResponseEntity<>(userAccessDTO.getEmail(),HttpStatus.OK);
+        return new ResponseEntity<>(userAccessDTO.getEmail(), HttpStatus.OK);
     }
 
     @GetMapping("/role")
     @ApiOperation(value = "권한 확인", notes = "모든 권한에서 작동")
     public ResponseEntity<?> checkRole(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
-        return new ResponseEntity<>(userAccessDTO.getRole(),HttpStatus.OK);
+        return new ResponseEntity<>(userAccessDTO.getRole(), HttpStatus.OK);
     }
 
     @GetMapping("/selfAdmin")

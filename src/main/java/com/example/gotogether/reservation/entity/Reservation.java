@@ -41,12 +41,12 @@ public class Reservation {
     @Column(name = "reservation_date")
     private LocalDateTime reservationDate;
 
-    @Column(name="payment_method")
+    @Column(name = "payment_method")
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'UNDECIDED'")
     private PaymentMethod paymentMethod;
 
-    @Column(name="status")
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'UNDECIDED'")
     private ReservationStatus reservationStatus;

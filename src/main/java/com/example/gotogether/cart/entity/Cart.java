@@ -6,11 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -34,13 +32,13 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
-    @Column(name="number_of_people")
+    @Column(name = "number_of_people")
     private int numberOfPeople;
 
-    @Column(name="single_room_number")
+    @Column(name = "single_room_number")
     private int singleRoomNumber;
 
-    @Column(name="travel_date")
+    @Column(name = "travel_date")
     private String travelDate;
 
 }
