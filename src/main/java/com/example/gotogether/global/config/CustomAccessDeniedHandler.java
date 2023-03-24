@@ -1,7 +1,6 @@
 package com.example.gotogether.global.config;
 
 import org.json.JSONObject;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 

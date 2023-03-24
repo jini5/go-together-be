@@ -1,6 +1,7 @@
 package com.example.gotogether.board.entity;
 
 import com.example.gotogether.auth.entity.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -34,14 +35,14 @@ public class Board {
     @Column(name = "board_id")
     private Long boardId;
 
-    @Column(name="type")
+    @Column(name = "type")
     @ColumnDefault("'여행 후기'")
     private String type;
 
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
-    @Column(name="content")
+    @Column(name = "content")
     private String content;
 
     @CreatedDate
@@ -52,4 +53,10 @@ public class Board {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
+    @Builder
+    public Board(User user, String title, String content) {
+        this.user = user;
+        this.title = title;
+        this.content = content;
+    }
 }

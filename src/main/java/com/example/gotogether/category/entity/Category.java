@@ -25,7 +25,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<ProductCategory> productCategories = new ArrayList<>();
 
     @Column(name = "name")
@@ -40,6 +40,7 @@ public class Category {
 
     @OneToMany(mappedBy = "parent")
     private List<Category> children = new ArrayList<>();
+
     public Category(String name, Category parent, int categoryDepth) {
         this.name = name;
         this.parent = parent;
