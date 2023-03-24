@@ -44,7 +44,7 @@ public class BoardServiceImpl implements BoardService {
 
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            Page<BoardDTO.BoardListResDTO> boardListResDTO = boardPage.map(BoardDTO.BoardListResDTO::new);
+            Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
 
             return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
         } catch (NullPointerException e) {
@@ -63,12 +63,12 @@ public class BoardServiceImpl implements BoardService {
 
         try {
             Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
-            BoardDTO.BoardDetailInfoResDTO boardDetailInfoResDTO = new BoardDTO.BoardDetailInfoResDTO().toDTO(board);
+            BoardDTO.DetailInfoResDTO detailInfoResDTO = new BoardDTO.DetailInfoResDTO(board);
 
-            return new ResponseEntity<>(boardDetailInfoResDTO, HttpStatus.OK);
+            return new ResponseEntity<>(detailInfoResDTO, HttpStatus.OK);
         } catch (NoSuchElementException e) {
 
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -76,15 +76,15 @@ public class BoardServiceImpl implements BoardService {
      * 게시글 추가
      *
      * @param userAccessDTO 토큰 정보
-     * @param boardAddReqDTO 추가할 게시글 정보
+     * @param addReqDTO 추가할 게시글 정보
      * @return
      */
     @Override
-    public ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.BoardAddReqDTO boardAddReqDTO) {
+    public ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.AddReqDTO addReqDTO) {
 
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
-            Board board = boardAddReqDTO.toEntity(user);
+            Board board = addReqDTO.toEntity(user);
             boardRepository.save(board);
         } catch (NoSuchElementException e) {
 
