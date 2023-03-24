@@ -184,6 +184,21 @@ public class UserDTO {
         }
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ToString
+    @ApiModel(value = "사용자 여행 유형 dto")
+    public static class UserType {
+
+        @ApiModelProperty(value = "사용자 여행 유형 ", required = true)
+        private String userType;
+    }
+
+
+
+
 
 }
 

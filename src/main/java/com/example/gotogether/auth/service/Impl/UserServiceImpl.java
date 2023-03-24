@@ -168,6 +168,18 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Override
+    @Transactional
+    public ResponseEntity<?> saveUserType(UserDTO.UserAccessDTO userAccessDTO, UserDTO.UserType userType) {
+        try {
+            User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(IllegalArgumentException::new);
+            user.setType(userType.getUserType());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     private final JavaMailSender mailSender;
     private static final String title = "고투게더 임시 비밀번호 안내 이메일입니다.";
     private static final String message = "안녕하세요. 고투게더 임시 비밀번호 안내 메일입니다. "
