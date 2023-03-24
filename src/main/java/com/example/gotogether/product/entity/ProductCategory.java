@@ -2,6 +2,7 @@ package com.example.gotogether.product.entity;
 
 import com.example.gotogether.category.entity.Category;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,7 @@ import javax.persistence.*;
 public class ProductCategory {
 
     @Id
-    @Column(name = "product_category_id")
+    @Column(name="product_category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productCategoryId;
 
@@ -26,4 +27,9 @@ public class ProductCategory {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Builder
+    public ProductCategory(Product product, Category category) {
+        this.product = product;
+        this.category = category;
+    }
 }
