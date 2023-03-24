@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
             //상품 엔티티 생성
             Product product = productReqDTO.toEntity();
             //상품 카테고리 엔티티 생성 후 상품엔티티의 카테고리 리스트에 넣기
-            List<Category> categoryList = categoryRepository.findAllByCategoryId(productReqDTO.getCategoryIdList());
+            List<Category> categoryList = categoryRepository.findAllByCategoryIdIn(productReqDTO.getCategoryIdList());
             if (categoryList.size() != productReqDTO.getCategoryIdList().size())
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             for (Category category : categoryList) {
