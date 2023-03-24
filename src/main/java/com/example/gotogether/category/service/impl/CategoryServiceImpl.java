@@ -23,7 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<?> makeCate(CategoryDTO.MakeCategory dto){
         try {
             if (categoryRepository.existsByName(dto.getCategoryName())){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
             if (dto.getCategoryDepth() != 1) {
                 Category parent = categoryRepository.findById(dto.getCategoryParent()).orElseThrow(IllegalArgumentException::new);
@@ -34,10 +34,10 @@ public class CategoryServiceImpl implements CategoryService {
             } else {
                 categoryRepository.save(dto.toParent());
             }
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (IllegalArgumentException e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
@@ -53,12 +53,15 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public ResponseEntity<?> updateCate(Long categoryId, CategoryDTO.UpdateCategory dto) {
         try {
+            if (categoryRepository.existsByName(dto.getCategoryName())){
+                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            }
             Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
             category.setName(dto.getCategoryName());
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
@@ -66,11 +69,11 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
             if (category.getChildren().size()>0){
-                return new ResponseEntity<>("Delete Children Categories first",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
             categoryRepository.delete(category);
         }catch (IllegalArgumentException e){
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
