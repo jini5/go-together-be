@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 public class ProductDTO {
 
 
-
-
     @NoArgsConstructor
     @Getter
     @Setter
@@ -63,7 +61,7 @@ public class ProductDTO {
 //            return ProductStatus.HIDING;
 //        }
 
-        public Product toEntity(){
+        public Product toEntity() {
             return Product.builder()
                     .name(name)
                     .summary(summary)
@@ -80,10 +78,7 @@ public class ProductDTO {
         }
 
 
-
     }
-
-
 
 
     @NoArgsConstructor
@@ -112,9 +107,9 @@ public class ProductDTO {
             this.categories = product.getCategories().stream()
                     .map(e -> new CategoryDTO.viewCategoryForProduct(e.getCategory()))
                     .collect(Collectors.toList());
-            this.productId=product.getProductId();
+            this.productId = product.getProductId();
             this.productName = product.getName();
-            this.productSummary=product.getSummary();
+            this.productSummary = product.getSummary();
             this.productArea = product.getArea();
             this.productThumbnail = product.getThumbnail();
         }
@@ -155,7 +150,7 @@ public class ProductDTO {
 
         public ProductDetailResDTO(Product product) {
 
-            this.productId=product.getProductId();
+            this.productId = product.getProductId();
             this.name = product.getName();
             this.summary = product.getSummary();
             this.area = product.getArea();

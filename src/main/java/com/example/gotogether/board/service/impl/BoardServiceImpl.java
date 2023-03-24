@@ -77,7 +77,7 @@ public class BoardServiceImpl implements BoardService {
      * 게시글 추가
      *
      * @param userAccessDTO 토큰 정보
-     * @param addReqDTO 추가할 게시글 정보
+     * @param addReqDTO     추가할 게시글 정보
      */
     @Override
     public ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.AddReqDTO addReqDTO) {
@@ -98,7 +98,7 @@ public class BoardServiceImpl implements BoardService {
      * 게시글 수정
      *
      * @param userAccessDTO 토큰 정보
-     * @param modifyReqDTO 수정할 게시글 정보
+     * @param modifyReqDTO  수정할 게시글 정보
      */
     @Transactional
     @Override

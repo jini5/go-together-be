@@ -25,48 +25,48 @@ public class Product {
     @Column(name = "product_id")
     private Long productId;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProductCategory> categories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProductOption> productOptions = new ArrayList<>();
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="summary")
+    @Column(name = "summary")
     private String summary;
 
-    @Column(name="area")
+    @Column(name = "area")
     private String area;
 
-    @Column(name="feature")
+    @Column(name = "feature")
     private String feature;
 
-    @Column(name="airplane")
+    @Column(name = "airplane")
     private String airplane;
 
-    @Column(name="single_room_price")
+    @Column(name = "single_room_price")
     private int singleRoomPrice;
 
-    @Column(name="price")
+    @Column(name = "price")
     private int price;
 
-    @Column(name="type")
+    @Column(name = "type")
     private String type;
 
-    @Column(name="thumbnail")
+    @Column(name = "thumbnail")
     private String thumbnail;
 
-    @Column(name="detail")
+    @Column(name = "detail")
     private String detail;
 
-    @Column(name="status")
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'FOR_SALE'")
     private ProductStatus productStatus;
 
-    public void changeStatusHiding(Product product){
+    public void changeStatusHiding(Product product) {
         product.productStatus = productStatus.HIDING;
     }
 

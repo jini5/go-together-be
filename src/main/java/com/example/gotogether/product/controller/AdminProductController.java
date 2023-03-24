@@ -35,10 +35,9 @@ public class AdminProductController {
     }
 
     @PatchMapping("/products/{productId}")
-    public ResponseEntity<?> patchProducts(@PathVariable Long productId,@RequestBody ProductDTO.ProductReqDTO productReqDTO) {
+    public ResponseEntity<?> patchProducts(@PathVariable Long productId, @RequestBody ProductDTO.ProductReqDTO productReqDTO) {
         return productService.patchProduct(productId, productReqDTO);
     }
-
 
 
     // 제품 전체목록 보기
@@ -48,15 +47,11 @@ public class AdminProductController {
     }
 
 
-
-
-
 //    // 제품 상세 보기
 //    @GetMapping("/products/details/{productId}")
 //    public ResponseEntity<?> oneProduct(@PathVariable Long productId) {
 //        return new
 //    }
-
 
 
 }

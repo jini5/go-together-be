@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
@@ -70,7 +69,7 @@ public class User {
     }
 
     @Builder
-    public User(String email, String password, String name, String birthday, String phoneNumber, String role, String gender, String sns,String deleteCheck) {
+    public User(String email, String password, String name, String birthday, String phoneNumber, String role, String gender, String sns, String deleteCheck) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -79,7 +78,7 @@ public class User {
         this.gender = gender;
         this.role = role;
         this.sns = sns;
-        this.deleteCheck=deleteCheck;
+        this.deleteCheck = deleteCheck;
     }
 
     public void update(String changePassword, String phoneNumber) {

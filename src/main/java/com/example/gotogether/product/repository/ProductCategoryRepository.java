@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ProductCategoryRepository  extends JpaRepository<ProductCategory,Long> {
+public interface ProductCategoryRepository extends JpaRepository<ProductCategory, Long> {
 
-//    List<ProductCategory> findAllByCategoryIn(List<Category> categoryList);
+    //    List<ProductCategory> findAllByCategoryIn(List<Category> categoryList);
     Page<ProductCategory> findAllByCategoryIn(Pageable pageable, List<Category> categoryList);
 }

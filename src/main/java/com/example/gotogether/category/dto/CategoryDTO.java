@@ -64,7 +64,7 @@ public class CategoryDTO {
     }
 
     @Getter
-    public static class viewCategoryForProduct{
+    public static class viewCategoryForProduct {
         private String categoryName;
         private Long categoryId;
 
