@@ -25,4 +25,9 @@ public class ProductCategory {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Builder
+    public ProductCategory(Product product, Category category) {
+        this.product = product;
+        this.category = category;
+    }
 }

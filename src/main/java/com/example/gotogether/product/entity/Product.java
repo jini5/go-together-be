@@ -1,6 +1,7 @@
 package com.example.gotogether.product.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -64,5 +65,44 @@ public class Product {
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'FOR_SALE'")
     private ProductStatus productStatus;
+
+    public void changeStatusHiding(Product product){
+        product.productStatus = productStatus.HIDING;
+    }
+
+    @Builder
+    public Product(Long productId, String name, String summary, String area, String feature, String airplane, int singleRoomPrice, int price, String type, String thumbnail, String detail, ProductStatus productStatus) {
+        this.productId = productId;
+        this.name = name;
+        this.summary = summary;
+        this.area = area;
+        this.feature = feature;
+        this.airplane = airplane;
+        this.singleRoomPrice = singleRoomPrice;
+        this.price = price;
+        this.type = type;
+        this.thumbnail = thumbnail;
+        this.detail = detail;
+        this.productStatus = productStatus;
+    }
+
+
+    public void update(Product product) {
+        this.categories = product.getCategories();
+        this.productOptions = product.getProductOptions();
+        this.name = product.getName();
+        this.summary = product.getSummary();
+        this.area = product.getArea();
+        this.feature = product.getFeature();
+        this.airplane = product.getAirplane();
+        this.singleRoomPrice = product.getSingleRoomPrice();
+        this.price = product.getPrice();
+        this.type = product.getType();
+        this.thumbnail = product.getThumbnail();
+        this.detail = product.getDetail();
+        this.productStatus = product.getProductStatus();
+
+    }
+
 
 }
