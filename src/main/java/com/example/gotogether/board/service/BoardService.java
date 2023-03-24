@@ -6,4 +6,5 @@ public interface BoardService {
 
     ResponseEntity<?> findAllList(int pageNumber);
 
+    ResponseEntity<?> findDetailInfo(Long boardId);
 }
