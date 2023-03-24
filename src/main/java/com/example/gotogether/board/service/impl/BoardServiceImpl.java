@@ -97,21 +97,15 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 게시글 수정
      *
-     * @param userAccessDTO 토큰 정보
      * @param modifyReqDTO 수정할 게시글 정보
+     * @param boardId 수정할 게시글 아이디
      */
     @Transactional
     @Override
-    public ResponseEntity<?> modifyPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId) {
+    public ResponseEntity<?> modifyPost(BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId) {
 
         try {
             Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
-            if (!userAccessDTO.getRole().equals("ROLE_ADMIN")) {
-                if (!userAccessDTO.getEmail().equals(board.getUser().getEmail())) {
-
-                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-                }
-            }
             board.update(modifyReqDTO);
 
             return new ResponseEntity<>(HttpStatus.OK);
@@ -121,6 +115,12 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
+    /**
+     * 게시글 권한 확인
+     *
+     * @param userAccessDTO 토큰 정보
+     * @param boardId 권한 확인할 게시판 아이디
+     */
     @Override
     public ResponseEntity<?> checkAuthority(UserDTO.UserAccessDTO userAccessDTO, Long boardId) {
 
