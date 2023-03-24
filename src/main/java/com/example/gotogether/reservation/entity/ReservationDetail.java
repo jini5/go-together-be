@@ -26,22 +26,22 @@ public class ReservationDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="reservation_detail_id")
+    @Column(name = "reservation_detail_id")
     private Long reservationDetailId;
 
-    @Column(name="number_of_people")
+    @Column(name = "number_of_people")
     private int numberOfPeople;
 
-    @Column(name="single_room_number")
+    @Column(name = "single_room_number")
     private int singleRoomNumber;
 
-    @Column(name="detail_total_price")
+    @Column(name = "detail_total_price")
     private int detailTotalPrice;
 
-    @Column(name="start_date")
+    @Column(name = "start_date")
     private LocalDate startDate;
 
-    @Column(name="end_date")
+    @Column(name = "end_date")
     private LocalDate endDate;
 
 }

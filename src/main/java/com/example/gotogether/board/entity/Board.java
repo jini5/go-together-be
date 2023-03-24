@@ -35,14 +35,14 @@ public class Board {
     @Column(name = "board_id")
     private Long boardId;
 
-    @Column(name="type")
+    @Column(name = "type")
     @ColumnDefault("'여행 후기'")
     private String type;
 
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
-    @Column(name="content")
+    @Column(name = "content")
     private String content;
 
     @CreatedDate

@@ -1,4 +1,4 @@
-package com.example.gotogether.admin.service;
+package com.example.gotogether.auth.service;
 
 import com.example.gotogether.auth.dto.UserDTO;
 import org.springframework.data.domain.Pageable;
@@ -11,4 +11,8 @@ public interface AdminService {
     ResponseEntity<?> setAdminToUser(String email);
 
     ResponseEntity<?> findUserList(Pageable pageable);
+
+    ResponseEntity<?> findUser(Long id);
+
+    ResponseEntity<?> updateUserInfo(Long userId, UserDTO.PatchUserByAdminReqDTO dto);
 }

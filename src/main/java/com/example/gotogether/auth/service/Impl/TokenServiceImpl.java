@@ -47,7 +47,7 @@ public class TokenServiceImpl implements TokenService {
                 String userRole = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new).getRole();
 
                 String updateAccessToken = jwtProvider.recreationAccessToken(userEmail, userRole);
-                return new ResponseEntity<>(TokenDTO.builder().accessToken(updateAccessToken).refreshToken(refreshToken).role(userRole).build(),HttpStatus.OK);
+                return new ResponseEntity<>(TokenDTO.builder().accessToken(updateAccessToken).refreshToken(refreshToken).role(userRole).build(), HttpStatus.OK);
             } else {
                 throw new IllegalArgumentException();
             }
