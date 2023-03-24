@@ -41,4 +41,41 @@ public class BoardDTO {
         }
     }
 
+    @ApiModel(value = "게시글 상세 정보 조회 응답")
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    @Builder
+    public static class BoardDetailInfoResDTO {
+        @ApiModelProperty(value = "여행후기 아이디")
+        private Long boardId;
+        @ApiModelProperty(value = "작성자 이름")
+        private String userName;
+        @ApiModelProperty(value = "게시판 타입")
+        private String boardType;
+        @ApiModelProperty(value = "게시판 제목")
+        private String boardTitle;
+        @ApiModelProperty(value = "게시글 내용")
+        private String boardContent;
+        @ApiModelProperty(value = "게시판 생성일자")
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate createdDate;
+        @ApiModelProperty(value = "게시판 마지막 수정일자")
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate updatedDate;
+
+        public BoardDetailInfoResDTO toDTO(Board board) {
+
+            return BoardDetailInfoResDTO.builder()
+                    .boardId(board.getBoardId())
+                    .userName(board.getUser().getName())
+                    .boardType(board.getType())
+                    .boardTitle(board.getTitle())
+                    .boardContent(board.getContent())
+                    .createdDate(board.getCreatedDate().toLocalDate())
+                    .updatedDate(board.getUpdatedDate().toLocalDate())
+                    .build();
+        }
+    }
 }
