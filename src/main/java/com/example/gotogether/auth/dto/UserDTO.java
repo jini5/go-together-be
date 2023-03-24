@@ -229,20 +229,38 @@ public class UserDTO {
             this.gender = user.getGender();
             this.type = user.getType();
             this.sns = user.getSns();
-            if (user.getDeleteCheck()==""||user.getDeleteCheck()==null){
-                this.deleteCheck="Available";
-            }else {
-                this.deleteCheck = user.getDeleteCheck();
-            }
+            this.deleteCheck = user.getDeleteCheck();
             this.role = user.getRole();
             this.createdDate = user.getCreatedDate();
             this.updatedDate = user.getUpdatedDate();
         }
     }
 
-
-
-
-
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ToString
+    @ApiModel(value = "관리자의 회원정보수정 입력",description = "변경 하지 않는다면 기존 정보 입력 요망.")
+    public static class PatchUserByAdminReqDTO {
+        @ApiModelProperty(value = "사용자 이름 입력.",required = true)
+        private String userName;
+        @ApiModelProperty(value = "사용자 이메일 입력",required = true)
+        private String userEmail;
+        @ApiModelProperty(value = "사용자 전화번호 입력",required = true)
+        private String userPhoneNumber;
+        @ApiModelProperty(value = "사용자 생년월일 입력",required = true)
+        private String userBirthday;
+        @ApiModelProperty(value = "사용자 성별 입력\n male or female",required = true)
+        private String userGender;
+        @ApiModelProperty(value = "사용자 여행 유형 입력",required = true)
+        private String userType;
+        @ApiModelProperty(value = "사용자 권한 입력\n ROLE_ADMIN or ROLE_USER",required = true)
+        private String userRole;
+        @ApiModelProperty(value = "사용자 탈퇴여부 입력\n available or withdraw",required = true)
+        private String deleteCheck;
+        @ApiModelProperty(value = "소셜 로그인 여부 입력",required = true)
+        private String sns;
+    }
 }
 

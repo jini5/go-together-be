@@ -67,4 +67,24 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    @Override
+    @Transactional
+    public ResponseEntity<?> updateUserInfo(Long userId, UserDTO.PatchUserByAdminReqDTO dto) {
+        try {
+            User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+            user.setName(dto.getUserName());
+            user.setEmail(dto.getUserEmail());
+            user.setPhoneNumber(dto.getUserPhoneNumber());
+            user.setBirthday(dto.getUserBirthday());
+            user.setGender(dto.getUserGender());
+            user.setType(dto.getUserType());
+            user.setRole(dto.getUserRole());
+            user.setDeleteCheck(dto.getDeleteCheck());
+            user.setSns(dto.getSns());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.gotogether.auth.controller;
 
+import com.example.gotogether.auth.dto.UserDTO;
 import com.example.gotogether.auth.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,4 +51,9 @@ public class AdminUserController {
         return adminService.findUser(userId);
     }
 
+    @PutMapping("/userDetail/{userId}")
+    @ApiOperation(value = "회원 상세 정보 조회", notes = "관리자가 회원 상세 정보 조회.\n code: 200 조회 성공, 404 해당 사용자 없음")
+    public ResponseEntity<?> updateUserInfo(@PathVariable Long userId, @RequestBody UserDTO.PatchUserByAdminReqDTO dto){
+        return adminService.updateUserInfo(userId,dto);
+    }
 }
