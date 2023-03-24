@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.example.gotogether.global.config.PageSizeConfig.User_List_Size;
 
-@Api(tags = {"관리자 서비스"}, description = "관리자 권한 부여,")
+@Api(tags = {"관리자의 사용자 관리 서비스"}, description = "관리자 권한 부여, 박탈, 회원 리스트 조회, 회원 상세정보 조회")
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
@@ -44,5 +44,10 @@ public class AdminUserController {
         return adminService.findUserList(pageRequest);
     }
 
+    @GetMapping("/user/{userId}")
+    @ApiOperation(value = "회원 상세 정보 조회", notes = "관리자가 회원 상세 정보 조회.\n code: 200 조회 성공, 404 해당 사용자 없음")
+    public ResponseEntity<?> findUser(@PathVariable Long userId){
+        return adminService.findUser(userId);
+    }
 
 }

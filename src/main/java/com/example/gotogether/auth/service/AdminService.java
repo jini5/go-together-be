@@ -11,4 +11,6 @@ public interface AdminService {
     ResponseEntity<?> setAdminToUser(String email);
 
     ResponseEntity<?> findUserList(Pageable pageable);
+
+    ResponseEntity<?> findUser(Long id);
 }

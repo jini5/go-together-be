@@ -57,4 +57,14 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> findUser(Long id) {
+        try {
+            User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+            return new ResponseEntity<>(new UserDTO.UserDetailsForAdmin(user),HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

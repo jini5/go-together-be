@@ -5,9 +5,14 @@ import io.jsonwebtoken.Claims;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import javax.persistence.Column;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -194,6 +199,45 @@ public class UserDTO {
 
         @ApiModelProperty(value = "사용자 여행 유형 ", required = true)
         private String userType;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ToString
+    public static class UserDetailsForAdmin{
+        private Long userId;
+        private String name;
+        private String email;
+        private String phoneNumber;
+        private String birthday;
+        private String gender;
+        private String type;
+        private String sns;
+        private String deleteCheck;
+        private String role;
+        private LocalDateTime createdDate;
+        private LocalDateTime updatedDate;
+
+        public UserDetailsForAdmin(User user) {
+            this.userId = user.getUserId();
+            this.name = user.getName();
+            this.email = user.getEmail();
+            this.phoneNumber = user.getPhoneNumber();
+            this.birthday = user.getBirthday();
+            this.gender = user.getGender();
+            this.type = user.getType();
+            this.sns = user.getSns();
+            if (user.getDeleteCheck()==""||user.getDeleteCheck()==null){
+                this.deleteCheck="Available";
+            }else {
+                this.deleteCheck = user.getDeleteCheck();
+            }
+            this.role = user.getRole();
+            this.createdDate = user.getCreatedDate();
+            this.updatedDate = user.getUpdatedDate();
+        }
     }
 
 
