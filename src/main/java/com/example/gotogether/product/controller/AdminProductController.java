@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RequestMapping("/admin")
-public class ProductController {
+public class AdminProductController {
 
     private final ProductService productService;
 
