@@ -15,7 +15,7 @@ public class BoardDTO {
     @NoArgsConstructor
     @Getter
     @Setter
-    public static class BoardListResDTO {
+    public static class ListResDTO {
 
         @ApiModelProperty(value = "여행후기 아이디")
         private Long boardId;
@@ -32,7 +32,7 @@ public class BoardDTO {
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate updatedDate;
 
-        public BoardListResDTO(Board board) {
+        public ListResDTO(Board board) {
             this.boardId = board.getBoardId();
             this.userName = board.getUser().getName();
             this.boardType = board.getType();
@@ -43,12 +43,11 @@ public class BoardDTO {
     }
 
     @ApiModel(value = "게시글 상세 정보 조회 응답")
-    @AllArgsConstructor
     @NoArgsConstructor
     @Getter
     @Setter
-    @Builder
-    public static class BoardDetailInfoResDTO {
+    public static class DetailInfoResDTO {
+
         @ApiModelProperty(value = "여행후기 아이디")
         private Long boardId;
         @ApiModelProperty(value = "작성자 이름")
@@ -66,25 +65,23 @@ public class BoardDTO {
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate updatedDate;
 
-        public BoardDetailInfoResDTO toDTO(Board board) {
-
-            return BoardDetailInfoResDTO.builder()
-                    .boardId(board.getBoardId())
-                    .userName(board.getUser().getName())
-                    .boardType(board.getType())
-                    .boardTitle(board.getTitle())
-                    .boardContent(board.getContent())
-                    .createdDate(board.getCreatedDate().toLocalDate())
-                    .updatedDate(board.getUpdatedDate().toLocalDate())
-                    .build();
+        public DetailInfoResDTO(Board board) {
+            this.boardId = board.getBoardId();
+            this.userName = board.getUser().getName();
+            this.boardType = board.getType();
+            this.boardTitle = board.getTitle();
+            this.boardContent = board.getContent();
+            this.createdDate = board.getCreatedDate().toLocalDate();
+            this.updatedDate = board.getUpdatedDate().toLocalDate();
         }
+
     }
 
     @ApiModel(value = "게시글 추가 요청")
     @NoArgsConstructor
     @Getter
     @Setter
-    public static class BoardAddReqDTO {
+    public static class AddReqDTO {
 
         @ApiModelProperty(value = "게시판 제목")
         private String boardTitle;
