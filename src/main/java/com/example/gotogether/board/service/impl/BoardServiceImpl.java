@@ -120,4 +120,23 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Override
+    public ResponseEntity<?> checkAuthority(UserDTO.UserAccessDTO userAccessDTO, Long boardId) {
+
+        try {
+            Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
+            if (!userAccessDTO.getRole().equals("ROLE_ADMIN")) {
+                if (!userAccessDTO.getEmail().equals(board.getUser().getEmail())) {
+
+                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                }
+            }
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
