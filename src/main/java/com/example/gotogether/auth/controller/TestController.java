@@ -1,6 +1,6 @@
 package com.example.gotogether.auth.controller;
 
-import com.example.gotogether.admin.service.AdminService;
+import com.example.gotogether.auth.service.AdminService;
 import com.example.gotogether.auth.dto.UserDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

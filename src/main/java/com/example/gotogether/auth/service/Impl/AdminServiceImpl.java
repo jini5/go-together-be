@@ -1,6 +1,6 @@
-package com.example.gotogether.admin.service.impl;
+package com.example.gotogether.auth.service.Impl;
 
-import com.example.gotogether.admin.service.AdminService;
+import com.example.gotogether.auth.service.AdminService;
 import com.example.gotogether.auth.dto.UserDTO;
 import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.auth.repository.UserRepository;

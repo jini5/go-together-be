@@ -1,7 +1,6 @@
-package com.example.gotogether.admin.controller;
+package com.example.gotogether.auth.controller;
 
-import com.example.gotogether.admin.service.AdminService;
-import com.example.gotogether.auth.dto.UserDTO;
+import com.example.gotogether.auth.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import static com.example.gotogether.global.config.PageSizeConfig.User_List_Size
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminUserController {
 
     private final AdminService adminService;
 
