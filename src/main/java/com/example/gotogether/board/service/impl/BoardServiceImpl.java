@@ -95,6 +95,31 @@ public class BoardServiceImpl implements BoardService {
     }
 
     /**
+     * 게시글 권한 확인 (게시글 수정 및 삭제 전 선행 동작)
+     *
+     * @param userAccessDTO 토큰 정보
+     * @param boardId 권한 확인할 게시판 아이디
+     */
+    @Override
+    public ResponseEntity<?> checkAuthority(UserDTO.UserAccessDTO userAccessDTO, Long boardId) {
+
+        try {
+            Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
+            if (!userAccessDTO.getRole().equals("ROLE_ADMIN")) {
+                if (!userAccessDTO.getEmail().equals(board.getUser().getEmail())) {
+
+                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                }
+            }
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
      * 게시글 수정
      *
      * @param modifyReqDTO 수정할 게시글 정보
@@ -128,27 +153,30 @@ public class BoardServiceImpl implements BoardService {
     }
 
     /**
-     * 게시글 권한 확인 (게시글 수정 및 삭제 전 선행 동작)
+     * 게시글 검색 (범위: 제목 + 내용)
      *
-     * @param userAccessDTO 토큰 정보
-     * @param boardId 권한 확인할 게시판 아이디
+     * @param keyword 검색할 단어
+     * @param pageNumber 현 페이지 번호
      */
     @Override
-    public ResponseEntity<?> checkAuthority(UserDTO.UserAccessDTO userAccessDTO, Long boardId) {
+    public ResponseEntity<?> searchPost(String keyword, int pageNumber) {
 
         try {
-            Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
-            if (!userAccessDTO.getRole().equals("ROLE_ADMIN")) {
-                if (!userAccessDTO.getEmail().equals(board.getUser().getEmail())) {
-
-                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-                }
+            PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
+            Page<Board> boardPage = boardRepository.findByTitleContaining(keyword, pageRequest);
+            if (boardPage == null) {
+                throw new NullPointerException();
             }
+            if (boardPage.getTotalElements() < 1) {
 
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException e) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
 
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
+        } catch (NullPointerException e) {
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
