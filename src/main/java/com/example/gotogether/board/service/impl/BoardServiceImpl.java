@@ -77,7 +77,7 @@ public class BoardServiceImpl implements BoardService {
      * 게시글 추가
      *
      * @param userAccessDTO 토큰 정보
-     * @param addReqDTO     추가할 게시글 정보
+     * @param addReqDTO 추가할 게시글 정보
      */
     @Override
     public ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.AddReqDTO addReqDTO) {
@@ -97,12 +97,32 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 게시글 수정
      *
-     * @param userAccessDTO 토큰 정보
-     * @param modifyReqDTO  수정할 게시글 정보
+     * @param modifyReqDTO 수정할 게시글 정보
+     * @param boardId 수정할 게시글 아이디
      */
     @Transactional
     @Override
-    public ResponseEntity<?> modifyPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId) {
+    public ResponseEntity<?> modifyPost(BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId) {
+
+        try {
+            Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
+            board.update(modifyReqDTO);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 게시글 권한 확인
+     *
+     * @param userAccessDTO 토큰 정보
+     * @param boardId 권한 확인할 게시판 아이디
+     */
+    @Override
+    public ResponseEntity<?> checkAuthority(UserDTO.UserAccessDTO userAccessDTO, Long boardId) {
 
         try {
             Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
@@ -112,7 +132,6 @@ public class BoardServiceImpl implements BoardService {
                     return new ResponseEntity<>(HttpStatus.FORBIDDEN);
                 }
             }
-            board.update(modifyReqDTO);
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
