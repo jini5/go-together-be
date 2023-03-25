@@ -116,7 +116,19 @@ public class BoardServiceImpl implements BoardService {
     }
 
     /**
-     * 게시글 권한 확인
+     * 게시글 삭제
+     *
+     * @param boardId 삭제할 게시글 아이디
+     */
+    @Override
+    public ResponseEntity<?> deletePost(Long boardId) {
+        boardRepository.deleteById(boardId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * 게시글 권한 확인 (게시글 수정 및 삭제 전 선행 동작)
      *
      * @param userAccessDTO 토큰 정보
      * @param boardId 권한 확인할 게시판 아이디
