@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userRepository.findByEmail(loginReqDTO.getEmail())
                     .orElseThrow(IllegalArgumentException::new);
-            if (withDrawCheck(user)) {
+            if (!withDrawCheck(user)) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
             passwordMustBeSame(loginReqDTO.getPassword(), user.getPassword());
