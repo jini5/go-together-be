@@ -12,5 +12,11 @@ public interface BoardService {
 
     ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.AddReqDTO addReqDTO);
 
-    ResponseEntity<?> modifyPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId);
+    ResponseEntity<?> checkAuthority(UserDTO.UserAccessDTO userAccessDTO, Long boardId);
+
+    ResponseEntity<?> modifyPost(BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId);
+
+    ResponseEntity<?> deletePost(Long boardId);
+
+    ResponseEntity<?> searchPost(String keyword, int pageNumber);
 }

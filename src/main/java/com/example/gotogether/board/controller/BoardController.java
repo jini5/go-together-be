@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = {"게시판 서비스"}, description = "게시글 목록 조회")
+@Api(tags = {"게시판 서비스"}, description = "전체 게시글 목록 조회, 게시글 상세 정보 조회, 게시글 추가, 게시글 수정, 게시글 삭제, 게시글 권한 확인")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RestController
@@ -40,11 +40,31 @@ public class BoardController {
         return boardService.addPost(userAccessDTO, addReqDTO);
     }
 
+    @ApiOperation(value = "게시글 권한 확인", notes = "게시글에 대한 사용자의 권한을 확인한다.\n" +
+            "code: 200 올바른 권한 확인 성공, 400 잘못된 boardId 요청, 403 권한없는 사용자 접근")
+    @GetMapping("/authority/{boardId}")
+    public ResponseEntity<?> checkAuthority(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @PathVariable Long boardId) {
+        return boardService.checkAuthority(userAccessDTO, boardId);
+    }
+
     @ApiOperation(value = "게시글 수정", notes = "게시글을 수정한다.\n" +
-            "code: 200 수정 성공, 400 잘못된 boardId 요청, 403 권한없는 사용자 접근")
+            "code: 200 수정 성공, 400 잘못된 boardId 요청")
     @PatchMapping("/{boardId}")
-    public ResponseEntity<?> modifyPost(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,
-                                        @RequestBody BoardDTO.ModifyReqDTO modifyReqDTO, @PathVariable Long boardId) {
-        return boardService.modifyPost(userAccessDTO, modifyReqDTO, boardId);
+    public ResponseEntity<?> modifyPost(@RequestBody BoardDTO.ModifyReqDTO modifyReqDTO, @PathVariable Long boardId) {
+        return boardService.modifyPost(modifyReqDTO, boardId);
+    }
+
+    @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제한다.\n" +
+            "code: 200 삭제 성공")
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<?> deletePost(@PathVariable Long boardId) {
+        return boardService.deletePost(boardId);
+    }
+
+    @ApiOperation(value = "게시글 검색", notes = "게시글을 검색한다.\n" +
+            "code: 200 검색 성공, 204 조회 성공 + 표시할 내용 없음, 500 알 수 없는 서버 오류")
+    @GetMapping("/search")
+    public ResponseEntity<?> searchPost(@RequestParam(required = false, defaultValue = "") String keyword, @RequestParam(required = false, defaultValue = "1") int pageNumber) {
+        return boardService.searchPost(keyword, pageNumber);
     }
 }
