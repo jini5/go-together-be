@@ -8,6 +8,7 @@ import com.example.gotogether.product.dto.ProductOptionDTO;
 import com.example.gotogether.product.entity.Product;
 import com.example.gotogether.product.entity.ProductCategory;
 import com.example.gotogether.product.entity.ProductOption;
+import com.example.gotogether.product.entity.ProductStatus;
 import com.example.gotogether.product.repository.ProductCategoryRepository;
 import com.example.gotogether.product.repository.ProductRepository;
 import com.example.gotogether.product.service.ProductService;
@@ -139,9 +140,8 @@ public class ProductServiceImpl implements ProductService {
         try {
             if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Category);
-            System.out.println(keyword);
             Page<Product> productPage = productRepository
-                    .findAllByNameContainsOrSummaryContainsOrFeatureContainsOrDetailContains(pageable,keyword,keyword,keyword,keyword);
+                    .findAllByNameContainsOrSummaryContainsOrFeatureContainsOrDetailContainsAndProductStatus(pageable,keyword,keyword,keyword,keyword, ProductStatus.FOR_SALE);
             PageResponseDTO pageResponseDTO = new PageResponseDTO(productPage);
             pageResponseDTO
                     .setContent(pageResponseDTO.getContent()
@@ -150,6 +150,7 @@ public class ProductServiceImpl implements ProductService {
                             .collect(Collectors.toList()));
             return new ResponseEntity<>(pageResponseDTO,HttpStatus.OK);
         }catch (Exception e){
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -1,6 +1,7 @@
 package com.example.gotogether.product.repository;
 
 import com.example.gotogether.product.entity.Product;
+import com.example.gotogether.product.entity.ProductStatus;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     boolean existsByName(String name);
 
-    Page<Product> findAllByNameContainsOrSummaryContainsOrFeatureContainsOrDetailContains(Pageable pageable,String keyword1,String keyword2,String keyword3,String keyword4);
+    Page<Product> findAllByNameContainsOrSummaryContainsOrFeatureContainsOrDetailContainsAndProductStatus(Pageable pageable, String keyword1, String keyword2, String keyword3, String keyword4, ProductStatus status);
 
 }
