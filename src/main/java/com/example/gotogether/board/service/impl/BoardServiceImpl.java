@@ -38,16 +38,8 @@ public class BoardServiceImpl implements BoardService {
         try {
             PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
             Page<Board> boardPage = boardRepository.findAll(pageRequest);
-            if (boardPage == null) {
-                throw new NullPointerException();
-            }
-            if (boardPage.getTotalElements() < 1) {
 
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
-
-            return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
+            return getResponseEntityFrom(boardPage);
         } catch (NullPointerException e) {
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -86,12 +78,12 @@ public class BoardServiceImpl implements BoardService {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
             Board board = addReqDTO.toEntity(user);
             boardRepository.save(board);
+
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     /**
@@ -164,19 +156,25 @@ public class BoardServiceImpl implements BoardService {
         try {
             PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
             Page<Board> boardPage = boardRepository.findByTitleContaining(keyword, pageRequest);
-            if (boardPage == null) {
-                throw new NullPointerException();
-            }
-            if (boardPage.getTotalElements() < 1) {
 
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
-
-            return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
+            return getResponseEntityFrom(boardPage);
         } catch (NullPointerException e) {
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private ResponseEntity<?> getResponseEntityFrom(Page<Board> boardPage) {
+
+        if (boardPage == null) {
+            throw new NullPointerException();
+        }
+        if (boardPage.getTotalElements() < 1) {
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
+
+        return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
     }
 }
