@@ -134,6 +134,26 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> findProductByKeyword(String keyword, int page) {
+        try {
+            if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Category);
+            System.out.println(keyword);
+            Page<Product> productPage = productRepository
+                    .findAllByNameContainsOrSummaryContainsOrFeatureContainsOrDetailContains(pageable,keyword,keyword,keyword,keyword);
+            PageResponseDTO pageResponseDTO = new PageResponseDTO(productPage);
+            pageResponseDTO
+                    .setContent(pageResponseDTO.getContent()
+                            .stream()
+                            .map(e -> new ProductDTO.ProductListResDTO((Product) e))
+                            .collect(Collectors.toList()));
+            return new ResponseEntity<>(pageResponseDTO,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public List<Category> listOfCategory(Category category) {
         List<Category> categoryList = new ArrayList<>(category.getChildren());
         categoryList.add(category);
