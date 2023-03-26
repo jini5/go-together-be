@@ -14,5 +14,7 @@ public interface BoardService {
 
     ResponseEntity<?> modifyPost(BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId);
 
+    ResponseEntity<?> deletePost(Long boardId);
+
     ResponseEntity<?> checkAuthority(UserDTO.UserAccessDTO userAccessDTO, Long boardId);
 }
