@@ -4,6 +4,8 @@ import com.example.gotogether.category.dto.CategoryDTO;
 import com.example.gotogether.category.entity.Category;
 import com.example.gotogether.category.repository.CategoryRepository;
 import com.example.gotogether.category.service.CategoryService;
+import com.example.gotogether.product.entity.ProductCategory;
+import com.example.gotogether.product.repository.ProductCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ProductCategoryRepository productCategoryRepository;
 
     @Override
     public ResponseEntity<?> makeCate(CategoryDTO.MakeCategory dto) {
@@ -71,9 +74,13 @@ public class CategoryServiceImpl implements CategoryService {
             if (category.getChildren().size() > 0) {
                 return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
+            productCategoryRepository.deleteAllByCategory(category);
             categoryRepository.delete(category);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

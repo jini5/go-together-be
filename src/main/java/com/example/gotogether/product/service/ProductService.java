@@ -18,4 +18,5 @@ public interface ProductService {
 
     ResponseEntity<?> findProductByCategory(Long categoryId, int page);
 
+    ResponseEntity<?> findProductByKeyword(String keyword, int page);
 }
