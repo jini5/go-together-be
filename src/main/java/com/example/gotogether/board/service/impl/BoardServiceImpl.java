@@ -38,16 +38,8 @@ public class BoardServiceImpl implements BoardService {
         try {
             PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
             Page<Board> boardPage = boardRepository.findAll(pageRequest);
-            if (boardPage == null) {
-                throw new NullPointerException();
-            }
-            if (boardPage.getTotalElements() < 1) {
 
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
-
-            return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
+            return getResponseEntityFrom(boardPage);
         } catch (NullPointerException e) {
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -86,12 +78,37 @@ public class BoardServiceImpl implements BoardService {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
             Board board = addReqDTO.toEntity(user);
             boardRepository.save(board);
+
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+    }
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    /**
+     * 게시글 권한 확인 (게시글 수정 및 삭제 전 선행 동작)
+     *
+     * @param userAccessDTO 토큰 정보
+     * @param boardId 권한 확인할 게시판 아이디
+     */
+    @Override
+    public ResponseEntity<?> checkAuthority(UserDTO.UserAccessDTO userAccessDTO, Long boardId) {
+
+        try {
+            Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
+            if (!userAccessDTO.getRole().equals("ROLE_ADMIN")) {
+                if (!userAccessDTO.getEmail().equals(board.getUser().getEmail())) {
+
+                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                }
+            }
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -128,27 +145,36 @@ public class BoardServiceImpl implements BoardService {
     }
 
     /**
-     * 게시글 권한 확인 (게시글 수정 및 삭제 전 선행 동작)
+     * 게시글 검색 (범위: 제목 + 내용)
      *
-     * @param userAccessDTO 토큰 정보
-     * @param boardId 권한 확인할 게시판 아이디
+     * @param keyword 검색할 단어
+     * @param pageNumber 현 페이지 번호
      */
     @Override
-    public ResponseEntity<?> checkAuthority(UserDTO.UserAccessDTO userAccessDTO, Long boardId) {
+    public ResponseEntity<?> searchPost(String keyword, int pageNumber) {
 
         try {
-            Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
-            if (!userAccessDTO.getRole().equals("ROLE_ADMIN")) {
-                if (!userAccessDTO.getEmail().equals(board.getUser().getEmail())) {
+            PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
+            Page<Board> boardPage = boardRepository.findByTitleContaining(keyword, pageRequest);
 
-                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-                }
-            }
+            return getResponseEntityFrom(boardPage);
+        } catch (NullPointerException e) {
 
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private ResponseEntity<?> getResponseEntityFrom(Page<Board> boardPage) {
+
+        if (boardPage == null) {
+            throw new NullPointerException();
+        }
+        if (boardPage.getTotalElements() < 1) {
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
+
+        return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
     }
 }
