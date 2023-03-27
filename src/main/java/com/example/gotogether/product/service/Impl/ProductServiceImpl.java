@@ -200,14 +200,10 @@ public class ProductServiceImpl implements ProductService {
                 category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
             }
             List<Product> productList = productRepository.findPopular(category);
-            System.out.println(productList.size());
             if (productList.size() < 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            for (Product product : productList) {
-                System.out.println(product.getProductId());
-            }
-            return new ResponseEntity<>(productList.stream().map(e -> new ProductDTO.ProductListResDTO(e)).collect(Collectors.toList()), HttpStatus.OK);
+            return new ResponseEntity<>(productList.stream().map(ProductDTO.ProductListResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (Exception e){
