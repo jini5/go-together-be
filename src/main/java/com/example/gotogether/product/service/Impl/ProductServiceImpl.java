@@ -193,16 +193,26 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> findPopularProducts() {
-        List<Product> productList = productRepository.findPopular();
-        System.out.println(productList.size());
-        if (productList.size()<1){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> findPopularProducts(Long categoryId) {
+        try {
+            Category category = null;
+            if (categoryId!=null) {
+                category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
+            }
+            List<Product> productList = productRepository.findPopular(category);
+            System.out.println(productList.size());
+            if (productList.size() < 1) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            for (Product product : productList) {
+                System.out.println(product.getProductId());
+            }
+            return new ResponseEntity<>(productList.stream().map(e -> new ProductDTO.ProductListResDTO(e)).collect(Collectors.toList()), HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        for (Product product : productList){
-            System.out.println(product.getProductId());
-        }
-        return new ResponseEntity<>(productList.stream().map(e -> new ProductDTO.ProductListResDTO(e)).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     public List<Category> listOfCategory(Category category) {
