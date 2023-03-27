@@ -1,5 +1,6 @@
 package com.example.gotogether.product.entity;
 
+import com.example.gotogether.product.dto.ProductDTO;
 import com.example.gotogether.product.dto.ProductOptionDTO;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class ProductOption {
     @Id
     @Column(name = "product_option_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ProductOptionId;
+    private Long productOptionId;
 
     @Column(name = "start_date")
     private LocalDate startDate;
@@ -53,10 +54,10 @@ public class ProductOption {
         this.PresentSingleRoomNumber = presentSingleRoomNumber;
     }
 
-//    public void update(ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO){
-//        this.startDate=productOptionReqDTO.getStartDate();
-//        this.endDate=productOptionReqDTO.getEndDate();
-//        this.maxPeople=productOptionReqDTO.getMaxPeople();
-//        this.maxSingleRoom=productOptionReqDTO.getMaxSingleRoom();
-//    }
+    public void update(ProductOptionDTO.OptionUpdateReqDTO optionUpdateReqDTO){
+        this.startDate=optionUpdateReqDTO.getStartDate();
+        this.endDate=optionUpdateReqDTO.getEndDate();
+        this.maxPeople=optionUpdateReqDTO.getMaxPeople();
+        this.maxSingleRoom=optionUpdateReqDTO.getMaxSingleRoom();
+    }
 }
