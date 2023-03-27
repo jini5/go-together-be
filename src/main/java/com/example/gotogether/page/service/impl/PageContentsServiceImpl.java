@@ -39,5 +39,16 @@ public class PageContentsServiceImpl implements PageContentsService {
         return new ResponseEntity<>(regionList.stream().map(RegionDTO.RegionResDTO::new).collect(Collectors.toList()),HttpStatus.OK);
     }
 
+    @Override
+    @Transactional
+    public ResponseEntity<?> updateRegion(Long regionId,RegionDTO.RegionUpdateReqDTO dto) {
+        try {
+            Region region = regionRepository.findById(regionId).orElseThrow(IllegalArgumentException::new);
+            region.update(dto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

@@ -8,4 +8,5 @@ public interface PageContentsService {
 
     ResponseEntity<?> getRegionList();
 
+    ResponseEntity<?> updateRegion(Long regionId,RegionDTO.RegionUpdateReqDTO dto);
 }
