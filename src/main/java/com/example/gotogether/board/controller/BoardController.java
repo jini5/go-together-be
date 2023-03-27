@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = {"게시판 서비스"}, description = "전체 게시글 목록 조회, 게시글 상세 정보 조회, 게시글 추가, 게시글 수정, 게시글 삭제, 게시글 권한 확인")
+@Api(tags = {"게시판 서비스"}, description = "전체 게시글 목록 조회, 게시글 상세 정보 조회, 게시글 추가, 게시글 권한 확인, 게시글 수정, 게시글 삭제, 게시글 검색")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RestController
@@ -19,7 +19,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @ApiOperation(value = "전체 게시글 목록 조회", notes = "해당 페이지의 게시글 목록을 조회한다.\n" +
+    @ApiOperation(value = "전체 게시글 목록 조회", notes = "현 페이지의 전체 게시글 목록을 조회한다.\n" +
             "code: 200 조회 성공, 204 조회 성공 + 표시할 내용 없음, 500 알 수 없는 서버 오류")
     @GetMapping
     public ResponseEntity<?> findAllList(@RequestParam(required = false, defaultValue = "1") int pageNumber) {
