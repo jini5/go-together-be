@@ -192,6 +192,19 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> findPopularProducts() {
+        List<Product> productList = productRepository.findPopular();
+        System.out.println(productList.size());
+        if (productList.size()<1){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        for (Product product : productList){
+            System.out.println(product.getProductId());
+        }
+        return new ResponseEntity<>(productList.stream().map(e -> new ProductDTO.ProductListResDTO(e)).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
     public List<Category> listOfCategory(Category category) {
         List<Category> categoryList = new ArrayList<>(category.getChildren());
         categoryList.add(category);
