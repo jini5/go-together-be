@@ -18,11 +18,12 @@ public class AdminProductOptionController {
     private final ProductOptionService productOptionService;
 
 
-    @PostMapping("/productOptions")
+    @PostMapping("/productOptions/{productId}")
     @ApiOperation(value = "상품 옵션 추가", notes = "상품 옵션 추가")
-    public ResponseEntity<?> createProduct(@RequestBody Long productId, ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
+    public ResponseEntity<?> createProduct(@PathVariable Long productId,@RequestBody ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
         return productOptionService.createProductOptions(productId, productOptionReqDTO);
     }
+
 
     //상품 삭제
     @DeleteMapping("/productOptions/{productOptionId}")
