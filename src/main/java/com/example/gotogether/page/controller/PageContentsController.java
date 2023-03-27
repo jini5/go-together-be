@@ -21,6 +21,8 @@ public class PageContentsController {
     private final ProductService productService;
 
     @GetMapping("/page/popular/regions")
+    @ApiOperation(value = "인기 지역 리스트", notes = "관리자가 제작한 인기 여행지역 리스트 제공. \n" +
+            "code: 200 조회 성공, 204 표시할 지역 없음")
     public ResponseEntity<?> getRegionList() {
         return pageContentsService.getRegionList();
     }
