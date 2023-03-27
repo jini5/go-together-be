@@ -23,13 +23,15 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    @ApiOperation(value = "키워드로 상품 검색", notes = "해당 키워드와 관련된 상품 반환.\n" +
+    @ApiOperation(value = "키워드로 상품 검색", notes = "해당 키워드와 관련된 상품 반환. 요청시 sort 는 asc(낮은 가격 순), desc(높은 가격 순), recent 또는 안주기(required X)-> 최신순 \n" +
             "code: 200 상품 목록 조회 성공, 204 표시할 상품 없음, 400 잘못된 페이지 사이즈 요청, 500 서버에러 ")
     public ResponseEntity<?> searchProductByKeyword(@RequestParam(required = true) String keyword,@RequestParam(required = false,defaultValue = "recent") String sort,@RequestParam(required = false,defaultValue = "1") int page){
         return productService.findProductByKeyword(keyword,page,sort);
     }
 
-    @GetMapping("/popularProducts")
+    @GetMapping("/popular")
+    @ApiOperation(value = "인기 상품 검색(전체 or 특정 카테고리 가능)", notes = "categoryID 를 받을경우 그 카테고리의 인기순 상품 10개 제공.없을시 전체 상품 중 인기순 10개 제공. \n" +
+            "code: 200 상품 목록 조회 성공, 204 표시할 상품 없음, 400 잘못된 카테고리 요청, 500 서버에러 ")
     public ResponseEntity<?> findPopularProducts(@RequestParam(required = false) Long categoryId){
         return productService.findPopularProducts(categoryId);
     }
