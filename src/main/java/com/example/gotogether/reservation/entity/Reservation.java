@@ -51,5 +51,7 @@ public class Reservation {
     @ColumnDefault("'UNDECIDED'")
     private ReservationStatus reservationStatus;
 
-
+    public void updateStatus(ReservationStatus reservationStatus) {
+        this.reservationStatus = reservationStatus;
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.gotogether.reservation.controller;
 
+import com.example.gotogether.reservation.entity.ReservationStatus;
 import com.example.gotogether.reservation.service.ReservationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,5 +22,12 @@ public class AdminReservationController {
     @GetMapping
     public ResponseEntity<?> findAllList(@RequestParam(required = false, defaultValue = "1") int pageNumber) {
         return reservationService.findAllList(pageNumber);
+    }
+
+    @ApiOperation(value = "예약 상태 수정", notes = "예약 상태를 수정한다.\n" +
+            "code: 200 수정 성공, 400 잘못된 reservationId 요청")
+    @PatchMapping("/{reservationId}")
+    public ResponseEntity<?> modifyReservationStatus(@PathVariable Long reservationId, @RequestBody ReservationStatus reservationStatus) {
+        return reservationService.modifyReservationStatus(reservationId, reservationStatus);
     }
 }
