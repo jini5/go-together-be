@@ -18,4 +18,9 @@ public class PageContentsAdminController {
         return pageContentsService.addRegion(dto);
     }
 
+    @PutMapping("/region/{regionId}")
+    public ResponseEntity<?> updateRegion(@PathVariable Long regionId,@RequestBody RegionDTO.RegionUpdateReqDTO dto){
+        return pageContentsService.updateRegion(regionId,dto);
+    }
+
 }
