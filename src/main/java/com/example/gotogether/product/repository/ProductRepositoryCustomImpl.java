@@ -2,10 +2,12 @@ package com.example.gotogether.product.repository;
 
 import com.example.gotogether.category.entity.Category;
 import com.example.gotogether.product.entity.Product;
-import com.example.gotogether.reservation.entity.QReservationDetail;
+import com.example.gotogether.product.entity.ProductStatus;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.BooleanOperation;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +16,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.example.gotogether.product.entity.QProduct.product;
 import static com.example.gotogether.reservation.entity.QReservationDetail.reservationDetail;
 import static com.example.gotogether.product.entity.QProductCategory.productCategory;
+import static com.example.gotogether.product.entity.QProductOption.productOption;
 public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport implements ProductRepositoryCustom {
 
     @Autowired
@@ -28,9 +32,10 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
         super(Product.class);
     }
     @Override
-    public Page<Product> searchByKeywordAndSorting(Pageable pageable, String keyword, String sort) {
+    public Page<Product> searchByKeywordAndSorting(Pageable pageable, String keyword, String sort,LocalDate localDate,int people) {
         JPQLQuery<Product> query = queryFactory.selectFrom(product)
-                .where(containsName(keyword))
+                .leftJoin(product.productOptions,productOption)
+                .where(containsName(keyword),isAvailableProduct(),isStartDateAfter(localDate),isAvailablePeople(people))
                 .orderBy(sort(sort));
         List<Product> productList = this.getQuerydsl().applyPagination(pageable,query).fetch();
         return new PageImpl<Product>(productList,pageable, query.fetchCount());
@@ -44,7 +49,7 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
                 .leftJoin(product.reservationDetails, reservationDetail)
                 .leftJoin(product.categories,productCategory)
                 .groupBy(product.productId)
-                .where(containCategory(category))
+                .where(containCategory(category),isAvailableProduct())
                 .limit(10)
                 .orderBy(reservationDetail.count().desc())
                 .fetch();
@@ -99,5 +104,22 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
             return null;
         }
         return productCategory.category.eq(category);
+    }
+
+    private BooleanExpression isAvailableProduct(){
+        return product.productStatus.eq(ProductStatus.FOR_SALE);
+    }
+
+    private BooleanExpression isStartDateAfter(LocalDate localDate){
+        if (localDate == null){
+            return null;
+        }
+        return productOption.startDate.after(localDate);
+    }
+    private BooleanExpression isAvailablePeople(int people){
+        if (people<1){
+            return null;
+        }
+        return productOption.maxPeople.subtract(productOption.PresentPeopleNumber).goe(people);
     }
 }
