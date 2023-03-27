@@ -1,5 +1,6 @@
 package com.example.gotogether.product.repository;
 
+import com.example.gotogether.category.entity.Category;
 import com.example.gotogether.product.entity.Product;
 import com.example.gotogether.reservation.entity.QReservationDetail;
 import com.querydsl.core.types.Order;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static com.example.gotogether.product.entity.QProduct.product;
 import static com.example.gotogether.reservation.entity.QReservationDetail.reservationDetail;
+import static com.example.gotogether.product.entity.QProductCategory.productCategory;
 public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport implements ProductRepositoryCustom {
 
     @Autowired
@@ -35,12 +37,14 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public List<Product> findPopular() {
+    public List<Product> findPopular(Category category) {
         return queryFactory
                 .select(product)
                 .from(product)
                 .leftJoin(product.reservationDetails, reservationDetail)
+                .leftJoin(product.categories,productCategory)
                 .groupBy(product.productId)
+                .where(containCategory(category))
                 .limit(10)
                 .orderBy(reservationDetail.count().desc())
                 .fetch();
@@ -90,4 +94,10 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
         return null;
     }
 
+    private BooleanExpression containCategory(Category category){
+        if (category == null) {
+            return null;
+        }
+        return productCategory.category.eq(category);
+    }
 }
