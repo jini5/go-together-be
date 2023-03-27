@@ -28,7 +28,7 @@ public class BoardServiceImpl implements BoardService {
     private final UserRepository userRepository;
 
     /**
-     * 현 페이지의 게시글 목록 조회
+     * 현 페이지의 전체 게시글 목록 조회
      *
      * @param pageNumber 현 페이지 번호
      */
