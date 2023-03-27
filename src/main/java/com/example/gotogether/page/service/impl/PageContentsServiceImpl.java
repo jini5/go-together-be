@@ -51,4 +51,16 @@ public class PageContentsServiceImpl implements PageContentsService {
         }
     }
 
+    @Override
+    @Transactional
+    public ResponseEntity<?> deleteRegion(Long regionId) {
+        try {
+            Region region = regionRepository.findById(regionId).orElseThrow(IllegalArgumentException::new);
+            regionRepository.delete(region);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
