@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ProductRepositoryCustom {
     Page<Product> searchByKeywordAndSorting(Pageable pageable, String keyword, String sort);
-
+    List<Product> findPopular();
 }
