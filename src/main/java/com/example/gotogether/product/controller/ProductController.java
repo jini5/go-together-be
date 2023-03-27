@@ -28,4 +28,13 @@ public class ProductController {
     public ResponseEntity<?> searchProductByKeyword(@RequestParam(required = true) String keyword,@RequestParam(required = false,defaultValue = "1") int page){
         return productService.findProductByKeyword(keyword,page);
     }
+
+    @GetMapping("/details/{productId}")
+    @ApiOperation(value = "상품 상세 정보", notes = "상품 상세 정보를 보여줍니다.")
+    public ResponseEntity<?> oneProductForUser(@PathVariable Long productId) {
+        return productService.findDetailProduct(productId);
+    }
+
+
+
 }
