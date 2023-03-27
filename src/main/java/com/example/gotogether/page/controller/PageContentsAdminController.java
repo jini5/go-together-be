@@ -23,4 +23,9 @@ public class PageContentsAdminController {
         return pageContentsService.updateRegion(regionId,dto);
     }
 
+    @DeleteMapping("/region/{regionId}")
+    public ResponseEntity<?> deleteRegion(@PathVariable Long regionId){
+        return pageContentsService.deleteRegion(regionId);
+    }
+
 }
