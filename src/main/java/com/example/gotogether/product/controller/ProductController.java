@@ -28,4 +28,9 @@ public class ProductController {
     public ResponseEntity<?> searchProductByKeyword(@RequestParam(required = true) String keyword,@RequestParam(required = false,defaultValue = "recent") String sort,@RequestParam(required = false,defaultValue = "1") int page){
         return productService.findProductByKeyword(keyword,page,sort);
     }
+
+    @GetMapping("/popularProducts")
+    public ResponseEntity<?> findPopularProducts(){
+        return productService.findPopularProducts();
+    }
 }
