@@ -15,26 +15,6 @@ public class ProductOptionDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ToString
-    public static class ProductOptionCreateReqDTO {
-        @ApiModelProperty(value = "출발일", required = true)
-        private LocalDate startDate;
-        @ApiModelProperty(value = "도착일", required = true)
-        private LocalDate endDate;
-        @ApiModelProperty(value = "최대 인원", required = true)
-        private int maxPeople;
-        @ApiModelProperty(value = "최대 싱글룸 수", required = true)
-        private int maxSingleRoom;
-        @ApiModelProperty(value = "현재 예약 인원 수 ", required = true)
-        private int presentPeopleNumber;
-        @ApiModelProperty(value = "현재 예약 싱글룸 수", required = true)
-        private int presentSingleRoomNumber;
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @ToString
     public static class ProductOptionReqDTO {
 
         @ApiModelProperty(value = "출발일", required = true)
