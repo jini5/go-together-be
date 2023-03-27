@@ -31,9 +31,11 @@ public class ProductOptionDTO {
     }
 
     @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ToString
     public static class ProductOptionReqDTO {
-        @ApiModelProperty(value = "상품 ID", required = true)
-        private Product product;
 
         @ApiModelProperty(value = "출발일", required = true)
         private LocalDate startDate;
@@ -54,7 +56,9 @@ public class ProductOptionDTO {
         private int presentSingleRoomNumber;
 
 
+        @Builder
         public ProductOptionReqDTO(ProductOption productOption) {
+
             this.startDate = productOption.getStartDate();
             this.endDate = productOption.getEndDate();
             this.maxPeople = productOption.getMaxPeople();
@@ -63,8 +67,9 @@ public class ProductOptionDTO {
             this.presentSingleRoomNumber = productOption.getPresentSingleRoomNumber();
         }
 
-        public ProductOption toEntity() {
+        public ProductOption toEntity(Product product) {
             return ProductOption.builder()
+                    .product(product)
                     .startDate(startDate)
                     .endDate(endDate)
                     .maxPeople(maxPeople)
