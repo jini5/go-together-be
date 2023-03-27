@@ -22,4 +22,5 @@ public interface ProductService {
 
     ResponseEntity<?> findProductByKeyword(String keyword, int page,String sort);
 
+    ResponseEntity<?> findPopularProducts();
 }
