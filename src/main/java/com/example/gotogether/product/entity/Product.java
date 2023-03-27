@@ -1,5 +1,6 @@
 package com.example.gotogether.product.entity;
 
+import com.example.gotogether.product.dto.ProductDTO;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -87,21 +88,19 @@ public class Product {
     }
 
 
-    public void update(Product product) {
-        this.categories = product.getCategories();
-        this.productOptions = product.getProductOptions();
-        this.name = product.getName();
-        this.summary = product.getSummary();
-        this.area = product.getArea();
-        this.feature = product.getFeature();
-        this.airplane = product.getAirplane();
-        this.singleRoomPrice = product.getSingleRoomPrice();
-        this.price = product.getPrice();
-        this.type = product.getType();
-        this.thumbnail = product.getThumbnail();
-        this.detail = product.getDetail();
-        this.productStatus = product.getProductStatus();
-
+    public void update(ProductDTO.ProductReqDTO productReq,List<ProductCategory> categoryList) {
+        this.categories = categoryList;
+        this.name = productReq.getName();
+        this.summary = productReq.getSummary();
+        this.area = productReq.getArea();
+        this.feature = productReq.getFeature();
+        this.airplane = productReq.getAirplane();
+        this.singleRoomPrice = productReq.getSingleRoomPrice();
+        this.price = productReq.getPrice();
+        this.type = productReq.getType();
+        this.thumbnail = productReq.getThumbnail();
+        this.detail = productReq.getDetail();
+        this.productStatus = productReq.getProductStatus();
     }
 
 

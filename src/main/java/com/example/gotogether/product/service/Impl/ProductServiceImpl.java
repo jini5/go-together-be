@@ -19,12 +19,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.gotogether.global.config.PageSizeConfig.Product_List_By_Category;
 
+import static com.example.gotogether.global.config.PageSizeConfig.Product_List_By_Category;
+import static com.example.gotogether.global.config.PageSizeConfig.Product_List_By_Admin;
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -68,6 +70,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> deleteProduct(Long productId) {
         try {
             Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
@@ -76,34 +79,65 @@ public class ProductServiceImpl implements ProductService {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-
-    }
-
-
-    @Override
-    public ResponseEntity<List<Product>> getAllProducts() {
-        try {
-            return new ResponseEntity<>(productRepository.findAll(), HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
     }
 
     @Override
-    public ResponseEntity<?> patchProduct(Long productId, ProductDTO.ProductReqDTO productReqDTO) {
+    @Transactional
+    public ResponseEntity<?> updateProduct(Long productId, ProductDTO.ProductReqDTO productReqDTO) {
         try {
-
             Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
             if (product == null) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            product.update(productReqDTO.toEntity());
+            productCategoryRepository.deleteAllByProduct(product);
 
+            List<Category> categoryList = categoryRepository.findAllByCategoryIdIn(productReqDTO.getCategoryIdList());
+            if (categoryList.size() != productReqDTO.getCategoryIdList().size())
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            List<ProductCategory> productCategories = new ArrayList<>();
+            for (Category category : categoryList) {
+                productCategories.add(ProductCategory.builder()
+                        .category(category)
+                        .product(product)
+                        .build());
+            }
+            product.update(productReqDTO,productCategories);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Override
+    public ResponseEntity<?> getAllProducts(int page) {
+        try {
+            if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Admin);
+            Page<Product> productList = productRepository.findAll(pageable);
+            PageResponseDTO pageResponseDTO = new PageResponseDTO(productList);
+            pageResponseDTO.setContent(
+                    pageResponseDTO
+                            .getContent()
+                            .stream()
+                            .map(e -> new ProductDTO.ProductListResDTO((Product)e))
+                            .collect(Collectors.toList())
+            );
+            return new ResponseEntity<>(pageResponseDTO, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> findDetailProduct(Long productId) {
+        try {
+            Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+            return new ResponseEntity<>(new ProductDTO.ProductDetailResDTO(product),HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @Override
     public ResponseEntity<?> findProductByCategory(Long categoryId, int page) {

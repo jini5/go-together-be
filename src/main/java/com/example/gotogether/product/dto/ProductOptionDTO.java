@@ -23,6 +23,10 @@ public class ProductOptionDTO {
         private int maxPeople;
         @ApiModelProperty(value = "최대 싱글룸 수", required = true)
         private int maxSingleRoom;
+        @ApiModelProperty(value = "현재 예약 인원 수 ", required = true)
+        private int presentPeopleNumber;
+        @ApiModelProperty(value = "현재 예약 싱글룸 수", required = true)
+        private int presentSingleRoomNumber;
     }
 
     @Getter
@@ -48,6 +52,15 @@ public class ProductOptionDTO {
         @ApiModelProperty(value = "현재 예약 싱글룸 수", required = true)
         private int presentSingleRoomNumber;
 
+
+        public ProductOptionReqDTO(ProductOption productOption) {
+            this.startDate = productOption.getStartDate();
+            this.endDate = productOption.getEndDate();
+            this.maxPeople = productOption.getMaxPeople();
+            this.maxSingleRoom = productOption.getMaxSingleRoom();
+            this.presentPeopleNumber = productOption.getPresentPeopleNumber();
+            this.presentSingleRoomNumber = productOption.getPresentSingleRoomNumber();
+        }
 
     }
 
