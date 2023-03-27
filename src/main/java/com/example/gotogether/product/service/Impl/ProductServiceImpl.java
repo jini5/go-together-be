@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -169,12 +170,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> findProductByKeyword(String keyword, int page,String sort) {
+    public ResponseEntity<?> findProductByKeyword(String keyword, int page, String sort, LocalDate dateOption, int people) {
         try {
             if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Keyword);
             Page<Product> productPage = productRepository
-                    .searchByKeywordAndSorting(pageable,keyword,sort);
+                    .searchByKeywordAndSorting(pageable,keyword,sort, dateOption, people);
             if (productPage.getTotalElements()<1){
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
