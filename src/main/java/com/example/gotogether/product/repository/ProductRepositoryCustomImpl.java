@@ -34,6 +34,18 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
         return new PageImpl<Product>(productList,pageable, query.fetchCount());
     }
 
+    @Override
+    public List<Product> findPopular() {
+        return queryFactory
+                .select(product)
+                .from(product)
+                .leftJoin(product.reservationDetails, reservationDetail)
+                .groupBy(product.productId)
+                .limit(10)
+                .orderBy(reservationDetail.count().desc())
+                .fetch();
+    }
+
     private BooleanExpression containsName(String keyword){
         if (keyword.isEmpty()){
             return null;
