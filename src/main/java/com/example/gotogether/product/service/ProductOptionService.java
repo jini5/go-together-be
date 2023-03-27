@@ -4,11 +4,12 @@ import com.example.gotogether.product.dto.ProductOptionDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface ProductOptionService {
-    ResponseEntity<?> createProductOptions(ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO);
+    ResponseEntity<?> createProductOptions(Long productId, ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO);
 
-    ResponseEntity<?> patchProductOptions(ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO);
+    ResponseEntity<?> updateProductOptions(Long productId, ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO);
 
-    ResponseEntity<?> deleteProductOptions(ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO);
+    ResponseEntity<?> deleteProductOption(Long productOptionId);
 
-    ResponseEntity<?> AllProductOptions(ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO);
+    ResponseEntity<?> getAllProductOptions(Long productId, ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO);
+
 }
