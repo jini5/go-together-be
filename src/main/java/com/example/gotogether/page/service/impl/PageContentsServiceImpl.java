@@ -22,7 +22,7 @@ public class PageContentsServiceImpl implements PageContentsService {
 
     @Override
     public ResponseEntity<?> addRegion(RegionDTO.RegionReqDTO dto) {
-        if(regionRepository.existsByRegion(dto.getRegionName())){
+        if(regionRepository.existsByRegionName(dto.getRegionName())){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         regionRepository.save(dto.toEntity());
@@ -44,10 +44,13 @@ public class PageContentsServiceImpl implements PageContentsService {
     public ResponseEntity<?> updateRegion(Long regionId,RegionDTO.RegionUpdateReqDTO dto) {
         try {
             Region region = regionRepository.findById(regionId).orElseThrow(IllegalArgumentException::new);
+            if (!region.getRegionName().equals(dto.getRegionName()) && regionRepository.existsByRegionName(dto.getRegionName())){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             region.update(dto);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (IllegalArgumentException e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -59,7 +62,7 @@ public class PageContentsServiceImpl implements PageContentsService {
             regionRepository.delete(region);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (IllegalArgumentException e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

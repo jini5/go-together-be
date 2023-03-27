@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface RegionRepository extends JpaRepository<Region, Long> {
 
-    boolean existsByRegion(String region);
-
+    boolean existsByRegionName(String regionName);
 
 }
