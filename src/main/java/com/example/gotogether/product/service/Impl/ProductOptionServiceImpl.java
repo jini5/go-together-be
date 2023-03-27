@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,12 +23,12 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     private final ProductRepository productRepository;
 
     @Override
+    @Transactional
     public ResponseEntity<?> createProductOptions(Long productId, ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
-
         try {
-            ProductOption productOption = productOptionReqDTO.toEntity();
-
-            //productOptionRepository.save(productOptionReqDTO);
+            Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+            ProductOption productOption = productOptionReqDTO.toEntity(product);
+            product.getProductOptions().add(productOption);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -62,7 +63,10 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Override
     public ResponseEntity<?> getAllProductOptions(Long productId) {
         try {
-            return new ResponseEntity<>(HttpStatus.OK);
+            Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+            List<ProductOption> productOptionList= productOptionRepository.findAllByProduct(product);
+            if (productOptionList.size()<1)return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(productOptionList.stream().map(ProductOptionDTO.ProductOptionResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
