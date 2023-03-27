@@ -11,14 +11,11 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>,ProductRepositoryCustom {
 
     Optional<Product> findById(Long productId);
 
     Page<Product> findAll(Pageable pageable);
 
     boolean existsByName(String name);
-
-    Page<Product> findAllByNameContainsOrSummaryContainsOrFeatureContainsOrDetailContainsAndProductStatus(Pageable pageable, String keyword1, String keyword2, String keyword3, String keyword4, ProductStatus status);
-
 }
