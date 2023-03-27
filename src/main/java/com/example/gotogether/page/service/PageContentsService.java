@@ -6,5 +6,6 @@ import org.springframework.http.ResponseEntity;
 public interface PageContentsService {
     ResponseEntity<?> addRegion(RegionDTO.RegionReqDTO dto);
 
+    ResponseEntity<?> getRegionList();
 
 }
