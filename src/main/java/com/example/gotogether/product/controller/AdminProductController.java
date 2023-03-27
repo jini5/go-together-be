@@ -35,23 +35,26 @@ public class AdminProductController {
     }
 
     @PatchMapping("/products/{productId}")
-    public ResponseEntity<?> patchProducts(@PathVariable Long productId, @RequestBody ProductDTO.ProductReqDTO productReqDTO) {
-        return productService.patchProduct(productId, productReqDTO);
+    @ApiOperation(value = "상품 수정", notes = "상품 수정(옵션 제외)")
+    public ResponseEntity<?> updateProducts(@PathVariable Long productId, @RequestBody ProductDTO.ProductReqDTO productReqDTO) {
+        return productService.updateProduct(productId, productReqDTO);
     }
 
 
     // 제품 전체목록 보기
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> allProducts() {
-        return productService.getAllProducts();
+    @ApiOperation(value = "상품 전체 목록 보기", notes = "상품 전체 목록 보기")
+    public ResponseEntity<?> allProducts(@RequestParam(required = false, defaultValue = "1") int page) {
+        return productService.getAllProducts(page);
     }
 
 
-//    // 제품 상세 보기
-//    @GetMapping("/products/details/{productId}")
-//    public ResponseEntity<?> oneProduct(@PathVariable Long productId) {
-//        return new
-//    }
+    // 제품 상세 보기
+    @GetMapping("/products/details/{productId}")
+    @ApiOperation(value = "상품 상세 정보", notes = "상품 상세 정보를 보여줍니다.")
+    public ResponseEntity<?> oneProduct(@PathVariable Long productId) {
+        return productService.findDetailProduct(productId);
+    }
 
 
 }

@@ -1,4 +1,7 @@
 package com.example.gotogether.product.repository;
 
-public class ProductOptionRepository {
+import com.example.gotogether.product.entity.ProductOption;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductOptionRepository extends JpaRepository<ProductOption, Long> {
 }

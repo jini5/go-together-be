@@ -12,9 +12,11 @@ public interface ProductService {
 
     ResponseEntity<?> deleteProduct(Long productId);
 
-    ResponseEntity<List<Product>> getAllProducts();
+    ResponseEntity<?> getAllProducts(int page);
 
-    ResponseEntity<?> patchProduct(Long productId, ProductDTO.ProductReqDTO productReqDTO);
+    ResponseEntity<?> updateProduct(Long productId, ProductDTO.ProductReqDTO productReqDTO);
+
+    ResponseEntity<?> findDetailProduct(Long productId);
 
     ResponseEntity<?> findProductByCategory(Long categoryId, int page);
 

@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +50,8 @@ public class ProductDTO {
         @ApiModelProperty(value = "상품 상세 정보", required = true)
         private String detail;
         @ApiModelProperty(value = "상품 상태", required = true)
-        private String productStatus;
+        @Enumerated(value = EnumType.STRING)
+        private ProductStatus productStatus;
         @ApiModelProperty(value = "상품 옵션 리스트", required = false)
         private List<ProductOptionDTO.ProductOptionCreateReqDTO> options;
 
@@ -73,7 +76,7 @@ public class ProductDTO {
                     .type(type)
                     .thumbnail(thumbnail)
                     .detail(detail)
-                    .productStatus(ProductStatus.FOR_SALE)
+                    .productStatus(productStatus)
                     .build();
         }
 
@@ -121,8 +124,9 @@ public class ProductDTO {
     @ApiModel(value = "상품 상세 정보 조회")
     public static class ProductDetailResDTO {
         @ApiModelProperty(value = "해당 상품 카테고리", required = true)
-        private List<ProductCategory> categories = new ArrayList<>();
-
+        private List<CategoryDTO.viewCategoryForProduct> categories = new ArrayList<>();
+        @ApiModelProperty(value = "해당 상품 옵션", required = true)
+        private List<ProductOptionDTO.ProductOptionResDTO> productOptions = new ArrayList<>();
         @ApiModelProperty(value = "상품 ID", required = true)
         private Long productId;
         @ApiModelProperty(value = "상품 명", required = true)
@@ -149,7 +153,12 @@ public class ProductDTO {
         private ProductStatus productStatus;
 
         public ProductDetailResDTO(Product product) {
-
+            this.categories = product.getCategories().stream()
+                    .map(e -> new CategoryDTO.viewCategoryForProduct(e.getCategory()))
+                    .collect(Collectors.toList());
+            this.productOptions = product.getProductOptions().stream()
+                    .map(e -> new ProductOptionDTO.ProductOptionResDTO(e))
+                    .collect(Collectors.toList());
             this.productId = product.getProductId();
             this.name = product.getName();
             this.summary = product.getSummary();
@@ -166,3 +175,4 @@ public class ProductDTO {
     }
 
 }
+

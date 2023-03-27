@@ -1,5 +1,6 @@
 package com.example.gotogether.product.entity;
 
+import com.example.gotogether.product.dto.ProductOptionDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,4 +52,11 @@ public class ProductOption {
         this.PresentPeopleNumber = presentPeopleNumber;
         this.PresentSingleRoomNumber = presentSingleRoomNumber;
     }
+
+//    public void update(ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO){
+//        this.startDate=productOptionReqDTO.getStartDate();
+//        this.endDate=productOptionReqDTO.getEndDate();
+//        this.maxPeople=productOptionReqDTO.getMaxPeople();
+//        this.maxSingleRoom=productOptionReqDTO.getMaxSingleRoom();
+//    }
 }
