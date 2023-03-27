@@ -30,7 +30,7 @@ public class ProductController {
     }
 
     @GetMapping("/popularProducts")
-    public ResponseEntity<?> findPopularProducts(){
-        return productService.findPopularProducts();
+    public ResponseEntity<?> findPopularProducts(@RequestParam(required = false) Long categoryId){
+        return productService.findPopularProducts(categoryId);
     }
 }
