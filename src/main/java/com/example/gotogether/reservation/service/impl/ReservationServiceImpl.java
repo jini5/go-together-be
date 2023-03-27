@@ -3,6 +3,7 @@ package com.example.gotogether.reservation.service.impl;
 import com.example.gotogether.global.response.PageResponseDTO;
 import com.example.gotogether.reservation.dto.ReservationDTO;
 import com.example.gotogether.reservation.entity.Reservation;
+import com.example.gotogether.reservation.entity.ReservationStatus;
 import com.example.gotogether.reservation.repository.ReservationRepository;
 import com.example.gotogether.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.NoSuchElementException;
 
 import static com.example.gotogether.global.config.PageSizeConfig.ADMIN_RESERVATION_LIST_SIZE;
 
@@ -48,4 +52,22 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    /**
+     * 예약 상태 수정
+     *
+     * @param reservationId 예약 아이디
+     */
+    @Transactional
+    @Override
+    public ResponseEntity<?> modifyReservationStatus(Long reservationId, ReservationStatus reservationStatus) {
+        try {
+            Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NoSuchElementException::new);
+            reservation.updateStatus(reservationStatus);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
