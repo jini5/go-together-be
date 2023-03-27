@@ -13,13 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
+@Api(tags = {" 페이지 컨텐츠 서비스"}, description = "인기 지역 리스트, 배너 리스트, 인기 상품 ")
 public class PageContentsController {
 
     private final PageContentsService pageContentsService;
     private final ProductService productService;
 
-    @GetMapping("/page/region")
-    public ResponseEntity<?> getRegionList(){
+    @GetMapping("/page/popular/regions")
+    public ResponseEntity<?> getRegionList() {
         return pageContentsService.getRegionList();
     }
 
