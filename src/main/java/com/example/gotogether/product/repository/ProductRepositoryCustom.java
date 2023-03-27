@@ -5,9 +5,10 @@ import com.example.gotogether.product.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ProductRepositoryCustom {
-    Page<Product> searchByKeywordAndSorting(Pageable pageable, String keyword, String sort);
+    Page<Product> searchByKeywordAndSorting(Pageable pageable, String keyword, String sort, LocalDate localDate, int people);
     List<Product> findPopular(Category category);
 }
