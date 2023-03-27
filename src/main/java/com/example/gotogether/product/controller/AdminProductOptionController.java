@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = {"상품 옵션 서비스"}, description = "상품 옵션 추가, 상품 옵션 수정, 상품 옵션 삭제, 상품 옵션 조회")
+@Api(tags = {"관리자 상품 옵션 서비스"}, description = "상품 옵션 추가, 상품 옵션 수정, 상품 옵션 삭제, 상품 옵션 조회")
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
@@ -33,14 +33,14 @@ public class AdminProductOptionController {
 
     @PatchMapping("/productOptions/{productOptionId}")
     @ApiOperation(value = "상품 옵션 수정", notes = "상품 옵션 수정")
-    public ResponseEntity<?> updateProducts(@PathVariable Long productId, @RequestBody ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
-        return productOptionService.updateProductOptions(productId, productOptionReqDTO);
+    public ResponseEntity<?> updateProducts(@PathVariable Long productOptionId, @RequestBody ProductOptionDTO.OptionUpdateReqDTO optionUpdateReqDTO) {
+        return productOptionService.updateProductOptions(productOptionId,optionUpdateReqDTO);
     }
 
-    @GetMapping("/products")
+    @GetMapping("/productOptions")
     @ApiOperation(value = "상품 옵션 전체 목록 보기", notes = "상품 옵션 전체 목록 보기")
-    public ResponseEntity<?> allProductOptions(Long productId, ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
-        return productOptionService.getAllProductOptions(productId, productOptionReqDTO);
+    public ResponseEntity<?> allProductOptions(Long productId) {
+        return productOptionService.getAllProductOptions(productId);
     }
 
 }
