@@ -21,14 +21,14 @@ public class PageContentsController {
     private final ProductService productService;
 
     @GetMapping("/page/popular/regions")
-    @ApiOperation(value = "인기 지역 리스트", notes = "관리자가 제작한 인기 여행지역 리스트 제공. \n" +
+    @ApiOperation(value = "인기 지역 리스트", notes = "관리자가 제작한 인기 여행지역 리스트 제공. \n\n" +
             "code: 200 조회 성공, 204 표시할 지역 없음")
     public ResponseEntity<?> getRegionList() {
         return pageContentsService.getRegionList();
     }
 
     @GetMapping("/page/popular/products")
-    @ApiOperation(value = "인기 상품 검색(전체 or 특정 카테고리 가능)", notes = "categoryID 를 받을경우 그 카테고리의 인기순 상품 10개 제공.없을시 전체 상품 중 인기순 10개 제공. \n" +
+    @ApiOperation(value = "인기 상품 검색(전체 or 특정 카테고리 가능)", notes = "categoryID 를 받을경우 그 카테고리의 인기순 상품 10개 제공.없을시 전체 상품 중 인기순 10개 제공. \n\n" +
             "code: 200 상품 목록 조회 성공, 204 표시할 상품 없음, 400 잘못된 카테고리 요청, 500 서버에러 ")
     public ResponseEntity<?> findPopularProducts(@RequestParam(required = false) Long categoryId){
         return productService.findPopularProducts(categoryId);
