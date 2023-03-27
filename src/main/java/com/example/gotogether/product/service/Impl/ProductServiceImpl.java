@@ -170,12 +170,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> findProductByKeyword(String keyword, int page) {
+    public ResponseEntity<?> findProductByKeyword(String keyword, int page,String sort) {
         try {
             if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Category);
             Page<Product> productPage = productRepository
-                    .findAllByNameContainsOrSummaryContainsOrFeatureContainsOrDetailContainsAndProductStatus(pageable,keyword,keyword,keyword,keyword, ProductStatus.FOR_SALE);
+                    .searchByKeywordAndSorting(pageable,keyword,sort);
+            if (productPage.getTotalElements()<1){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             PageResponseDTO pageResponseDTO = new PageResponseDTO(productPage);
             pageResponseDTO
                     .setContent(pageResponseDTO.getContent()
