@@ -29,4 +29,15 @@ public class PageContentsServiceImpl implements PageContentsService {
         return new  ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @Override
+    public ResponseEntity<?> getRegionList() {
+        Sort sort = Sort.by(Sort.Direction.ASC,"rate");
+        List<Region> regionList = regionRepository.findAll(sort);
+        if (regionList.size()<1){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(regionList.stream().map(RegionDTO.RegionResDTO::new).collect(Collectors.toList()),HttpStatus.OK);
+    }
+
+
 }
