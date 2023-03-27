@@ -24,9 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.gotogether.global.config.PageSizeConfig.*;
 
-import static com.example.gotogether.global.config.PageSizeConfig.Product_List_By_Category;
-import static com.example.gotogether.global.config.PageSizeConfig.Product_List_By_Admin;
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -173,7 +172,7 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<?> findProductByKeyword(String keyword, int page,String sort) {
         try {
             if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Category);
+            PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Keyword);
             Page<Product> productPage = productRepository
                     .searchByKeywordAndSorting(pageable,keyword,sort);
             if (productPage.getTotalElements()<1){
