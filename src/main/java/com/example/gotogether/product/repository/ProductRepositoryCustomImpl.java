@@ -42,14 +42,14 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public List<Product> findPopular(Category category) {
+    public List<Product> findPopular(List<Category> categoryList) {
         return queryFactory
                 .select(product)
                 .from(product)
                 .leftJoin(product.reservationDetails, reservationDetail)
                 .leftJoin(product.categories,productCategory)
                 .groupBy(product.productId)
-                .where(containCategory(category),isAvailableProduct())
+                .where(containCategory(categoryList),isAvailableProduct())
                 .limit(10)
                 .orderBy(reservationDetail.count().desc())
                 .fetch();
@@ -99,11 +99,11 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
         return null;
     }
 
-    private BooleanExpression containCategory(Category category){
-        if (category == null) {
+    private BooleanExpression containCategory(List<Category> categoryList){
+        if (categoryList == null) {
             return null;
         }
-        return productCategory.category.eq(category);
+        return productCategory.category.in(categoryList);
     }
 
     private BooleanExpression isAvailableProduct(){
