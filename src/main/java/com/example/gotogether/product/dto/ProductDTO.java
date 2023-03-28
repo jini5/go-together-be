@@ -23,10 +23,9 @@ public class ProductDTO {
     @NoArgsConstructor
     @Getter
     @Setter
-    @ApiModel(value = "상품 추가")
+    @ApiModel(value = "상품 추가 Req")
     @ToString
-    public static class ProductReqDTO {
-
+    public static class ProductCreateReqDTO {
         @ApiModelProperty(value = "해당 상품 카테고리", required = true)
         private List<Long> categoryIdList = new ArrayList<>();
         @ApiModelProperty(value = "상품 명", required = true)
@@ -55,14 +54,54 @@ public class ProductDTO {
         @ApiModelProperty(value = "상품 옵션 리스트", required = false)
         private List<ProductOptionDTO.ProductOptionReqDTO> options;
 
-//        public ProductStatus setEnumProductStatus(String status) {
-//            if (status.equals(ProductStatus.FOR_SALE)) {
-//                return ProductStatus.FOR_SALE;
-//            } else if (productStatus.equals(ProductStatus.STOP_SELLING)) {
-//                return ProductStatus.STOP_SELLING;
-//            }
-//            return ProductStatus.HIDING;
-//        }
+        public Product toEntity() {
+            return Product.builder()
+                    .name(name)
+                    .summary(summary)
+                    .area(area)
+                    .feature(feature)
+                    .airplane(airplane)
+                    .singleRoomPrice(singleRoomPrice)
+                    .price(price)
+                    .type(type)
+                    .thumbnail(thumbnail)
+                    .detail(detail)
+                    .productStatus(productStatus)
+                    .build();
+        }
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    @ApiModel(value = "상품 수정 Req")
+    @ToString
+    public static class ProductUpdateReqDTO {
+        @ApiModelProperty(value = "해당 상품 카테고리", required = true)
+        private List<Long> categoryIdList = new ArrayList<>();
+        @ApiModelProperty(value = "상품 명", required = true)
+        private String name;
+        @ApiModelProperty(value = "상품 요약", required = true)
+        private String summary;
+        @ApiModelProperty(value = "여행 지역", required = true)
+        private String area;
+        @ApiModelProperty(value = "여행 특징", required = true)
+        private String feature;
+        @ApiModelProperty(value = "항공편", required = true)
+        private String airplane;
+        @ApiModelProperty(value = "싱글룸 가격", required = true)
+        private int singleRoomPrice;
+        @ApiModelProperty(value = "상품 가격", required = true)
+        private int price;
+        @ApiModelProperty(value = "상품 여행 유형", required = true)
+        private String type;
+        @ApiModelProperty(value = "상품 썸네일", required = true)
+        private String thumbnail;
+        @ApiModelProperty(value = "상품 상세 정보", required = true)
+        private String detail;
+        @ApiModelProperty(value = "상품 상태", required = true)
+        @Enumerated(value = EnumType.STRING)
+        private ProductStatus productStatus;
 
         public Product toEntity() {
             return Product.builder()
@@ -79,8 +118,6 @@ public class ProductDTO {
                     .productStatus(productStatus)
                     .build();
         }
-
-
     }
 
 

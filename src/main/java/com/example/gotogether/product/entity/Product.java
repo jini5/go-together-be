@@ -92,7 +92,7 @@ public class Product {
     }
 
 
-    public void update(ProductDTO.ProductReqDTO productReq,List<ProductCategory> categoryList) {
+    public void update(ProductDTO.ProductUpdateReqDTO productReq,List<ProductCategory> categoryList) {
         this.categories = categoryList;
         this.name = productReq.getName();
         this.summary = productReq.getSummary();
