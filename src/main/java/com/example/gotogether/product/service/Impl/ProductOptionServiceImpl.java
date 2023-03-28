@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,11 +27,11 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Transactional
     public ResponseEntity<?> createProductOptions(Long productId, ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
         try {
-            Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+            Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
             ProductOption productOption = productOptionReqDTO.toEntity(product);
             product.getProductOptions().add(productOption);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -41,10 +42,10 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     public ResponseEntity<?> updateProductOptions(Long productOptionId, ProductOptionDTO.OptionUpdateReqDTO optionUpdateReqDTO) {
 
         try {
-            ProductOption productOption = productOptionRepository.findByProductOptionId(productOptionId).orElseThrow(IllegalArgumentException::new);
+            ProductOption productOption = productOptionRepository.findByProductOptionId(productOptionId).orElseThrow(NoSuchElementException::new);
             productOption.update(optionUpdateReqDTO);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -53,9 +54,9 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Transactional
     public ResponseEntity<?> deleteProductOption(Long productOptionId) {
         try {
-            productOptionRepository.deleteAllByProductOptionId(productOptionId).orElseThrow(IllegalArgumentException::new);
+            productOptionRepository.deleteAllByProductOptionId(productOptionId).orElseThrow(NoSuchElementException::new);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -63,11 +64,11 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Override
     public ResponseEntity<?> getAllProductOptions(Long productId) {
         try {
-            Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+            Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
             List<ProductOption> productOptionList= productOptionRepository.findAllByProduct(product);
             if (productOptionList.size()<1)return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             return new ResponseEntity<>(productOptionList.stream().map(ProductOptionDTO.ProductOptionResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

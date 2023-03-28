@@ -23,6 +23,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static com.example.gotogether.global.config.PageSizeConfig.*;
@@ -35,14 +36,14 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductCategoryRepository productCategoryRepository;
 
-    public ResponseEntity<?> createProduct(ProductDTO.ProductReqDTO productReqDTO) {
+    public ResponseEntity<?> createProduct(ProductDTO.ProductCreateReqDTO productCreateReqDTO) {
         try {
-            if (productRepository.existsByName(productReqDTO.getName()))return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            if (productRepository.existsByName(productCreateReqDTO.getName()))return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             //상품 엔티티 생성
-            Product product = productReqDTO.toEntity();
+            Product product = productCreateReqDTO.toEntity();
             //상품 카테고리 엔티티 생성 후 상품엔티티의 카테고리 리스트에 넣기
-            List<Category> categoryList = categoryRepository.findAllByCategoryIdIn(productReqDTO.getCategoryIdList());
-            if (categoryList.size() != productReqDTO.getCategoryIdList().size())
+            List<Category> categoryList = categoryRepository.findAllByCategoryIdIn(productCreateReqDTO.getCategoryIdList());
+            if (categoryList.size() != productCreateReqDTO.getCategoryIdList().size())
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             for (Category category : categoryList) {
                 product.getCategories().add(ProductCategory.builder()
@@ -51,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
                         .build());
             }
             //상품 옵션 생성 후, 상품 엔티티의 옵션 리스트에 넣기
-            for (ProductOptionDTO.ProductOptionReqDTO createDto : productReqDTO.getOptions()) {
+            for (ProductOptionDTO.ProductOptionReqDTO createDto : productCreateReqDTO.getOptions()) {
                 product.getProductOptions().add(ProductOption.builder()
                         .product(product)
                         .startDate(createDto.getStartDate())
@@ -73,26 +74,26 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ResponseEntity<?> deleteProduct(Long productId) {
         try {
-            Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+            Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
             product.changeStatusHiding(product);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> updateProduct(Long productId, ProductDTO.ProductReqDTO productReqDTO) {
+    public ResponseEntity<?> updateProduct(Long productId, ProductDTO.ProductUpdateReqDTO productUpdateReqDTO) {
         try {
-            Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+            Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
             if (product == null) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             productCategoryRepository.deleteAllByProduct(product);
 
-            List<Category> categoryList = categoryRepository.findAllByCategoryIdIn(productReqDTO.getCategoryIdList());
-            if (categoryList.size() != productReqDTO.getCategoryIdList().size())
+            List<Category> categoryList = categoryRepository.findAllByCategoryIdIn(productUpdateReqDTO.getCategoryIdList());
+            if (categoryList.size() != productUpdateReqDTO.getCategoryIdList().size())
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             List<ProductCategory> productCategories = new ArrayList<>();
             for (Category category : categoryList) {
@@ -101,9 +102,9 @@ public class ProductServiceImpl implements ProductService {
                         .product(product)
                         .build());
             }
-            product.update(productReqDTO,productCategories);
+            product.update(productUpdateReqDTO,productCategories);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -123,7 +124,7 @@ public class ProductServiceImpl implements ProductService {
                             .collect(Collectors.toList())
             );
             return new ResponseEntity<>(pageResponseDTO, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -131,9 +132,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseEntity<?> findDetailProduct(Long productId) {
         try {
-            Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+            Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
             return new ResponseEntity<>(new ProductDTO.ProductDetailResDTO(product),HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
