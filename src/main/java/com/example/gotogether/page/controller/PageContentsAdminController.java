@@ -37,5 +37,11 @@ public class PageContentsAdminController {
     public ResponseEntity<?> deleteRegion(@PathVariable Long regionId){
         return pageContentsService.deleteRegion(regionId);
     }
+    @GetMapping("/regions/{regionId}")
+    @ApiOperation(value = "인기 지역 상세 조회", notes = "관리자가 인기 여행지역 상세 조회.\n\n" +
+            "code: 200 조회 성공, 404 잘못된 ID")
+    public ResponseEntity<?> getRegionDetail(@PathVariable Long regionId){
+        return pageContentsService.getRegionDetail(regionId);
+    }
 
 }
