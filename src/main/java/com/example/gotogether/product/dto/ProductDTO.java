@@ -53,7 +53,7 @@ public class ProductDTO {
         @Enumerated(value = EnumType.STRING)
         private ProductStatus productStatus;
         @ApiModelProperty(value = "상품 옵션 리스트", required = false)
-        private List<ProductOptionDTO.ProductOptionCreateReqDTO> options;
+        private List<ProductOptionDTO.ProductOptionReqDTO> options;
 
 //        public ProductStatus setEnumProductStatus(String status) {
 //            if (status.equals(ProductStatus.FOR_SALE)) {

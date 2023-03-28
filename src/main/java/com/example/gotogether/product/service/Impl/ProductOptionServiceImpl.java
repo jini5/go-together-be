@@ -1,22 +1,34 @@
 package com.example.gotogether.product.service.Impl;
 
 import com.example.gotogether.product.dto.ProductOptionDTO;
+import com.example.gotogether.product.entity.Product;
+import com.example.gotogether.product.entity.ProductOption;
+import com.example.gotogether.product.repository.ProductOptionRepository;
 import com.example.gotogether.product.repository.ProductRepository;
 import com.example.gotogether.product.service.ProductOptionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
+@RequiredArgsConstructor
 public class ProductOptionServiceImpl implements ProductOptionService {
 
-    private ProductRepository productRepository;
+    private final ProductOptionRepository productOptionRepository;
+    private final ProductRepository productRepository;
 
     @Override
-    public ResponseEntity<?> createProductOptions(ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
-
+    @Transactional
+    public ResponseEntity<?> createProductOptions(Long productId, ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
         try {
-
+            Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+            ProductOption productOption = productOptionReqDTO.toEntity(product);
+            product.getProductOptions().add(productOption);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -25,10 +37,12 @@ public class ProductOptionServiceImpl implements ProductOptionService {
 
 
     @Override
-    public ResponseEntity<?> patchProductOptions(ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
+    @Transactional
+    public ResponseEntity<?> updateProductOptions(Long productOptionId, ProductOptionDTO.OptionUpdateReqDTO optionUpdateReqDTO) {
 
         try {
-
+            ProductOption productOption = productOptionRepository.findByProductOptionId(productOptionId).orElseThrow(IllegalArgumentException::new);
+            productOption.update(optionUpdateReqDTO);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -36,10 +50,10 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     }
 
     @Override
-    public ResponseEntity<?> deleteProductOptions(ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
-
+    @Transactional
+    public ResponseEntity<?> deleteProductOption(Long productOptionId) {
         try {
-
+            productOptionRepository.deleteAllByProductOptionId(productOptionId).orElseThrow(IllegalArgumentException::new);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -47,11 +61,12 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     }
 
     @Override
-    public ResponseEntity<?> AllProductOptions(ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
-
+    public ResponseEntity<?> getAllProductOptions(Long productId) {
         try {
-
-            return new ResponseEntity<>(HttpStatus.OK);
+            Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+            List<ProductOption> productOptionList= productOptionRepository.findAllByProduct(product);
+            if (productOptionList.size()<1)return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(productOptionList.stream().map(ProductOptionDTO.ProductOptionResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
