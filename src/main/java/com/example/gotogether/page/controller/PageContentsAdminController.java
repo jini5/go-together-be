@@ -26,14 +26,14 @@ public class PageContentsAdminController {
 
     @PutMapping("/regions/{regionId}")
     @ApiOperation(value = "인기 지역 수정", notes = "관리자가 인기 여행지역 수정.\n\n" +
-            "code: 200 수정 성공, 400 지역 이름 중복 또는 잘못된 ID")
+            "code: 200 수정 성공, 400 지역 이름 중복, 404 잘못된 ID")
     public ResponseEntity<?> updateRegion(@PathVariable Long regionId,@RequestBody RegionDTO.RegionUpdateReqDTO dto){
         return pageContentsService.updateRegion(regionId,dto);
     }
 
     @DeleteMapping("/regions/{regionId}")
     @ApiOperation(value = "인기 지역 삭제", notes = "관리자가 인기 여행지역 삭제.\n\n" +
-            "code: 200 삭제 성공, 400 잘못된 ID")
+            "code: 200 삭제 성공, 404 잘못된 ID")
     public ResponseEntity<?> deleteRegion(@PathVariable Long regionId){
         return pageContentsService.deleteRegion(regionId);
     }
