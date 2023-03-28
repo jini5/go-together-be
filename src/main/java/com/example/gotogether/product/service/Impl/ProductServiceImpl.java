@@ -199,7 +199,11 @@ public class ProductServiceImpl implements ProductService {
             if (categoryId!=null) {
                 category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
             }
-            List<Product> productList = productRepository.findPopular(category);
+            List<Category> categoryList = null;
+            if (category!=null) {
+                categoryList = listOfCategory(category);
+            }
+            List<Product> productList = productRepository.findPopular(categoryList);
             if (productList.size() < 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
