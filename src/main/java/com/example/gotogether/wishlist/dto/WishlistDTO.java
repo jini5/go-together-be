@@ -2,10 +2,7 @@ package com.example.gotogether.wishlist.dto;
 
 import com.example.gotogether.wishlist.entity.Wishlist;
 import io.swagger.annotations.ApiModel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
@@ -30,7 +27,7 @@ public class WishlistDTO {
     }
 
 
-
+    @AllArgsConstructor
     @NoArgsConstructor
     @Getter
     @ApiModel(value = "위시리스트 목록 조회")
@@ -42,6 +39,17 @@ public class WishlistDTO {
         private String productName;
         private String productThubnail;
         private String productFeature;
+
+        @Override
+        public String toString() {
+            return "WishlistResDTO{" +
+                    "wishlistId=" + wishlistId +
+                    ", productId=" + productId +
+                    ", productName='" + productName + '\'' +
+                    ", productThubnail='" + productThubnail + '\'' +
+                    ", productFeature='" + productFeature + '\'' +
+                    '}';
+        }
 
         public WishlistResDTO(Wishlist wishlist){
             wishlistId = wishlist.getWishlistId();
