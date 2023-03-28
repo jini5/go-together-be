@@ -103,6 +103,10 @@ public class ProductDTO {
         @ApiModelProperty(value = "상품 썸네일", required = true)
         private String productThumbnail;
 
+        @ApiModelProperty(value = "상품 가격", required = true)
+        private int productPrice;
+
+
 
         private ProductStatus productStatus;
 
@@ -115,6 +119,7 @@ public class ProductDTO {
             this.productSummary = product.getSummary();
             this.productArea = product.getArea();
             this.productThumbnail = product.getThumbnail();
+            this.productPrice=product.getPrice();
         }
     }
 

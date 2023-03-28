@@ -1,6 +1,7 @@
 package com.example.gotogether.product.entity;
 
 import com.example.gotogether.product.dto.ProductDTO;
+import com.example.gotogether.reservation.entity.ReservationDetail;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +32,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProductOption> productOptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product" , fetch = FetchType.LAZY)
+    private List<ReservationDetail> reservationDetails = new ArrayList<>();
 
     @Column(name = "name")
     private String name;

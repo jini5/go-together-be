@@ -20,13 +20,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.gotogether.global.config.PageSizeConfig.*;
 
-import static com.example.gotogether.global.config.PageSizeConfig.Product_List_By_Category;
-import static com.example.gotogether.global.config.PageSizeConfig.Product_List_By_Admin;
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -170,12 +170,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> findProductByKeyword(String keyword, int page) {
+    public ResponseEntity<?> findProductByKeyword(String keyword, int page, String sort, LocalDate dateOption, int people) {
         try {
             if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Category);
+            PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Keyword);
             Page<Product> productPage = productRepository
-                    .findAllByNameContainsOrSummaryContainsOrFeatureContainsOrDetailContainsAndProductStatus(pageable,keyword,keyword,keyword,keyword, ProductStatus.FOR_SALE);
+                    .searchByKeywordAndSorting(pageable,keyword,sort, dateOption, people);
+            if (productPage.getTotalElements()<1){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             PageResponseDTO pageResponseDTO = new PageResponseDTO(productPage);
             pageResponseDTO
                     .setContent(pageResponseDTO.getContent()
@@ -185,6 +188,29 @@ public class ProductServiceImpl implements ProductService {
             return new ResponseEntity<>(pageResponseDTO,HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> findPopularProducts(Long categoryId) {
+        try {
+            Category category = null;
+            if (categoryId!=null) {
+                category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
+            }
+            List<Category> categoryList = null;
+            if (category!=null) {
+                categoryList = listOfCategory(category);
+            }
+            List<Product> productList = productRepository.findPopular(categoryList);
+            if (productList.size() < 1) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(productList.stream().map(ProductDTO.ProductListResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
