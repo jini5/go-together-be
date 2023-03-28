@@ -11,8 +11,8 @@ public interface WishlistService {
 
     @Transactional
     ResponseEntity<?> createWishlist(UserDTO.UserAccessDTO userAccessDTO, WishlistDTO.WishReqDTO wishReqDTO);
-
-
     @Transactional
     ResponseEntity<?> deleteWishlist(UserDTO.UserAccessDTO userAccessDTO,WishlistDTO.DeleteWishReqDTO deletewishReqDTO);
+    @Transactional
+    ResponseEntity<?> findAllWishlistDTO(UserDTO.UserAccessDTO userAccessDTO);
 }

@@ -10,13 +10,14 @@ import com.example.gotogether.wishlist.entity.Wishlist;
 import com.example.gotogether.wishlist.repository.WishlistRepository;
 import com.example.gotogether.wishlist.service.WishlistService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.security.SecurityUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -53,6 +54,19 @@ public class WishlistServiceImpl implements WishlistService {
                 return new ResponseEntity<>(HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<List<?>> findAllWishlistDTO(UserDTO.UserAccessDTO userAccessDTO) {
+        try {
+            User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
+            List<Wishlist> wishlists = wishlistRepository.findAllByUser(user);
+            List<WishlistDTO.WishlistResDTO> allWishlist = wishlists.stream().map(WishlistDTO.WishlistResDTO::new).collect(Collectors.toList());
+            return new ResponseEntity<>(allWishlist, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
