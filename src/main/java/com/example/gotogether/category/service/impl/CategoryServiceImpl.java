@@ -85,5 +85,15 @@ public class CategoryServiceImpl implements CategoryService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<?> viewCategoryDetail(Long categoryId) {
+        try {
+            Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
+            return new ResponseEntity<>(CategoryDTO.ViewCategory.of(category),HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 }
