@@ -23,7 +23,6 @@ public class AdminProductController {
     @PostMapping("/products")
     @ApiOperation(value = "상품 추가", notes = "상품 추가")
     public ResponseEntity<?> createProduct(@RequestBody ProductDTO.ProductReqDTO productReqDTO) {
-        System.out.println(productReqDTO.toString());
         return productService.createProduct(productReqDTO);
     }
 

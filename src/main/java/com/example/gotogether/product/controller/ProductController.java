@@ -44,4 +44,13 @@ public class ProductController {
         }
         return productService.findProductByKeyword(keyword,page,sort,date,people);
     }
+
+    @GetMapping("/details/{productId}")
+    @ApiOperation(value = "상품 상세 정보", notes = "상품 상세 정보를 보여줍니다.")
+    public ResponseEntity<?> oneProductForUser(@PathVariable Long productId) {
+        return productService.findDetailProduct(productId);
+    }
+
+
+
 }

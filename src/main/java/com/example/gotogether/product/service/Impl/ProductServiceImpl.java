@@ -51,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
                         .build());
             }
             //상품 옵션 생성 후, 상품 엔티티의 옵션 리스트에 넣기
-            for (ProductOptionDTO.ProductOptionCreateReqDTO createDto : productReqDTO.getOptions()) {
+            for (ProductOptionDTO.ProductOptionReqDTO createDto : productReqDTO.getOptions()) {
                 product.getProductOptions().add(ProductOption.builder()
                         .product(product)
                         .startDate(createDto.getStartDate())
