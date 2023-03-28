@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface ProductRepositoryCustom {
     Page<Product> searchByKeywordAndSorting(Pageable pageable, String keyword, String sort, LocalDate localDate, int people);
-    List<Product> findPopular(Category category);
+    List<Product> findPopular(List<Category> categoryList);
 }
