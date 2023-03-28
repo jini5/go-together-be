@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = {"관리자 예약 서비스"}, description = "전체 예약 목록 조회")
+@Api(tags = {"관리자 예약 서비스"}, description = "전체 예약 목록 조회, 예약 상태 수정")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RestController
