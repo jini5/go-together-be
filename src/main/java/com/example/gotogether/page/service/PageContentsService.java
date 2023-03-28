@@ -10,4 +10,6 @@ public interface PageContentsService {
 
     ResponseEntity<?> updateRegion(Long regionId,RegionDTO.RegionUpdateReqDTO dto);
     ResponseEntity<?> deleteRegion(Long regionId);
+
+    ResponseEntity<?> getRegionDetail(Long regionId);
 }

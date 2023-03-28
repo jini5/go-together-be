@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,6 +63,16 @@ public class PageContentsServiceImpl implements PageContentsService {
             regionRepository.delete(region);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getRegionDetail(Long regionId) {
+        try {
+            Region region = regionRepository.findById(regionId).orElseThrow(NoSuchElementException::new);
+            return new ResponseEntity<>(new RegionDTO.RegionResDTO(region),HttpStatus.OK);
+        }catch (NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
