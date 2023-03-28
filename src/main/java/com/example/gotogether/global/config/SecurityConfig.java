@@ -32,9 +32,10 @@ public class SecurityConfig {
 
 
     private static final String[] PUBLIC_URLS = { //이 URL은 권한 검사안함
-            "/auth/**", "/categories",
-            "/products/**",
+            "/auth/**", "/categories/**",
+            "/products/**","/productOptions",
             "/board", "/board/detail/*", "/board/search",
+            "/page/popular/regions","/page/popular/products",
 
 
             /* swagger v3 */

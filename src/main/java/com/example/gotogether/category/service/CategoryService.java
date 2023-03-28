@@ -11,4 +11,6 @@ public interface CategoryService {
     ResponseEntity<?> updateCate(Long categoryId, CategoryDTO.UpdateCategory dto);
 
     ResponseEntity<?> deleteCate(Long categoryId);
+
+    ResponseEntity<?> viewCategoryDetail(Long categoryId);
 }

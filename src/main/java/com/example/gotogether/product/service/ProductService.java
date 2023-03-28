@@ -4,19 +4,24 @@ import com.example.gotogether.product.dto.ProductDTO;
 import com.example.gotogether.product.entity.Product;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ProductService {
 
-    ResponseEntity<?> createProduct(ProductDTO.ProductReqDTO productReqDTO);
+    ResponseEntity<?> createProduct(ProductDTO.ProductCreateReqDTO productReqDTO);
 
     ResponseEntity<?> deleteProduct(Long productId);
 
-    ResponseEntity<List<Product>> getAllProducts();
+    ResponseEntity<?> getAllProducts(int page);
 
-    ResponseEntity<?> patchProduct(Long productId, ProductDTO.ProductReqDTO productReqDTO);
+    ResponseEntity<?> updateProduct(Long productId, ProductDTO.ProductUpdateReqDTO productReqDTO);
+
+    ResponseEntity<?> findDetailProduct(Long productId);
 
     ResponseEntity<?> findProductByCategory(Long categoryId, int page);
 
-    ResponseEntity<?> findProductByKeyword(String keyword, int page);
+    ResponseEntity<?> findProductByKeyword(String keyword, int page, String sort, LocalDate dateOption, int people);
+
+    ResponseEntity<?> findPopularProducts(Long categoryId);
 }

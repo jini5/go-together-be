@@ -1,6 +1,7 @@
 package com.example.gotogether.product.repository;
 
 import com.example.gotogether.category.entity.Category;
+import com.example.gotogether.product.entity.Product;
 import com.example.gotogether.product.entity.ProductCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,4 +15,7 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
 
     @Transactional
     void deleteAllByCategory(Category category);
+
+    @Transactional
+    void deleteAllByProduct(Product product);
 }
