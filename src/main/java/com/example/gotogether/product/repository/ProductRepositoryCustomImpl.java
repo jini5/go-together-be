@@ -111,14 +111,7 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
     }
 
     private BooleanExpression isStartDateAfter(LocalDate localDate,int people){
-        if (localDate == null){
-            if (people<1){
-                return null;
-            }else {
-                return isAvailablePeople(people);
-            }
-        }
-
+        
         return productOption.startDate.after(localDate).and(isAvailablePeople(people));
     }
     private BooleanExpression isAvailablePeople(int people){
