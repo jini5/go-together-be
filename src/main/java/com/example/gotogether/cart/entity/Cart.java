@@ -57,11 +57,9 @@ public class Cart {
         this.singleRoomNumber = singleRoomNumber;
     }
 
-    public void update(CartDTO.UpdateCartReqDTO updateCartReqDTO){
+    public void update(CartDTO.UpdateCartReqDTO updateCartReqDTO,ProductOption productOption){
+        this.productOption = productOption;
         this.numberOfPeople = updateCartReqDTO.getNumberOfPeople();
         this.singleRoomNumber = updateCartReqDTO.getSingleRoomNumber();
-    }
-    public void findProductOption(ProductOption productOption) {
-        this.productOption = productOption;
     }
 }
