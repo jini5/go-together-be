@@ -58,11 +58,10 @@ public class Cart {
     }
 
     public void update(CartDTO.UpdateCartReqDTO updateCartReqDTO){
-        ProductOption productOption = new ProductOption();
-        productOption.setProductOptionId(updateCartReqDTO.getProductOptionId());
-        this.productOption = productOption;
         this.numberOfPeople = updateCartReqDTO.getNumberOfPeople();
         this.singleRoomNumber = updateCartReqDTO.getSingleRoomNumber();
     }
-
+    public void findProductOption(ProductOption productOption) {
+        this.productOption = productOption;
+    }
 }
