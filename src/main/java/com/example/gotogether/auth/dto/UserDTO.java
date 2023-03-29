@@ -67,6 +67,10 @@ public class UserDTO {
         private String userPassword;
         @ApiModelProperty(value = "비밀번호 확인", required = true)
         private String passwordConfirmation;
+        @ApiModelProperty(value = "여권에 적힌 이름", required = true)
+        private String passportFirstName;
+        @ApiModelProperty(value = "여권에 적힌 성", required = true)
+        private String passportLastName;
         @ApiModelProperty(value = "전화번호", required = true)
         private String userPhoneNumber;
         @ApiModelProperty(value = "생년월일", required = true)
@@ -83,6 +87,8 @@ public class UserDTO {
                     .name(userName)
                     .email(userEmail)
                     .password(userPassword)
+                    .passportFirstName(passportFirstName)
+                    .passportLastName(passportLastName)
                     .phoneNumber(userPhoneNumber)
                     .birthday(userBirth)
                     .gender(userGender)
@@ -208,6 +214,8 @@ public class UserDTO {
         private String email;
         private String phoneNumber;
         private String birthday;
+        private String passportFirstName;
+        private String passportLastName;
         private String gender;
         private String type;
         private String sns;
@@ -222,6 +230,8 @@ public class UserDTO {
             this.email = user.getEmail();
             this.phoneNumber = user.getPhoneNumber();
             this.birthday = user.getBirthday();
+            this.passportFirstName = user.getPassportFirstName();
+            this.passportLastName = user.getPassportLastName();
             this.gender = user.getGender();
             this.type = user.getType();
             this.sns = user.getSns();
@@ -247,6 +257,10 @@ public class UserDTO {
         private String userPhoneNumber;
         @ApiModelProperty(value = "사용자 생년월일 입력", required = true)
         private String userBirthday;
+        @ApiModelProperty(value = "사용자 여권에 적힌 이름", required = true)
+        private String passportFirstName;
+        @ApiModelProperty(value = "사용자 여권에 적힌 성", required = true)
+        private String passportLastName;
         @ApiModelProperty(value = "사용자 성별 입력\n male or female", required = true)
         private String userGender;
         @ApiModelProperty(value = "사용자 여행 유형 입력", required = true)
