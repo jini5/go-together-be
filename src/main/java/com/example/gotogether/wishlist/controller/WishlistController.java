@@ -20,7 +20,7 @@ public class WishlistController {
     private final WishlistService wishlistService;
 
     @PostMapping("/wishlist")
-    @ApiOperation(value = "위시리스트 상품 추가", notes = "상품ID를 통해 위시리스트 목록에 상품을 추가한다. \\n\\n" +"code: 200 위시리스트 추가 성공,  code: 400 해당 상품이 이미 있음, code: 401 로그인X , code: 500 서버에러")
+    @ApiOperation(value = "위시리스트 상품 추가", notes = "상품ID를 통해 위시리스트 목록에 상품을 추가한다. \\n\\n" +"code: 201 위시리스트 추가 성공,  code: 400 해당 상품이 이미 있음, code: 401 로그인X , code: 500 서버에러")
     public ResponseEntity<?> addWishlist(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @RequestBody WishlistDTO.WishReqDTO wishReqDTO){
         return wishlistService.createWishlist(userAccessDTO, wishReqDTO);
     }
