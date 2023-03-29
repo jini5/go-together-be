@@ -117,10 +117,6 @@ public class CartServiceImpl implements CartService {
         try {
             Cart cart = cartRepository.findById(cartId).orElseThrow(NoSuchElementException::new);
             ProductOption productOption = productOptionRepository.findById(updateCartReqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
-            if (productOption.getProduct().getProductId() == cart.getProduct().getProductId() &&
-                    productOption.getProductOptionId() == cart.getProductOption().getProductOptionId()) {
-                return new ResponseEntity<>("해당 상품과 그 상품에 하는 옵션이 이미 장바구니에 존재합니다.", HttpStatus.BAD_REQUEST);
-            }
             if (productOption.getProduct().getProductId() != cart.getProduct().getProductId()){
                 return new ResponseEntity<>("존재하지 않는 옵션입니다.", HttpStatus.BAD_REQUEST);
             }
@@ -130,7 +126,9 @@ public class CartServiceImpl implements CartService {
             if(updateCartReqDTO.getSingleRoomNumber()>(productOption.getMaxSingleRoom()-productOption.getPresentPeopleNumber())){
                 return new ResponseEntity<>("예약 가능한 최대 싱글를을 수를 초과하였습니다.",HttpStatus.BAD_REQUEST);
             }
+            cart.findProductOption(productOption);
             cart.update(updateCartReqDTO);
+            cartRepository.save(cart);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
