@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = {"사용자 예약 서비스"}, description = "회원 예약 목록 조회, 예약 상세 정보 조회")
+@Api(tags = {"사용자 예약 서비스"}, description = "회원 예약 목록 조회, 예약 상세 정보 조회, 회원 예약 취소")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RestController
@@ -30,5 +30,12 @@ public class ReservationController {
     @GetMapping("/{reservationId}")
     public ResponseEntity<?> findDetailInfo(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @PathVariable Long reservationId) {
         return reservationService.findDetailInfo(userAccessDTO, reservationId);
+    }
+
+    @ApiOperation(value = "회원 예약 취소", notes = "회원의 예약을 취소한다.\n\n" +
+            "code: 200 예약 취소 성공, 400 잘못된 reservationId 요청, 403 권한없는 사용자 접근")
+    @PatchMapping("/{reservationId}")
+    public ResponseEntity<?> cancelReservation(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @PathVariable Long reservationId) {
+        return reservationService.cancelReservation(userAccessDTO, reservationId);
     }
 }
