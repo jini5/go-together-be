@@ -69,7 +69,7 @@ public class CartDTO {
         private int numberOfPeople;
         private int singleRoomNumber;
 
-        public CartListResDTO(Long cartId, Long productId, Long productOprionId, String productName, String productThubnail, int numberOfPeople, int singleRoomNumber) {
+        public CartListResDTO(Long cartId, Long productId, Long productOptionId, String productName, String productThubnail, int numberOfPeople, int singleRoomNumber) {
             this.cartId = cartId;
             this.productId = productId;
             this.productOptionId = productOptionId;
