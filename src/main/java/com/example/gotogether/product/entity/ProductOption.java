@@ -60,4 +60,8 @@ public class ProductOption {
         this.maxPeople=optionUpdateReqDTO.getMaxPeople();
         this.maxSingleRoom=optionUpdateReqDTO.getMaxSingleRoom();
     }
+
+    public void setProductOptionId(Long productOptionId) {
+        this.productOptionId=productOptionId;
+    }
 }
