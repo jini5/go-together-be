@@ -22,19 +22,19 @@ public class CartController {
 
 
     @PostMapping("/cart")
-    @ApiOperation(value = "장바구니 상품 추가", notes = "상품ID를 통해 장바구니에 상품을 추가한다. \n\n" +"code: 200 장바구니 추가 성공, code: 401 로그인X , code: 500 서버에러")
+    @ApiOperation(value = "장바구니 상품 추가", notes = "상품ID를 통해 장바구니에 상품을 추가한다. \n\n" +"code: 201 장바구니 추가 성공, code: 400 발생하는 원린 body로 출력, code: 401 로그인X , code: 500 서버에러")
     public ResponseEntity<?> addCart(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @RequestBody CartDTO.AddCartReqDTO addCartReqDTO){
         return cartService.addCart(userAccessDTO, addCartReqDTO);
     }
 
     @DeleteMapping("/cart/{cartId}")
-    @ApiOperation(value = "장바구니 상품 삭제", notes = "상품ID를 통해 장바구니에 상품을 추가한다. \n\n" +"code: 200 장바구니 삭제 성공, code: 204 장바구니에 없는 상품, code: 400 이미 장바구니에서 삭제됨, code: 500 서버에러")
+    @ApiOperation(value = "장바구니 상품 삭제", notes = "상품ID를 통해 장바구니에 상품을 삭제한다. \n\n" +"code: 200 장바구니 삭제 성공, code: 204 장바구니에 없는 상품, code: 400 이미 장바구니에서 삭제됨, code: 500 서버에러")
     public ResponseEntity<?> deletedCart(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @PathVariable Long cartId){
         return cartService.deleteCart(userAccessDTO, cartId);
     }
 
     @PatchMapping("/cart/{cartId}")
-    @ApiOperation(value = "내 장바구니 수정", notes = "회원의 장바구니를 수정한다. \n\n" +"code: 200 장바구니 수정 성공, code: 404 장바구니가 없음, code: 500 서버에러")
+    @ApiOperation(value = "내 장바구니 수정", notes = "회원의 장바구니를 수정한다. \n\n" +"code: 200 장바구니 수정 성공, code: 400 발생하는 원린 body로 출력, code: 404 장바구니가 없음, code: 500 서버에러")
     public ResponseEntity<?> updatedCart(@PathVariable Long cartId, @RequestBody CartDTO.UpdateCartReqDTO updateCartReqDTO){
         return cartService.updateCart(cartId, updateCartReqDTO);
     }
