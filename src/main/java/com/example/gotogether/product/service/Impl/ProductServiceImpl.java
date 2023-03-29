@@ -115,6 +115,9 @@ public class ProductServiceImpl implements ProductService {
             if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Admin);
             Page<Product> productList = productRepository.findAll(pageable);
+            if (productList.getContent().size()<1){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             PageResponseDTO pageResponseDTO = new PageResponseDTO(productList);
             pageResponseDTO.setContent(
                     pageResponseDTO
