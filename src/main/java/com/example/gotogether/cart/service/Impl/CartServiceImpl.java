@@ -115,20 +115,21 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public ResponseEntity<?> updateCart(Long cartId, CartDTO.UpdateCartReqDTO updateCartReqDTO) {
         try {
+            //카트 찾고
             Cart cart = cartRepository.findById(cartId).orElseThrow(NoSuchElementException::new);
+            //new 옵션
             ProductOption productOption = productOptionRepository.findById(updateCartReqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
             if (productOption.getProduct().getProductId() != cart.getProduct().getProductId()){
-                return new ResponseEntity<>("존재하지 않는 옵션입니다.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("해당 상품에는 존재하지 않는 옵션입니다.", HttpStatus.BAD_REQUEST);
             }
+            // 인원 및 싱글룸 유효성 검사
             if(updateCartReqDTO.getNumberOfPeople()>(productOption.getMaxPeople()- productOption.getPresentPeopleNumber())){
                 return new ResponseEntity<>("예약 가능한 최대 인원수를 초과하였습니다.",HttpStatus.BAD_REQUEST);
             }
             if(updateCartReqDTO.getSingleRoomNumber()>(productOption.getMaxSingleRoom()-productOption.getPresentPeopleNumber())){
                 return new ResponseEntity<>("예약 가능한 최대 싱글를을 수를 초과하였습니다.",HttpStatus.BAD_REQUEST);
             }
-            cart.findProductOption(productOption);
-            cart.update(updateCartReqDTO);
-            cartRepository.save(cart);
+            cart.update(updateCartReqDTO,productOption);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
