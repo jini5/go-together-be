@@ -13,4 +13,6 @@ public interface ReservationService {
     ResponseEntity<?> findList(UserDTO.UserAccessDTO userAccessDTO, int pageNumber);
 
     ResponseEntity<?> findDetailInfo(UserDTO.UserAccessDTO userAccessDTO, Long reservationId);
+
+    ResponseEntity<?> cancelReservation(UserDTO.UserAccessDTO userAccessDTO, Long reservationId);
 }
