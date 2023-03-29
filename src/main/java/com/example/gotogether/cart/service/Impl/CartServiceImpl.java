@@ -40,7 +40,7 @@ public class CartServiceImpl implements CartService {
             Product product = productRepository.findById(addCartReqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
             ProductOption productOption = productOptionRepository.findById(addCartReqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
             if (cartRepository.existsByUserAndProductAndProductOption(user, product, productOption)) {
-                return new ResponseEntity<>("해당 상품과 같은 상품옵션은 이미 장바구니에 있습니다.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("해당 상품과 그 상품에 하는 상품옵션은 이미 장바구니에 있습니다.", HttpStatus.BAD_REQUEST);
             }
             if (productOption.getProduct().getProductId() != addCartReqDTO.getProductId()){
                 return new ResponseEntity<>("존재하지 않는 옵션입니다.", HttpStatus.BAD_REQUEST);
@@ -117,9 +117,9 @@ public class CartServiceImpl implements CartService {
         try {
             Cart cart = cartRepository.findById(cartId).orElseThrow(NoSuchElementException::new);
             ProductOption productOption = productOptionRepository.findById(updateCartReqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
-            if (productOption.getProduct().getProductId() == cart.getProduct().getProductId() ||
+            if (productOption.getProduct().getProductId() == cart.getProduct().getProductId() &&
                     productOption.getProductOptionId() == cart.getProductOption().getProductOptionId()) {
-                return new ResponseEntity<>("해당 상품과 옵션이 이미 장바구니에 존재합니다.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("해당 상품과 그 상품에 하는 옵션이 이미 장바구니에 존재합니다.", HttpStatus.BAD_REQUEST);
             }
             if (productOption.getProduct().getProductId() != cart.getProduct().getProductId()){
                 return new ResponseEntity<>("존재하지 않는 옵션입니다.", HttpStatus.BAD_REQUEST);
