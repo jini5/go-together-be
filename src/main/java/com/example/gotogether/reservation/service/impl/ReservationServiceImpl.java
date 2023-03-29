@@ -107,4 +107,30 @@ public class ReservationServiceImpl implements ReservationService {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * 예약 상세 정보 조회
+     *
+     * @param userAccessDTO 토큰 정보
+     * @param reservationId 조회할 예약 아이디
+     */
+    @Override
+    public ResponseEntity<?> findDetailInfo(UserDTO.UserAccessDTO userAccessDTO, Long reservationId) {
+
+        try {
+            Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NoSuchElementException::new);
+            if (!userAccessDTO.getRole().equals("ROLE_ADMIN")) {
+                if (!userAccessDTO.getEmail().equals(reservation.getUser().getEmail())) {
+
+                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                }
+            }
+            ReservationDTO.DetailInfoResDTO detailInfoResDTO = new ReservationDTO.DetailInfoResDTO(reservation);
+
+            return new ResponseEntity<>(detailInfoResDTO, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
