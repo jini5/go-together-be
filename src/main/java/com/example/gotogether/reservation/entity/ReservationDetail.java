@@ -1,6 +1,7 @@
 package com.example.gotogether.reservation.entity;
 
 import com.example.gotogether.product.entity.Product;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,8 +22,8 @@ public class ReservationDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Column(name = "product_data_option_id")
-    private Long productDateOptionId;
+    @Column(name = "product_option_id")
+    private Long productOptionId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,4 +45,15 @@ public class ReservationDetail {
     @Column(name = "end_date")
     private LocalDate endDate;
 
+    @Builder
+    public ReservationDetail(Reservation reservation, Product product, Long productOptionId, int numberOfPeople, int singleRoomNumber, int detailTotalPrice, LocalDate startDate, LocalDate endDate) {
+        this.reservation = reservation;
+        this.product = product;
+        this.productOptionId = productOptionId;
+        this.numberOfPeople = numberOfPeople;
+        this.singleRoomNumber = singleRoomNumber;
+        this.detailTotalPrice = detailTotalPrice;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

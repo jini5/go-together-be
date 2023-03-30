@@ -1,5 +1,6 @@
 package com.example.gotogether.reservation.dto;
 
+import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.reservation.entity.PaymentMethod;
 import com.example.gotogether.reservation.entity.Reservation;
 import com.example.gotogether.reservation.entity.ReservationStatus;
@@ -52,6 +53,16 @@ public class ReservationDTO {
                     .mapToInt(r -> r.getDetailTotalPrice())
                     .sum();
         }
+    }
+
+    @ApiModel(value = "예약상태 수정")
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class ModifyStatusReqDTO {
+
+        @ApiModelProperty(value = "예약상태")
+        private ReservationStatus reservationStatus;
     }
 
     @ApiModel(value = "사용자 페이지 예약 목록 조회 응답")
@@ -128,6 +139,28 @@ public class ReservationDTO {
             this.reservationProductList = reservation.getReservationDetails().stream()
                     .map(ReservationDetailDTO.DetailInfoResDTO::new)
                     .collect(Collectors.toList());
+        }
+    }
+
+    @ApiModel(value = "예약 추가 요청")
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class AddReqDTO {
+
+        @ApiModelProperty(value = "결제수단")
+        private PaymentMethod paymentMethod;
+        @ApiModelProperty(value = "예약상태")
+        private ReservationStatus reservationStatus;
+        @ApiModelProperty(value = "예약리스트")
+        private List<ReservationDetailDTO.AddReqDTO> reservationList;
+
+        public Reservation toEntity(User user) {
+            return Reservation.builder()
+                    .user(user)
+                    .paymentMethod(paymentMethod)
+                    .reservationStatus(reservationStatus)
+                    .build();
         }
     }
 }
