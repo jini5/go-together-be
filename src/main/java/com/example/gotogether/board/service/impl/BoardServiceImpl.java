@@ -72,6 +72,9 @@ public class BoardServiceImpl implements BoardService {
         try {
             Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
             BoardDTO.DetailInfoResDTO detailInfoResDTO = new BoardDTO.DetailInfoResDTO(board);
+            if (detailInfoResDTO.getBoardType().equals(BoardType.NOTICE.getValue())) {
+                detailInfoResDTO.setUserName("관리자");
+            }
 
             return new ResponseEntity<>(detailInfoResDTO, HttpStatus.OK);
         } catch (NoSuchElementException e) {

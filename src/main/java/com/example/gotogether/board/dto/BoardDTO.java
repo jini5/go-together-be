@@ -20,24 +20,24 @@ public class BoardDTO {
     @Setter
     public static class ListResDTO {
 
-        @ApiModelProperty(value = "여행후기 아이디")
+        @ApiModelProperty(value = "게시글 아이디")
         private Long boardId;
         @ApiModelProperty(value = "작성자 이름")
         private String userName;
-        @ApiModelProperty(value = "게시판 타입")
-        private BoardType boardType;
-        @ApiModelProperty(value = "게시판 썸네일")
+        @ApiModelProperty(value = "게시글 타입")
+        private String boardType;
+        @ApiModelProperty(value = "게시글 썸네일")
         private String boardThumbnail;
-        @ApiModelProperty(value = "게시판 제목")
+        @ApiModelProperty(value = "게시글 제목")
         private String boardTitle;
-        @ApiModelProperty(value = "게시판 생성일자")
+        @ApiModelProperty(value = "게시글 생성일자")
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate createdDate;
 
         public ListResDTO(Board board) {
             this.boardId = board.getBoardId();
             this.userName = board.getUser().getName();
-            this.boardType = board.getType();
+            this.boardType = board.getType().getValue();
             this.boardThumbnail = board.getThumbnail();
             this.boardTitle = board.getTitle();
             this.createdDate = board.getCreatedDate().toLocalDate();
@@ -50,27 +50,27 @@ public class BoardDTO {
     @Setter
     public static class DetailInfoResDTO {
 
-        @ApiModelProperty(value = "여행후기 아이디")
+        @ApiModelProperty(value = "게시글 아이디")
         private Long boardId;
         @ApiModelProperty(value = "작성자 이름")
         private String userName;
-        @ApiModelProperty(value = "게시판 타입")
-        private BoardType boardType;
-        @ApiModelProperty(value = "게시판 제목")
+        @ApiModelProperty(value = "게시글 타입")
+        private String boardType;
+        @ApiModelProperty(value = "게시글 제목")
         private String boardTitle;
         @ApiModelProperty(value = "게시글 내용")
         private String boardContent;
-        @ApiModelProperty(value = "게시판 생성일자")
+        @ApiModelProperty(value = "게시글 생성일자")
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate createdDate;
-        @ApiModelProperty(value = "게시판 마지막 수정일자")
+        @ApiModelProperty(value = "게시글 마지막 수정일자")
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate updatedDate;
 
         public DetailInfoResDTO(Board board) {
             this.boardId = board.getBoardId();
             this.userName = board.getUser().getName();
-            this.boardType = board.getType();
+            this.boardType = board.getType().getValue();
             this.boardTitle = board.getTitle();
             this.boardContent = board.getContent();
             this.createdDate = board.getCreatedDate().toLocalDate();
