@@ -1,5 +1,8 @@
 package com.example.gotogether.reservation.dto;
 
+import com.example.gotogether.product.entity.Product;
+import com.example.gotogether.product.entity.ProductOption;
+import com.example.gotogether.reservation.entity.Reservation;
 import com.example.gotogether.reservation.entity.ReservationDetail;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -98,6 +101,35 @@ public class ReservationDetailDTO {
             this.productSingleRoomPrice = reservationDetail.getProduct().getSingleRoomPrice();
             this.productPrice = reservationDetail.getProduct().getPrice();
             this.detailTotalPrice = reservationDetail.getDetailTotalPrice();
+        }
+    }
+
+    @ApiModel(value = "예약 추가 요청")
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class AddReqDTO {
+
+        @ApiModelProperty(value = "상품 아이디")
+        private Long productId;
+        @ApiModelProperty(value = "예약인원")
+        private int reservationPeopleNumber;
+        @ApiModelProperty(value = "예약 싱글룸 개수")
+        private int reservationSingleRoomNumber;
+        @ApiModelProperty(value = "상품옵션 아이디")
+        private Long productOptionId;
+
+        public ReservationDetail toEntity(Reservation reservation, Product product, ProductOption productOption) {
+            return ReservationDetail.builder()
+                    .reservation(reservation)
+                    .product(product)
+                    .productOptionId(productOptionId)
+                    .numberOfPeople(reservationPeopleNumber)
+                    .singleRoomNumber(reservationSingleRoomNumber)
+                    .detailTotalPrice(product.getPrice() * reservationPeopleNumber + product.getSingleRoomPrice() * reservationSingleRoomNumber)
+                    .startDate(productOption.getStartDate())
+                    .endDate(productOption.getEndDate())
+                    .build();
         }
     }
 }
