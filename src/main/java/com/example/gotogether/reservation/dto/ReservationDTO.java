@@ -55,6 +55,16 @@ public class ReservationDTO {
         }
     }
 
+    @ApiModel(value = "예약상태 수정")
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class ModifyStatusReqDTO {
+
+        @ApiModelProperty(value = "예약상태")
+        private ReservationStatus reservationStatus;
+    }
+
     @ApiModel(value = "사용자 페이지 예약 목록 조회 응답")
     @NoArgsConstructor
     @Getter
