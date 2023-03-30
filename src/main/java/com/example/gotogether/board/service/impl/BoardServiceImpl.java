@@ -93,6 +93,9 @@ public class BoardServiceImpl implements BoardService {
     public ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.AddReqDTO addReqDTO) {
 
         try {
+            if (addReqDTO.getBoardType().equals(BoardType.NOTICE.getValue())) {
+                addReqDTO.setBoardThumbnail("");
+            }
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
             Board board = addReqDTO.toEntity(user);
             boardRepository.save(board);
@@ -100,7 +103,7 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
 
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
