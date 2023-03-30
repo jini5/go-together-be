@@ -137,4 +137,16 @@ public class AdminServiceImpl implements AdminService {
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
+    @Override
+    @Transactional
+    public ResponseEntity<?> updateGrouping(GroupDTO dto) {
+        try {
+            Grouping grouping = groupingRepository.findById(dto.getUserType()).orElseThrow(NoSuchElementException::new);
+            grouping.setGroup(dto.getGroup());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

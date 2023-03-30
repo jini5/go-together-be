@@ -63,4 +63,8 @@ public class AdminUserController {
     public ResponseEntity<?> checkByGroup(@PathVariable String group){
         return adminService.getGroupingByGroup(group);
     }
+    @PatchMapping("/grouping")
+    public ResponseEntity<?> updateGrouping(@RequestBody GroupDTO dto){
+        return adminService.updateGrouping(dto);
+    }
 }

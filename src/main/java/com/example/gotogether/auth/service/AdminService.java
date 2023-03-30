@@ -19,4 +19,5 @@ public interface AdminService {
     ResponseEntity<?> findAllGrouping();
     ResponseEntity<?> getGroupingByType(String type);
     ResponseEntity<?> getGroupingByGroup(String group);
+    ResponseEntity<?> updateGrouping(GroupDTO dto);
 }
