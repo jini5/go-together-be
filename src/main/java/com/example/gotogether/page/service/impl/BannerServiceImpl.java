@@ -51,6 +51,7 @@ public class BannerServiceImpl implements BannerService {
             Banner banner = bannerRepository.findById(bannerId).orElseThrow(NoSuchElementException::new);
             Product product = productRepository.findById(bannerUpdateReqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
             banner.update(bannerUpdateReqDTO, product);
+            bannerRepository.save(banner);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
