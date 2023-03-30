@@ -128,4 +128,13 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> getGroupingByGroup(String group) {
+        List<GroupDTO> list = groupingRepository.findAllByGroup(group).stream().map(GroupDTO::new).collect(Collectors.toList());
+        if (list.size()<1){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+
 }

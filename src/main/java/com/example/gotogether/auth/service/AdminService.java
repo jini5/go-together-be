@@ -18,4 +18,5 @@ public interface AdminService {
     ResponseEntity<?> makeGroup(GroupDTO groupDTO);
     ResponseEntity<?> findAllGrouping();
     ResponseEntity<?> getGroupingByType(String type);
+    ResponseEntity<?> getGroupingByGroup(String group);
 }

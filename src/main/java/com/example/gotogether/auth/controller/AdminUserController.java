@@ -59,4 +59,8 @@ public class AdminUserController {
     public ResponseEntity<?> checkByType(@PathVariable String type){
         return adminService.getGroupingByType(type);
     }
+    @GetMapping("/grouping/group/{group}")
+    public ResponseEntity<?> checkByGroup(@PathVariable String group){
+        return adminService.getGroupingByGroup(group);
+    }
 }
