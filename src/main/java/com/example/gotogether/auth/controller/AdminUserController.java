@@ -67,4 +67,8 @@ public class AdminUserController {
     public ResponseEntity<?> updateGrouping(@RequestBody GroupDTO dto){
         return adminService.updateGrouping(dto);
     }
+    @DeleteMapping("/grouping/{type}")
+    public ResponseEntity<?> deleteGrouping(@PathVariable String type){
+        return adminService.deleteGrouping(type);
+    }
 }

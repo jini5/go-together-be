@@ -149,4 +149,18 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    @Override
+    @Transactional
+    public ResponseEntity<?> deleteGrouping(String type) {
+        try {
+            Grouping grouping = groupingRepository.findById(type).orElseThrow(NoSuchElementException::new);
+            groupingRepository.delete(grouping);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
