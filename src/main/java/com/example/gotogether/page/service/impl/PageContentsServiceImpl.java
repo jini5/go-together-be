@@ -1,9 +1,15 @@
 package com.example.gotogether.page.service.impl;
 
+import com.example.gotogether.auth.dto.UserDTO;
+import com.example.gotogether.auth.entity.User;
+import com.example.gotogether.auth.repository.UserRepository;
 import com.example.gotogether.page.dto.RegionDTO;
 import com.example.gotogether.page.entity.Region;
 import com.example.gotogether.page.repository.RegionRepository;
 import com.example.gotogether.page.service.PageContentsService;
+import com.example.gotogether.product.dto.ProductDTO;
+import com.example.gotogether.product.repository.ProductRepository;
+import com.example.gotogether.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -19,6 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PageContentsServiceImpl implements PageContentsService {
     private final RegionRepository regionRepository;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
 
     @Override
@@ -72,6 +80,26 @@ public class PageContentsServiceImpl implements PageContentsService {
         try {
             Region region = regionRepository.findById(regionId).orElseThrow(NoSuchElementException::new);
             return new ResponseEntity<>(new RegionDTO.RegionResDTO(region),HttpStatus.OK);
+        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> findGroupProduct(UserDTO.UserAccessDTO userAccessDTO) {
+        try {
+            User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
+            if (user.getType()==null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            List<ProductDTO.ProductListResDTO> list = productRepository.findAllByType(user.getType().getGroup())
+                    .stream()
+                    .map(ProductDTO.ProductListResDTO::new)
+                    .collect(Collectors.toList());
+            if (list.size()<1){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(list,HttpStatus.OK);
         }catch (NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

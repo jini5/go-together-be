@@ -18,4 +18,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>,ProductR
     Page<Product> findAll(Pageable pageable);
 
     boolean existsByName(String name);
+
+    List<Product> findAllByType(String type);
 }
