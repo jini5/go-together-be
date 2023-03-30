@@ -112,7 +112,9 @@ public class BoardDTO {
     @Setter
     public static class ModifyReqDTO {
 
-        @ApiModelProperty(value = "게시판 제목")
+        @ApiModelProperty(value = "게시글 썸네일")
+        private String boardThumbnail;
+        @ApiModelProperty(value = "게시글 제목")
         private String boardTitle;
         @ApiModelProperty(value = "게시글 내용")
         private String boardContent;
