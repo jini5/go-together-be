@@ -60,6 +60,7 @@ public class BannerDTO {
         private Long productId;
 
         public BannerResDTO(Banner banner) {
+            this.bannerId=banner.getBannerId();
             this.image=banner.getImage();
             this.productId = banner.getProduct().getProductId();
         }
