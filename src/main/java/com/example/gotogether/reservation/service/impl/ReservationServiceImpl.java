@@ -58,9 +58,10 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     /**
-     * 예약 상태 수정
+     * 예약상태 수정
      *
-     * @param reservationId 예약 아이디
+     * @param reservationId 예약상태 수정할 예약 아이디
+     * @param reservationStatus 수정할 예약상태 (수정 후)
      */
     @Transactional
     @Override
@@ -128,6 +129,31 @@ public class ReservationServiceImpl implements ReservationService {
             ReservationDTO.DetailInfoResDTO detailInfoResDTO = new ReservationDTO.DetailInfoResDTO(reservation);
 
             return new ResponseEntity<>(detailInfoResDTO, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 회원 예약 취소로 해당 예약의 예약 상태 변경
+     *
+     * @param userAccessDTO 토큰 정보
+     * @param reservationId 취소할 예약 아이디
+     */
+    @Transactional
+    @Override
+    public ResponseEntity<?> cancelReservation(UserDTO.UserAccessDTO userAccessDTO, Long reservationId) {
+
+        try {
+            Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NoSuchElementException::new);
+            if (!userAccessDTO.getEmail().equals(reservation.getUser().getEmail())) {
+
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+            reservation.updateStatus(ReservationStatus.CANCEL_REQUESTED);
+
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
