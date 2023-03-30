@@ -1,6 +1,7 @@
 package com.example.gotogether.reservation.entity;
 
 import com.example.gotogether.auth.entity.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -50,6 +51,13 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'UNDECIDED'")
     private ReservationStatus reservationStatus;
+
+    @Builder
+    public Reservation(User user, PaymentMethod paymentMethod, ReservationStatus reservationStatus) {
+        this.user = user;
+        this.paymentMethod = paymentMethod;
+        this.reservationStatus = reservationStatus;
+    }
 
     public void updateStatus(ReservationStatus reservationStatus) {
         this.reservationStatus = reservationStatus;
