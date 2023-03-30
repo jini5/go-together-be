@@ -2,6 +2,7 @@ package com.example.gotogether.board.dto;
 
 import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.board.entity.Board;
+import com.example.gotogether.board.entity.BoardType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 
 public class BoardDTO {
 
-    @ApiModel(value = "게시판 목록 조회 응답")
+    @ApiModel(value = "게시글 목록 조회 응답")
     @NoArgsConstructor
     @Getter
     @Setter
@@ -24,23 +25,22 @@ public class BoardDTO {
         @ApiModelProperty(value = "작성자 이름")
         private String userName;
         @ApiModelProperty(value = "게시판 타입")
-        private String boardType;
+        private BoardType boardType;
+        @ApiModelProperty(value = "게시판 썸네일")
+        private String boardThumbnail;
         @ApiModelProperty(value = "게시판 제목")
         private String boardTitle;
         @ApiModelProperty(value = "게시판 생성일자")
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate createdDate;
-        @ApiModelProperty(value = "게시판 마지막 수정일자")
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        private LocalDate updatedDate;
 
         public ListResDTO(Board board) {
             this.boardId = board.getBoardId();
             this.userName = board.getUser().getName();
             this.boardType = board.getType();
+            this.boardThumbnail = board.getThumbnail();
             this.boardTitle = board.getTitle();
             this.createdDate = board.getCreatedDate().toLocalDate();
-            this.updatedDate = board.getUpdatedDate().toLocalDate();
         }
     }
 
@@ -55,7 +55,7 @@ public class BoardDTO {
         @ApiModelProperty(value = "작성자 이름")
         private String userName;
         @ApiModelProperty(value = "게시판 타입")
-        private String boardType;
+        private BoardType boardType;
         @ApiModelProperty(value = "게시판 제목")
         private String boardTitle;
         @ApiModelProperty(value = "게시글 내용")
