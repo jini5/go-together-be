@@ -99,4 +99,13 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> makeGroup(GroupDTO groupDTO) {
+        if (groupingRepository.existsById(groupDTO.getUserType())){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        groupingRepository.save(new Grouping(groupDTO.getUserType(),groupDTO.getGroup()));
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
 }
