@@ -135,15 +135,24 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 게시글 수정
      *
+     * @param userAccessDTO 토큰 정보
      * @param modifyReqDTO 수정할 게시글 정보
      * @param boardId 수정할 게시글 아이디
      */
     @Transactional
     @Override
-    public ResponseEntity<?> modifyPost(BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId) {
+    public ResponseEntity<?> modifyPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId) {
 
         try {
             Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
+            boolean hasAuth = hasAuthority(userAccessDTO.getEmail(), userAccessDTO.getRole(), board.getType(), board.getUser().getEmail());
+            if (!hasAuth) {
+
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+            if (board.getType().equals(BoardType.NOTICE)) {
+                modifyReqDTO.setBoardThumbnail("");
+            }
             board.update(modifyReqDTO);
 
             return new ResponseEntity<>(HttpStatus.OK);
@@ -163,6 +172,25 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.deleteById(boardId);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * 해당 게시글에 대한 로그인 중인 회원의 권한 확인
+     *
+     * @param userEmail 로그인 중인 회원의 이메일
+     * @param userRole 로그인 중인 회원의 권한
+     * @param boardType 게시글 타입
+     * @param boardWriterEmail 게시글 작성자 이메일
+     */
+    public boolean hasAuthority(String userEmail, String userRole, BoardType boardType, String boardWriterEmail) {
+
+        if (userRole.equals("ROLE_ADMIN")) {
+            return true;
+        }
+        if (userRole.equals("ROLE_USER") && boardType.equals(BoardType.TRAVEL_REVIEW) && userEmail.equals(boardWriterEmail)) {
+            return true;
+        }
+        return false;
     }
 
     /**
