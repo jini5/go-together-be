@@ -223,7 +223,7 @@ public class UserDTO {
             this.phoneNumber = user.getPhoneNumber();
             this.birthday = user.getBirthday();
             this.gender = user.getGender();
-            this.type = user.getType();
+            this.type = user.getType().getUserType();
             this.sns = user.getSns();
             this.deleteCheck = user.getDeleteCheck();
             this.role = user.getRole();
