@@ -51,4 +51,8 @@ public class AdminUserController {
     public ResponseEntity<?> createGrouping(@RequestBody GroupDTO groupDTO){
         return adminService.makeGroup(groupDTO);
     }
+    @GetMapping("/grouping")
+    public ResponseEntity<?> checkGroup(){
+        return adminService.findAllGrouping();
+    }
 }

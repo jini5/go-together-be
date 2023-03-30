@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import static com.example.gotogether.global.config.PageSizeConfig.User_List_Size;
 
@@ -106,6 +108,15 @@ public class AdminServiceImpl implements AdminService {
         }
         groupingRepository.save(new Grouping(groupDTO.getUserType(),groupDTO.getGroup()));
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<?> findAllGrouping() {
+        List<GroupDTO> list = groupingRepository.findAll().stream().map(GroupDTO::new).collect(Collectors.toList());
+        if (list.size()<1){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
 }
