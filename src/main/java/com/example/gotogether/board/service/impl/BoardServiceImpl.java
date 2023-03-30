@@ -5,6 +5,7 @@ import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.auth.repository.UserRepository;
 import com.example.gotogether.board.dto.BoardDTO;
 import com.example.gotogether.board.entity.Board;
+import com.example.gotogether.board.entity.BoardType;
 import com.example.gotogether.board.repository.BoardRepository;
 import com.example.gotogether.board.service.BoardService;
 import com.example.gotogether.global.response.PageResponseDTO;
@@ -28,18 +29,32 @@ public class BoardServiceImpl implements BoardService {
     private final UserRepository userRepository;
 
     /**
-     * 현 페이지의 전체 게시글 목록 조회
+     * 현재 페이지의 게시판별 게시글 목록 조회
      *
-     * @param pageNumber 현 페이지 번호
+     * @param type 조회할 게시판 타입
+     * @param pageNumber 현재 페이지 번호
      */
     @Override
-    public ResponseEntity<?> findAllList(int pageNumber) {
+    public ResponseEntity<?> findList(BoardType type, int pageNumber) {
 
         try {
             PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
-            Page<Board> boardPage = boardRepository.findAll(pageRequest);
+            Page<Board> boardPage = boardRepository.findByType(type, pageRequest);
+            if (boardPage == null) {
+                throw new NullPointerException();
+            }
+            if (boardPage.getTotalElements() < 1) {
 
-            return getResponseEntityFrom(boardPage);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
+            if (type.equals(BoardType.NOTICE)) {
+                for (BoardDTO.ListResDTO resDTO : boardListResDTO.getContent()) {
+                    resDTO.setUserName("관리자");
+                }
+            }
+
+            return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
         } catch (NullPointerException e) {
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

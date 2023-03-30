@@ -37,8 +37,12 @@ public class Board {
     private Long boardId;
 
     @Column(name = "type")
-    @ColumnDefault("'여행 후기'")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private BoardType type;
+
+    @Column(name = "thumbnail")
+    @ColumnDefault("''")
+    private String thumbnail;
 
     @Column(name = "title")
     private String title;
