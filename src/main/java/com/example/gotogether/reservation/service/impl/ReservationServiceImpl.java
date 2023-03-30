@@ -24,9 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 import static com.example.gotogether.global.config.PageSizeConfig.ADMIN_RESERVATION_LIST_SIZE;
 import static com.example.gotogether.global.config.PageSizeConfig.USER_RESERVATION_LIST_SIZE;
@@ -73,14 +71,14 @@ public class ReservationServiceImpl implements ReservationService {
      * 예약상태 수정
      *
      * @param reservationId 예약상태 수정할 예약 아이디
-     * @param reservationStatus 수정할 예약상태 (수정 후)
+     * @param modifyStatusReqDTO 수정할 예약상태 (수정 후)
      */
     @Transactional
     @Override
-    public ResponseEntity<?> modifyReservationStatus(Long reservationId, ReservationStatus reservationStatus) {
+    public ResponseEntity<?> modifyReservationStatus(Long reservationId, ReservationDTO.ModifyStatusReqDTO modifyStatusReqDTO) {
         try {
             Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NoSuchElementException::new);
-            reservation.updateStatus(reservationStatus);
+            reservation.updateStatus(modifyStatusReqDTO.getReservationStatus());
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
