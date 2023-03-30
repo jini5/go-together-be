@@ -2,11 +2,12 @@ package com.example.gotogether.board.service;
 
 import com.example.gotogether.auth.dto.UserDTO;
 import com.example.gotogether.board.dto.BoardDTO;
+import com.example.gotogether.board.entity.BoardType;
 import org.springframework.http.ResponseEntity;
 
 public interface BoardService {
 
-    ResponseEntity<?> findAllList(int pageNumber);
+    ResponseEntity<?> findList(BoardType type, int pageNumber);
 
     ResponseEntity<?> findDetailInfo(Long boardId);
 
