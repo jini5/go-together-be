@@ -4,9 +4,16 @@ import com.example.gotogether.auth.dto.UserDTO;
 import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.auth.repository.UserRepository;
 import com.example.gotogether.global.response.PageResponseDTO;
+import com.example.gotogether.product.entity.Product;
+import com.example.gotogether.product.entity.ProductOption;
+import com.example.gotogether.product.repository.ProductOptionRepository;
+import com.example.gotogether.product.repository.ProductRepository;
 import com.example.gotogether.reservation.dto.ReservationDTO;
+import com.example.gotogether.reservation.dto.ReservationDetailDTO;
 import com.example.gotogether.reservation.entity.Reservation;
+import com.example.gotogether.reservation.entity.ReservationDetail;
 import com.example.gotogether.reservation.entity.ReservationStatus;
+import com.example.gotogether.reservation.repository.ReservationDetailRepository;
 import com.example.gotogether.reservation.repository.ReservationRepository;
 import com.example.gotogether.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +34,10 @@ import static com.example.gotogether.global.config.PageSizeConfig.USER_RESERVATI
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationDetailRepository reservationDetailRepository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final ProductOptionRepository productOptionRepository;
 
     /**
      * 현 페이지의 전체 예약 목록 조회
@@ -61,14 +71,14 @@ public class ReservationServiceImpl implements ReservationService {
      * 예약상태 수정
      *
      * @param reservationId 예약상태 수정할 예약 아이디
-     * @param reservationStatus 수정할 예약상태 (수정 후)
+     * @param modifyStatusReqDTO 수정할 예약상태 (수정 후)
      */
     @Transactional
     @Override
-    public ResponseEntity<?> modifyReservationStatus(Long reservationId, ReservationStatus reservationStatus) {
+    public ResponseEntity<?> modifyReservationStatus(Long reservationId, ReservationDTO.ModifyStatusReqDTO modifyStatusReqDTO) {
         try {
             Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NoSuchElementException::new);
-            reservation.updateStatus(reservationStatus);
+            reservation.updateStatus(modifyStatusReqDTO.getReservationStatus());
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
@@ -154,6 +164,35 @@ public class ReservationServiceImpl implements ReservationService {
             reservation.updateStatus(ReservationStatus.CANCEL_REQUESTED);
 
             return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 회원 예약 추가
+     *
+     * @param userAccessDTO 토큰 정보
+     * @param addReqDTO 추가할 예약 정보
+     */
+    @Transactional
+    @Override
+    public ResponseEntity<?> addReservation(UserDTO.UserAccessDTO userAccessDTO, ReservationDTO.AddReqDTO addReqDTO) {
+
+        try {
+            User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
+            Reservation reservation = addReqDTO.toEntity(user);
+            reservationRepository.save(reservation);
+
+            for (ReservationDetailDTO.AddReqDTO reqDTO : addReqDTO.getReservationList()) {
+                Product product = productRepository.findById(reqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
+                ProductOption productOption = productOptionRepository.findById(reqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
+                ReservationDetail reservationDetail = reqDTO.toEntity(reservation, product, productOption);
+                reservationDetailRepository.save(reservationDetail);
+            }
+
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -1,6 +1,7 @@
 package com.example.gotogether.reservation.controller;
 
 import com.example.gotogether.auth.dto.UserDTO;
+import com.example.gotogether.reservation.dto.ReservationDTO;
 import com.example.gotogether.reservation.service.ReservationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -9,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = {"사용자 예약 서비스"}, description = "회원 예약 목록 조회, 예약 상세 정보 조회, 회원 예약 취소")
+@Api(tags = {"사용자 예약 서비스"}, description = "회원 예약 목록 조회, 예약 상세 정보 조회, 회원 예약 취소, 회원 예약 추가")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RestController
@@ -37,5 +38,12 @@ public class ReservationController {
     @PatchMapping("/{reservationId}")
     public ResponseEntity<?> cancelReservation(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @PathVariable Long reservationId) {
         return reservationService.cancelReservation(userAccessDTO, reservationId);
+    }
+
+    @ApiOperation(value = "회원 예약 추가", notes = "회원의 예약을 추가한다.\n\n" +
+            "code: 201 예약 추가 성공, 400 잘못된 userId 또는 productId 또는 productOptionId 요청")
+    @PostMapping
+    public ResponseEntity<?> addReservation(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @RequestBody ReservationDTO.AddReqDTO addReqDTO) {
+        return reservationService.addReservation(userAccessDTO, addReqDTO);
     }
 }
