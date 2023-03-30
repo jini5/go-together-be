@@ -76,6 +76,7 @@ public class User {
 
     @Builder
     public User(String email, String password, String name, String birthday, String passportLastName, String passportFirstName,String phoneNumber, String role, String gender, String sns, String deleteCheck) {
+        this.email = email;
         this.password = password;
         this.name = name;
         this.birthday = birthday;
