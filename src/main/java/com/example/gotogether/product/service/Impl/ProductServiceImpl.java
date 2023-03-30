@@ -1,6 +1,5 @@
 package com.example.gotogether.product.service.Impl;
 
-import com.example.gotogether.auth.repository.GroupingRepository;
 import com.example.gotogether.category.entity.Category;
 import com.example.gotogether.category.repository.CategoryRepository;
 import com.example.gotogether.global.response.PageResponseDTO;
@@ -36,14 +35,10 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductCategoryRepository productCategoryRepository;
-    private final GroupingRepository groupingRepository;
 
     public ResponseEntity<?> createProduct(ProductDTO.ProductCreateReqDTO productCreateReqDTO) {
         try {
             if (productRepository.existsByName(productCreateReqDTO.getName()))return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            if (!groupingRepository.existsByGroup(productCreateReqDTO.getType())){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
             //상품 엔티티 생성
             Product product = productCreateReqDTO.toEntity();
             //상품 카테고리 엔티티 생성 후 상품엔티티의 카테고리 리스트에 넣기
@@ -93,9 +88,6 @@ public class ProductServiceImpl implements ProductService {
         try {
             Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
             if (product == null) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            if (!groupingRepository.existsByGroup(productUpdateReqDTO.getType())){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             productCategoryRepository.deleteAllByProduct(product);
