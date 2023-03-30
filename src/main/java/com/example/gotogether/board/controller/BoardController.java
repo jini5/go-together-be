@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +36,9 @@ public class BoardController {
     }
 
     @ApiOperation(value = "게시글 추가", notes = "게시글을 추가한다.\n\n" +
-            "code: 201 추가 성공, 401 없는 사용자 또는 잘못된 요청")
+            "code: 201 추가 성공, 400 잘못된 user 토큰 정보 요청, 403 권한없는 사용자 접근")
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_USER') and #addReqDTO.boardType == '여행후기')")
     public ResponseEntity<?> addPost(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @RequestBody BoardDTO.AddReqDTO addReqDTO) {
         return boardService.addPost(userAccessDTO, addReqDTO);
     }
