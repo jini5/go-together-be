@@ -17,4 +17,5 @@ public interface AdminService {
     ResponseEntity<?> updateUserInfo(Long userId, UserDTO.PatchUserByAdminReqDTO dto);
     ResponseEntity<?> makeGroup(GroupDTO groupDTO);
     ResponseEntity<?> findAllGrouping();
+    ResponseEntity<?> getGroupingByType(String type);
 }

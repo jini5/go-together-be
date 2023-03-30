@@ -119,4 +119,13 @@ public class AdminServiceImpl implements AdminService {
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<?> getGroupingByType(String type) {
+        try {
+            return new ResponseEntity<>(groupingRepository.findById(type).orElseThrow(NoSuchElementException::new),HttpStatus.OK);
+        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
