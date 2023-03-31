@@ -104,7 +104,9 @@ public class CartServiceImpl implements CartService {
                         cart.getNumberOfPeople(),
                         cart.getSingleRoomNumber()));
             }
-
+            if(cartList.size()<1){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             return new ResponseEntity<>(CartList, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
