@@ -37,8 +37,12 @@ public class Board {
     private Long boardId;
 
     @Column(name = "type")
-    @ColumnDefault("'여행 후기'")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private BoardType type;
+
+    @Column(name = "thumbnail")
+    @ColumnDefault("''")
+    private String thumbnail;
 
     @Column(name = "title")
     private String title;
@@ -55,13 +59,16 @@ public class Board {
     private LocalDateTime updatedDate;
 
     @Builder
-    public Board(User user, String title, String content) {
+    public Board(User user, BoardType type, String thumbnail, String title, String content) {
         this.user = user;
+        this.type = type;
+        this.thumbnail = thumbnail;
         this.title = title;
         this.content = content;
     }
 
     public void update(BoardDTO.ModifyReqDTO modifyReqDTO) {
+        this.thumbnail = modifyReqDTO.getBoardThumbnail();
         this.title = modifyReqDTO.getBoardTitle();
         this.content = modifyReqDTO.getBoardContent();
     }
