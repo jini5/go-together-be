@@ -55,6 +55,18 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
                 .fetch();
     }
 
+    @Override
+    public Page<Product> searchByCategories(Pageable pageable, List<Category> categoryList) {
+        JPQLQuery<Product> query =  queryFactory
+                .select(product)
+                .from(product)
+                .leftJoin(product.categories,productCategory)
+                .groupBy(product.productId)
+                .where(containCategory(categoryList),isAvailableProduct());
+        List<Product> productList = this.getQuerydsl().applyPagination(pageable,query).fetch();
+        return new PageImpl<Product>(productList,pageable,query.fetchCount());
+    }
+
     private BooleanExpression containsName(String keyword){
         if (keyword.isEmpty()){
             return null;

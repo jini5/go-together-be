@@ -8,6 +8,7 @@ import com.example.gotogether.page.entity.Region;
 import com.example.gotogether.page.repository.RegionRepository;
 import com.example.gotogether.page.service.PageContentsService;
 import com.example.gotogether.product.dto.ProductDTO;
+import com.example.gotogether.product.entity.ProductStatus;
 import com.example.gotogether.product.repository.ProductRepository;
 import com.example.gotogether.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -92,7 +93,7 @@ public class PageContentsServiceImpl implements PageContentsService {
             if (user.getType()==null){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            List<ProductDTO.ProductListResDTO> list = productRepository.findAllByType(user.getType().getGroup())
+            List<ProductDTO.ProductListResDTO> list = productRepository.findAllByTypeAndProductStatus(user.getType().getGroup(), ProductStatus.FOR_SALE)
                     .stream()
                     .map(ProductDTO.ProductListResDTO::new)
                     .collect(Collectors.toList());
