@@ -32,4 +32,8 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long wishlistId;
 
+    public Wishlist(User user, Product product) {
+        this.user = user;
+        this.product = product;
+    }
 }
