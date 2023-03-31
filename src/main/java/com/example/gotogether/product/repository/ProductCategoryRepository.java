@@ -11,7 +11,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface ProductCategoryRepository extends JpaRepository<ProductCategory, Long> {
-    Page<ProductCategory> findAllByCategoryIn(Pageable pageable, List<Category> categoryList);
 
     @Transactional
     void deleteAllByCategory(Category category);

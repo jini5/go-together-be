@@ -8,7 +8,6 @@ import com.example.gotogether.product.dto.ProductOptionDTO;
 import com.example.gotogether.product.entity.Product;
 import com.example.gotogether.product.entity.ProductCategory;
 import com.example.gotogether.product.entity.ProductOption;
-import com.example.gotogether.product.entity.ProductStatus;
 import com.example.gotogether.product.repository.ProductCategoryRepository;
 import com.example.gotogether.product.repository.ProductRepository;
 import com.example.gotogether.product.service.ProductService;
@@ -115,6 +114,9 @@ public class ProductServiceImpl implements ProductService {
             if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Admin);
             Page<Product> productList = productRepository.findAll(pageable);
+            if (productList.getContent().size()<1){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             PageResponseDTO pageResponseDTO = new PageResponseDTO(productList);
             pageResponseDTO.setContent(
                     pageResponseDTO
@@ -147,6 +149,8 @@ public class ProductServiceImpl implements ProductService {
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Category);
             //카테고리 검색
             Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
+            /**
+             * 이전 버전
             //해당 카테고리 및 관련 하위 카테고리 전부 중 하나라도 포함 한 상품-카테고리 검색
             Page<ProductCategory> productCategories = productCategoryRepository.findAllByCategoryIn(pageable, listOfCategory(category));
             //페이지 처리 한 상태로 변환
@@ -161,6 +165,10 @@ public class ProductServiceImpl implements ProductService {
                     .collect(Collectors.toList());
             // 페이징 처리된 리스트노출용 상품 정보로 전환
             pageResponseDTO.setContent(productListResDTOS);
+             */
+            Page<Product> products = productRepository.searchByCategories(pageable,listOfCategory(category));
+            PageResponseDTO pageResponseDTO = new PageResponseDTO(products);
+            pageResponseDTO.setContent(products.getContent().stream().map(ProductDTO.ProductListResDTO::new).collect(Collectors.toList()));
             return new ResponseEntity<>(pageResponseDTO, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -225,6 +233,19 @@ public class ProductServiceImpl implements ProductService {
                 categoryList.addAll(listOfCategory(insideCategory));
         }
         return categoryList;
+    }
+
+
+    @Override
+    public ResponseEntity<?> getProductByType(Long productId) {
+        try {
+            Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
+            List<Product> productTypeList= productRepository.findAllByType(product.getType());
+            if (productTypeList.size()<1)return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(productTypeList.stream().map(ProductDTO.ProductDetailResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 

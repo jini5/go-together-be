@@ -1,5 +1,6 @@
 package com.example.gotogether.page.controller;
 
+import com.example.gotogether.auth.dto.UserDTO;
 import com.example.gotogether.page.service.BannerService;
 import com.example.gotogether.page.service.PageContentsService;
 import com.example.gotogether.product.service.ProductService;
@@ -7,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +37,13 @@ public class PageContentsController {
             "code: 200 상품 목록 조회 성공, 204 표시할 상품 없음, 400 잘못된 카테고리 요청, 500 서버에러 ")
     public ResponseEntity<?> findPopularProducts(@RequestParam(required = false) Long categoryId){
         return productService.findPopularProducts(categoryId);
+    }
+
+    @GetMapping("/page/group/products")
+    @ApiOperation(value = "사용자 그룹의 상품 추천", notes = "사용자가 속한 그룹의 추천 상품 제공. \n\n" +
+            "code: 200 그룹 상품 목록 조회 성공, 204 표시할 상품 없음, 400 사용자의 타입 없음, 500 서버에러, 404 없는 사용자 ")
+    public ResponseEntity<?> findGroupProduct(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO){
+        return pageContentsService.findGroupProduct(userAccessDTO);
     }
 
     //배너
