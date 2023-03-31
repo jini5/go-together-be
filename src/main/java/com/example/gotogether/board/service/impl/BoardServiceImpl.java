@@ -165,13 +165,26 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 게시글 삭제
      *
+     * @param userAccessDTO 토큰 정보
      * @param boardId 삭제할 게시글 아이디
      */
     @Override
-    public ResponseEntity<?> deletePost(Long boardId) {
-        boardRepository.deleteById(boardId);
+    public ResponseEntity<?> deletePost(UserDTO.UserAccessDTO userAccessDTO, Long boardId) {
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
+            boolean hasAuth = hasAuthority(userAccessDTO.getEmail(), userAccessDTO.getRole(), board.getType(), board.getUser().getEmail());
+            if(!hasAuth) {
+
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+            boardRepository.deleteById(boardId);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
