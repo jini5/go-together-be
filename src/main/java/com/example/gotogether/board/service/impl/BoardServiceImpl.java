@@ -118,11 +118,10 @@ public class BoardServiceImpl implements BoardService {
 
         try {
             Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
-            if (!userAccessDTO.getRole().equals("ROLE_ADMIN")) {
-                if (!userAccessDTO.getEmail().equals(board.getUser().getEmail())) {
+            boolean hasAuth = hasAuthority(userAccessDTO.getEmail(), userAccessDTO.getRole(), board.getType(), board.getUser().getEmail());
+            if (!hasAuth) {
 
-                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-                }
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
             return new ResponseEntity<>(HttpStatus.OK);
