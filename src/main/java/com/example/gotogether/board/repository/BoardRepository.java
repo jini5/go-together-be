@@ -12,5 +12,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     Page<Board> findByType(BoardType type, Pageable pageable);
 
-    Page<Board> findByTitleContaining(String keyword, Pageable pageable);
+    Page<Board> findByTypeAndTitleContaining(BoardType type, String keyword, Pageable pageable);
 }

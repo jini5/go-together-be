@@ -40,21 +40,8 @@ public class BoardServiceImpl implements BoardService {
         try {
             PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
             Page<Board> boardPage = boardRepository.findByType(type, pageRequest);
-            if (boardPage == null) {
-                throw new NullPointerException();
-            }
-            if (boardPage.getTotalElements() < 1) {
 
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
-            if (type.equals(BoardType.NOTICE)) {
-                for (BoardDTO.ListResDTO resDTO : boardListResDTO.getContent()) {
-                    resDTO.setUserName("관리자");
-                }
-            }
-
-            return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
+            return getResponseEntityForList(type, boardPage);
         } catch (NullPointerException e) {
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -206,26 +193,27 @@ public class BoardServiceImpl implements BoardService {
     }
 
     /**
-     * 게시글 검색 (범위: 제목 + 내용)
+     * 게시글 검색 (범위: 제목)
      *
+     * @param type 검색할 게시판 타입
      * @param keyword 검색할 단어
      * @param pageNumber 현 페이지 번호
      */
     @Override
-    public ResponseEntity<?> searchPost(String keyword, int pageNumber) {
+    public ResponseEntity<?> searchPost(BoardType type, String keyword, int pageNumber) {
 
         try {
             PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
-            Page<Board> boardPage = boardRepository.findByTitleContaining(keyword, pageRequest);
+            Page<Board> boardPage = boardRepository.findByTypeAndTitleContaining(type, keyword, pageRequest);
 
-            return getResponseEntityFrom(boardPage);
+            return getResponseEntityForList(type, boardPage);
         } catch (NullPointerException e) {
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private ResponseEntity<?> getResponseEntityFrom(Page<Board> boardPage) {
+    private ResponseEntity<?> getResponseEntityForList(BoardType type, Page<Board> boardPage) {
 
         if (boardPage == null) {
             throw new NullPointerException();
@@ -235,6 +223,11 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
+        if (type.equals(BoardType.NOTICE)) {
+            for (BoardDTO.ListResDTO resDTO : boardListResDTO.getContent()) {
+                resDTO.setUserName("관리자");
+            }
+        }
 
         return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
     }
