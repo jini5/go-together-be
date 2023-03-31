@@ -1,6 +1,7 @@
 package com.example.gotogether.page.controller;
 
 import com.example.gotogether.auth.dto.UserDTO;
+import com.example.gotogether.page.service.BannerService;
 import com.example.gotogether.page.service.PageContentsService;
 import com.example.gotogether.product.service.ProductService;
 import io.swagger.annotations.Api;
@@ -22,6 +23,8 @@ public class PageContentsController {
     private final PageContentsService pageContentsService;
     private final ProductService productService;
 
+    private final BannerService bannerService;
+
     @GetMapping("/page/popular/regions")
     @ApiOperation(value = "인기 지역 리스트", notes = "관리자가 제작한 인기 여행지역 리스트 제공. \n\n" +
             "code: 200 조회 성공, 204 표시할 지역 없음")
@@ -35,10 +38,20 @@ public class PageContentsController {
     public ResponseEntity<?> findPopularProducts(@RequestParam(required = false) Long categoryId){
         return productService.findPopularProducts(categoryId);
     }
+
     @GetMapping("/page/group/products")
     @ApiOperation(value = "사용자 그룹의 상품 추천", notes = "사용자가 속한 그룹의 추천 상품 제공. \n\n" +
             "code: 200 그룹 상품 목록 조회 성공, 204 표시할 상품 없음, 400 사용자의 타입 없음, 500 서버에러, 404 없는 사용자 ")
     public ResponseEntity<?> findGroupProduct(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO){
         return pageContentsService.findGroupProduct(userAccessDTO);
     }
+
+    //배너
+    @GetMapping("/bannerlist")
+    @ApiOperation(value = "배너 리스트", notes = "배너 리스트 제공. \n\n" +
+            "code: 200 조회 성공, 204 표시할 배너 없음, 400 잘못된 요청")
+    public ResponseEntity<?> BannerList() {
+        return bannerService.findAllBanner();
+    }
+
 }

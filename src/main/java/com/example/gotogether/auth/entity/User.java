@@ -37,6 +37,12 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "passport_last_name", nullable = false)
+    private String passportLastName;
+
+    @Column(name = "passport_first_name", nullable = false)
+    private String passportFirstName;
+
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
@@ -70,11 +76,13 @@ public class User {
     }
 
     @Builder
-    public User(String email, String password, String name, String birthday, String phoneNumber, String role, String gender, String sns, String deleteCheck) {
+    public User(String email, String password, String name, String birthday, String passportLastName, String passportFirstName,String phoneNumber, String role, String gender, String sns, String deleteCheck) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.birthday = birthday;
+        this.passportLastName = passportLastName;
+        this.passportFirstName=passportFirstName;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
         this.role = role;

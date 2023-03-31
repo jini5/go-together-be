@@ -44,7 +44,7 @@ public class AdminProductController {
 
     // 제품 전체목록 보기
     @GetMapping("/products")
-    @ApiOperation(value = "상품 전체 목록 조회", notes = "전체 상품들의 목록들을 조회 합니다.\n\n" +"code: 200 상품 전체 목록 조회 성공, code: 403 권한 없음, code:500 서버에러 ")
+    @ApiOperation(value = "상품 전체 목록 조회", notes = "전체 상품들의 목록들을 조회 합니다.\n\n" +"code: 200 상품 전체 목록 조회 성공, code: 204 조회될 상품이 없음, code: 403 권한 없음, code:500 서버에러 ")
     public ResponseEntity<?> allProducts(@RequestParam(required = false, defaultValue = "1") int page) {
         return productService.getAllProducts(page);
     }

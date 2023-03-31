@@ -8,7 +8,6 @@ import com.example.gotogether.product.dto.ProductOptionDTO;
 import com.example.gotogether.product.entity.Product;
 import com.example.gotogether.product.entity.ProductCategory;
 import com.example.gotogether.product.entity.ProductOption;
-import com.example.gotogether.product.entity.ProductStatus;
 import com.example.gotogether.product.repository.ProductCategoryRepository;
 import com.example.gotogether.product.repository.ProductRepository;
 import com.example.gotogether.product.service.ProductService;
@@ -115,6 +114,9 @@ public class ProductServiceImpl implements ProductService {
             if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Admin);
             Page<Product> productList = productRepository.findAll(pageable);
+            if (productList.getContent().size()<1){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             PageResponseDTO pageResponseDTO = new PageResponseDTO(productList);
             pageResponseDTO.setContent(
                     pageResponseDTO
@@ -231,6 +233,19 @@ public class ProductServiceImpl implements ProductService {
                 categoryList.addAll(listOfCategory(insideCategory));
         }
         return categoryList;
+    }
+
+
+    @Override
+    public ResponseEntity<?> getProductByType(Long productId) {
+        try {
+            Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
+            List<Product> productTypeList= productRepository.findAllByType(product.getType());
+            if (productTypeList.size()<1)return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(productTypeList.stream().map(ProductDTO.ProductDetailResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 

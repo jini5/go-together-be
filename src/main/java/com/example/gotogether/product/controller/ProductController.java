@@ -51,6 +51,10 @@ public class ProductController {
         return productService.findDetailProduct(productId);
     }
 
-
+    @GetMapping("/related/{productId}")
+    @ApiOperation(value = "관련 상품 리스트", notes = "사용자에게 관련 상품들을 보여줍니다.\n\n" +"code: 200 관련 상품 조회 성공, code: 404 관련 상품이 존재하지 않음. code:500 서버에러 ")
+    public ResponseEntity<?> ProductsByType(@PathVariable Long productId) {
+        return productService.getProductByType(productId);
+    }
 
 }

@@ -85,7 +85,11 @@ public class BoardDTO {
     @Setter
     public static class AddReqDTO {
 
-        @ApiModelProperty(value = "게시판 제목")
+        @ApiModelProperty(value = "게시글 타입")
+        private String boardType;
+        @ApiModelProperty(value = "게시글 썸네일")
+        private String boardThumbnail;
+        @ApiModelProperty(value = "게시글 제목")
         private String boardTitle;
         @ApiModelProperty(value = "게시글 내용")
         private String boardContent;
@@ -94,6 +98,8 @@ public class BoardDTO {
 
             return Board.builder()
                     .user(user)
+                    .type(BoardType.from(boardType))
+                    .thumbnail(boardThumbnail)
                     .title(boardTitle)
                     .content(boardContent)
                     .build();
@@ -106,7 +112,9 @@ public class BoardDTO {
     @Setter
     public static class ModifyReqDTO {
 
-        @ApiModelProperty(value = "게시판 제목")
+        @ApiModelProperty(value = "게시글 썸네일")
+        private String boardThumbnail;
+        @ApiModelProperty(value = "게시글 제목")
         private String boardTitle;
         @ApiModelProperty(value = "게시글 내용")
         private String boardContent;

@@ -24,7 +24,6 @@ public class AuthController {
 
     @PostMapping("/signup")
     @ApiOperation(value = "회원가입 (토큰 X)", notes = "정보를 입력받아 회원가입을 진행하고 DB에 저장.\n\n code: 201 회원가입 성공, 400 email 이 존재하거나 두 패스워드가 불일치")
-
     public ResponseEntity<?> signUp(@RequestBody UserDTO.SignupReqDTO signupReqDTO) {
         return userService.signup(signupReqDTO);
     }

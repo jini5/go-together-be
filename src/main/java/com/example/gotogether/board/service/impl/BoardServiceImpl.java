@@ -93,6 +93,9 @@ public class BoardServiceImpl implements BoardService {
     public ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.AddReqDTO addReqDTO) {
 
         try {
+            if (addReqDTO.getBoardType().equals(BoardType.NOTICE.getValue())) {
+                addReqDTO.setBoardThumbnail("");
+            }
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
             Board board = addReqDTO.toEntity(user);
             boardRepository.save(board);
@@ -100,7 +103,7 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
 
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -115,11 +118,10 @@ public class BoardServiceImpl implements BoardService {
 
         try {
             Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
-            if (!userAccessDTO.getRole().equals("ROLE_ADMIN")) {
-                if (!userAccessDTO.getEmail().equals(board.getUser().getEmail())) {
+            boolean hasAuth = hasAuthority(userAccessDTO.getEmail(), userAccessDTO.getRole(), board.getType(), board.getUser().getEmail());
+            if (!hasAuth) {
 
-                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-                }
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
             return new ResponseEntity<>(HttpStatus.OK);
@@ -132,15 +134,24 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 게시글 수정
      *
+     * @param userAccessDTO 토큰 정보
      * @param modifyReqDTO 수정할 게시글 정보
      * @param boardId 수정할 게시글 아이디
      */
     @Transactional
     @Override
-    public ResponseEntity<?> modifyPost(BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId) {
+    public ResponseEntity<?> modifyPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId) {
 
         try {
             Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
+            boolean hasAuth = hasAuthority(userAccessDTO.getEmail(), userAccessDTO.getRole(), board.getType(), board.getUser().getEmail());
+            if (!hasAuth) {
+
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+            if (board.getType().equals(BoardType.NOTICE)) {
+                modifyReqDTO.setBoardThumbnail("");
+            }
             board.update(modifyReqDTO);
 
             return new ResponseEntity<>(HttpStatus.OK);
@@ -153,13 +164,45 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 게시글 삭제
      *
+     * @param userAccessDTO 토큰 정보
      * @param boardId 삭제할 게시글 아이디
      */
     @Override
-    public ResponseEntity<?> deletePost(Long boardId) {
-        boardRepository.deleteById(boardId);
+    public ResponseEntity<?> deletePost(UserDTO.UserAccessDTO userAccessDTO, Long boardId) {
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
+            boolean hasAuth = hasAuthority(userAccessDTO.getEmail(), userAccessDTO.getRole(), board.getType(), board.getUser().getEmail());
+            if(!hasAuth) {
+
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+            boardRepository.deleteById(boardId);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 해당 게시글에 대한 로그인 중인 회원의 권한 확인
+     *
+     * @param userEmail 로그인 중인 회원의 이메일
+     * @param userRole 로그인 중인 회원의 권한
+     * @param boardType 게시글 타입
+     * @param boardWriterEmail 게시글 작성자 이메일
+     */
+    public boolean hasAuthority(String userEmail, String userRole, BoardType boardType, String boardWriterEmail) {
+
+        if (userRole.equals("ROLE_ADMIN")) {
+            return true;
+        }
+        if (userRole.equals("ROLE_USER") && boardType.equals(BoardType.TRAVEL_REVIEW) && userEmail.equals(boardWriterEmail)) {
+            return true;
+        }
+        return false;
     }
 
     /**
