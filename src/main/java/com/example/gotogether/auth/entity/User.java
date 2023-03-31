@@ -52,8 +52,9 @@ public class User {
     @Column(name = "gender", nullable = false)
     private String gender;
 
-    @Column(name = "type")
-    private String type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_type")
+    private Grouping type;
     @Column(name = "sns")
     private String sns;
     @Column(name = "delete_check")

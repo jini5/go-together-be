@@ -3,8 +3,10 @@ package com.example.gotogether.auth.service.Impl;
 import com.example.gotogether.auth.dto.MailDTO;
 import com.example.gotogether.auth.dto.TokenDTO;
 import com.example.gotogether.auth.dto.UserDTO;
+import com.example.gotogether.auth.entity.Grouping;
 import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.auth.jwt.JwtProvider;
+import com.example.gotogether.auth.repository.GroupingRepository;
 import com.example.gotogether.auth.repository.RedisTemplateRepository;
 import com.example.gotogether.auth.repository.UserRepository;
 import com.example.gotogether.auth.service.UserService;
@@ -27,6 +29,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisTemplateRepository redisTemplateRepository;
+    private final GroupingRepository groupingRepository;
 
     @Override
     public ResponseEntity<?> signup(UserDTO.SignupReqDTO signupReqDTO) {
@@ -171,10 +174,13 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> saveUserType(UserDTO.UserAccessDTO userAccessDTO, UserDTO.UserType userType) {
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(IllegalArgumentException::new);
-            user.setType(userType.getUserType());
+            Grouping grouping = groupingRepository.findById(userType.getUserType()).orElseThrow(NoSuchElementException::new);
+            user.setType(grouping);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

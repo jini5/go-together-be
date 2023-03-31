@@ -16,6 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>,ProductR
 
     boolean existsByName(String name);
 
+    List<Product> findAllByTypeAndProductStatus(String type,ProductStatus status);
+    
     List<Product> findAllByType(String type);
-
 }

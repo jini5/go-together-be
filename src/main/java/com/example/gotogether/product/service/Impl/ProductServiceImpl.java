@@ -149,6 +149,8 @@ public class ProductServiceImpl implements ProductService {
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Category);
             //카테고리 검색
             Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
+            /**
+             * 이전 버전
             //해당 카테고리 및 관련 하위 카테고리 전부 중 하나라도 포함 한 상품-카테고리 검색
             Page<ProductCategory> productCategories = productCategoryRepository.findAllByCategoryIn(pageable, listOfCategory(category));
             //페이지 처리 한 상태로 변환
@@ -163,6 +165,10 @@ public class ProductServiceImpl implements ProductService {
                     .collect(Collectors.toList());
             // 페이징 처리된 리스트노출용 상품 정보로 전환
             pageResponseDTO.setContent(productListResDTOS);
+             */
+            Page<Product> products = productRepository.searchByCategories(pageable,listOfCategory(category));
+            PageResponseDTO pageResponseDTO = new PageResponseDTO(products);
+            pageResponseDTO.setContent(products.getContent().stream().map(ProductDTO.ProductListResDTO::new).collect(Collectors.toList()));
             return new ResponseEntity<>(pageResponseDTO, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

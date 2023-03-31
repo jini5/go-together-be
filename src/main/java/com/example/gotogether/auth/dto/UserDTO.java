@@ -233,7 +233,7 @@ public class UserDTO {
             this.passportFirstName = user.getPassportFirstName();
             this.passportLastName = user.getPassportLastName();
             this.gender = user.getGender();
-            this.type = user.getType();
+            this.type = user.getType().getUserType();
             this.sns = user.getSns();
             this.deleteCheck = user.getDeleteCheck();
             this.role = user.getRole();
