@@ -17,7 +17,7 @@ public interface BoardService {
 
     ResponseEntity<?> modifyPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId);
 
-    ResponseEntity<?> deletePost(Long boardId);
+    ResponseEntity<?> deletePost(UserDTO.UserAccessDTO userAccessDTO, Long boardId);
 
     ResponseEntity<?> searchPost(String keyword, int pageNumber);
 }
