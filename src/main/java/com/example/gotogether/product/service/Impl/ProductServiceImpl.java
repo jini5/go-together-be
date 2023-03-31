@@ -149,26 +149,12 @@ public class ProductServiceImpl implements ProductService {
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Category);
             //카테고리 검색
             Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
-            /**
-             * 이전 버전
-            //해당 카테고리 및 관련 하위 카테고리 전부 중 하나라도 포함 한 상품-카테고리 검색
-            Page<ProductCategory> productCategories = productCategoryRepository.findAllByCategoryIn(pageable, listOfCategory(category));
-            //페이지 처리 한 상태로 변환
-            if (productCategories.getTotalElements() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            PageResponseDTO pageResponseDTO = new PageResponseDTO(productCategories);
-            //상품-카테고리 상태이므로, 상품 정보만 꺼내기 위해 일단 리스트 꺼내기
-            List<ProductCategory> productCategoryList = (List<ProductCategory>) pageResponseDTO.getContent();
-            // 상품 정보만 반환 하기 위해 stream 을 이용해 dto 생성자 호출.
-            List<ProductDTO.ProductListResDTO> productListResDTOS = productCategoryList
-                    .stream()
-                    .map(e -> new ProductDTO.ProductListResDTO(e.getProduct()))
-                    .collect(Collectors.toList());
-            // 페이징 처리된 리스트노출용 상품 정보로 전환
-            pageResponseDTO.setContent(productListResDTOS);
-             */
             Page<Product> products = productRepository.searchByCategories(pageable,listOfCategory(category));
             PageResponseDTO pageResponseDTO = new PageResponseDTO(products);
             pageResponseDTO.setContent(products.getContent().stream().map(ProductDTO.ProductListResDTO::new).collect(Collectors.toList()));
+            if(pageResponseDTO.getContent().size()<1){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             return new ResponseEntity<>(pageResponseDTO, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
