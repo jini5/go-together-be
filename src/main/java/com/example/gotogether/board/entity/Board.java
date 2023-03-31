@@ -68,6 +68,7 @@ public class Board {
     }
 
     public void update(BoardDTO.ModifyReqDTO modifyReqDTO) {
+        this.thumbnail = modifyReqDTO.getBoardThumbnail();
         this.title = modifyReqDTO.getBoardTitle();
         this.content = modifyReqDTO.getBoardContent();
     }
