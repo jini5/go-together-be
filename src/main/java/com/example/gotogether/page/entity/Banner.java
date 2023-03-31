@@ -1,6 +1,8 @@
 package com.example.gotogether.page.entity;
 
+import com.example.gotogether.page.dto.BannerDTO;
 import com.example.gotogether.product.entity.Product;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,4 +26,16 @@ public class Banner {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Builder
+    public Banner(String image) {
+        this.image = image;
+    }
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+    public void update(BannerDTO.BannerUpdateReqDTO bannerUpdateReqDTO, Product product){
+        this.image = bannerUpdateReqDTO.getImage();
+        this.product= product;
+
+    }
 }
