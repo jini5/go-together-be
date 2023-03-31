@@ -58,10 +58,10 @@ public class BoardController {
     }
 
     @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제한다.\n\n" +
-            "code: 200 삭제 성공")
+            "code: 200 삭제 성공, 400 잘못된 boardId 요청, 403 권한없는 사용자 접근")
     @DeleteMapping("/{boardId}")
-    public ResponseEntity<?> deletePost(@PathVariable Long boardId) {
-        return boardService.deletePost(boardId);
+    public ResponseEntity<?> deletePost(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @PathVariable Long boardId) {
+        return boardService.deletePost(userAccessDTO, boardId);
     }
 
     @ApiOperation(value = "게시글 검색", notes = "게시글을 검색한다.\n\n" +
