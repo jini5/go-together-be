@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.NoSuchElementException;
 
 import static com.example.gotogether.global.config.PageSizeConfig.BOARD_LIST_SIZE;
+import static com.example.gotogether.global.config.PageSizeConfig.USER_REVIEW_LIST_SIZE;
 
 @RequiredArgsConstructor
 @Service
@@ -174,25 +175,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     /**
-     * 해당 게시글에 대한 로그인 중인 회원의 권한 확인
-     *
-     * @param userEmail 로그인 중인 회원의 이메일
-     * @param userRole 로그인 중인 회원의 권한
-     * @param boardType 게시글 타입
-     * @param boardWriterEmail 게시글 작성자 이메일
-     */
-    public boolean hasAuthority(String userEmail, String userRole, BoardType boardType, String boardWriterEmail) {
-
-        if (userRole.equals("ROLE_ADMIN")) {
-            return true;
-        }
-        if (userRole.equals("ROLE_USER") && boardType.equals(BoardType.TRAVEL_REVIEW) && userEmail.equals(boardWriterEmail)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * 게시글 검색 (범위: 제목)
      *
      * @param type 검색할 게시판 타입
@@ -211,6 +193,57 @@ public class BoardServiceImpl implements BoardService {
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * 로그인 중인 회원의 여행후기 목록 조회
+     *
+     * @param userAccessDTO 토큰 정보
+     * @param pageNumber 현재 페이지 번호
+     */
+    @Override
+    public ResponseEntity<?> findMyReviewList(UserDTO.UserAccessDTO userAccessDTO, int pageNumber) {
+
+        try {
+            User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
+            PageRequest pageRequest = PageRequest.of(pageNumber - 1, USER_REVIEW_LIST_SIZE);
+            Page<Board> reviewPage = boardRepository.findByUserAndType(user, BoardType.TRAVEL_REVIEW, pageRequest);
+            if (reviewPage == null) {
+                throw new NullPointerException();
+            }
+            if (reviewPage.getTotalElements() < 1) {
+
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            Page<BoardDTO.ReviewListResDTO> reviewListResDTO = reviewPage.map(BoardDTO.ReviewListResDTO::new);
+
+            return new ResponseEntity<>(new PageResponseDTO(reviewListResDTO), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (NullPointerException e) {
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * 해당 게시글에 대한 로그인 중인 회원의 권한 확인
+     *
+     * @param userEmail 로그인 중인 회원의 이메일
+     * @param userRole 로그인 중인 회원의 권한
+     * @param boardType 게시글 타입
+     * @param boardWriterEmail 게시글 작성자 이메일
+     */
+    public boolean hasAuthority(String userEmail, String userRole, BoardType boardType, String boardWriterEmail) {
+
+        if (userRole.equals("ROLE_ADMIN")) {
+            return true;
+        }
+        if (userRole.equals("ROLE_USER") && boardType.equals(BoardType.TRAVEL_REVIEW) && userEmail.equals(boardWriterEmail)) {
+            return true;
+        }
+        return false;
     }
 
     private ResponseEntity<?> getResponseEntityForList(BoardType type, Page<Board> boardPage) {
