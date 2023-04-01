@@ -119,4 +119,30 @@ public class BoardDTO {
         @ApiModelProperty(value = "게시글 내용")
         private String boardContent;
     }
+
+    @ApiModel(value = "회원 여행후기 목록 조회 요청")
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class ReviewListResDTO {
+
+        @ApiModelProperty(value = "게시글 아이디")
+        private Long boardId;
+        @ApiModelProperty(value = "게시글 썸네일")
+        private String boardThumbnail;
+        @ApiModelProperty(value = "게시글 제목")
+        private String boardTitle;
+        @ApiModelProperty(value = "게시글 생성일자")
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate createdDate;
+
+        public ReviewListResDTO(Board board) {
+            this.boardId = board.getBoardId();
+            this.boardThumbnail = board.getThumbnail();
+            this.boardTitle = board.getTitle();
+            this.createdDate = board.getCreatedDate().toLocalDate();
+
+            System.out.println("board : " + this.boardId + " ,  " + this.boardThumbnail + " , " + this.boardTitle);
+        }
+    }
 }

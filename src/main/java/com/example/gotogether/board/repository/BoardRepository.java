@@ -1,5 +1,6 @@
 package com.example.gotogether.board.repository;
 
+import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.board.entity.Board;
 import com.example.gotogether.board.entity.BoardType;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
     Page<Board> findByType(BoardType type, Pageable pageable);
-
     Page<Board> findByTypeAndTitleContaining(BoardType type, String keyword, Pageable pageable);
+    Page<Board> findByUserAndType(User user, BoardType type, Pageable pageable);
 }
