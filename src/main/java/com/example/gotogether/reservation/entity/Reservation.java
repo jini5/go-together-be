@@ -4,7 +4,6 @@ import com.example.gotogether.auth.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
@@ -44,12 +43,10 @@ public class Reservation {
 
     @Column(name = "payment_method")
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("'UNDECIDED'")
     private PaymentMethod paymentMethod;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("'UNDECIDED'")
     private ReservationStatus reservationStatus;
 
     @Builder
