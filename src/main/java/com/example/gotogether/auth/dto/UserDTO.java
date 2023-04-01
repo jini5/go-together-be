@@ -22,10 +22,10 @@ public class UserDTO {
     public static class LoginReqDTO {
 
         @ApiModelProperty(value = "이메일 ", required = true)
-        private String email;
+        private String userEmail;
 
         @ApiModelProperty(value = "비밀번호 ", required = true)
-        private String password;
+        private String userPassword;
 
     }
 
@@ -127,24 +127,30 @@ public class UserDTO {
     @ApiModel(value = "회원정보수정 출력")
     public static class PatchUserResDTO {
 
-        @ApiModelProperty(value = "이메일")
-        private String email;
-        @ApiModelProperty(value = "비밀번호")
-        private String password;
-        @ApiModelProperty(value = "이름")
-        private String name;
-        @ApiModelProperty(value = "생년월일")
-        private String birth;
-        @ApiModelProperty(value = "전화번호")
-        private String phone;
+        @ApiModelProperty(value = "이름", required = true)
+        private String userName;
+        @ApiModelProperty(value = "이메일", required = true)
+        private String userEmail;
+        @ApiModelProperty(value = "여권에 적힌 이름", required = true)
+        private String passportFirstName;
+        @ApiModelProperty(value = "여권에 적힌 성", required = true)
+        private String passportLastName;
+        @ApiModelProperty(value = "전화번호", required = true)
+        private String userPhoneNumber;
+        @ApiModelProperty(value = "생년월일", required = true)
+        private String userBirth;
+        @ApiModelProperty(value = "성별", required = true)
+        private String userGender;
 
 
         public PatchUserResDTO(User user) {
-            this.email = user.getEmail();
-            this.password = user.getPassword();
-            this.name = user.getName();
-            this.birth = user.getBirthday();
-            this.phone = user.getPhoneNumber();
+            this.userName = user.getName();
+            this.userEmail = user.getEmail();
+            this.userBirth = user.getBirthday();
+            this.userPhoneNumber = user.getPhoneNumber();
+            this.userGender = user.getGender();
+            this.passportFirstName = user.getPassportFirstName();
+            this.passportLastName = user.getPassportLastName();
         }
     }
 
@@ -181,13 +187,15 @@ public class UserDTO {
     @ApiModel(value = "회원리스트 출력")
     public static class UserListDto {
         private Long userId;
-        private String email;
-        private String name;
+        private String userEmail;
+        private String userName;
+        private String userRole;
 
         public UserListDto(User user) {
             this.userId = user.getUserId();
-            this.email = user.getEmail();
-            this.name = user.getName();
+            this.userEmail = user.getEmail();
+            this.userName = user.getName();
+            this.userRole=user.getRole();
         }
     }
 
@@ -210,33 +218,33 @@ public class UserDTO {
     @ToString
     public static class UserDetailsForAdmin {
         private Long userId;
-        private String name;
-        private String email;
-        private String phoneNumber;
-        private String birthday;
+        private String userName;
+        private String userEmail;
+        private String userPhoneNumber;
+        private String userBirthday;
         private String passportFirstName;
         private String passportLastName;
-        private String gender;
-        private String type;
+        private String userGender;
+        private String userType;
         private String sns;
         private String deleteCheck;
-        private String role;
+        private String userRole;
         private LocalDateTime createdDate;
         private LocalDateTime updatedDate;
 
         public UserDetailsForAdmin(User user) {
             this.userId = user.getUserId();
-            this.name = user.getName();
-            this.email = user.getEmail();
-            this.phoneNumber = user.getPhoneNumber();
-            this.birthday = user.getBirthday();
+            this.userName = user.getName();
+            this.userEmail = user.getEmail();
+            this.userPhoneNumber = user.getPhoneNumber();
+            this.userBirthday = user.getBirthday();
             this.passportFirstName = user.getPassportFirstName();
             this.passportLastName = user.getPassportLastName();
-            this.gender = user.getGender();
-            this.type = user.getType().getUserType();
+            this.userGender = user.getGender();
+            this.userType = user.getType().getUserType();
             this.sns = user.getSns();
             this.deleteCheck = user.getDeleteCheck();
-            this.role = user.getRole();
+            this.userRole = user.getRole();
             this.createdDate = user.getCreatedDate();
             this.updatedDate = user.getUpdatedDate();
         }
