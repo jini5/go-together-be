@@ -77,4 +77,12 @@ public class BoardController {
                                         @RequestParam(required = false, defaultValue = "1") int pageNumber) {
         return boardService.searchPost(type, keyword, pageNumber);
     }
+
+    @ApiOperation(value = "회원 여행후기 목록 조회", notes = "회원이 작성한 여행후기 목록을 조회한다.\n\n" +
+            "code: 200 조회 성공, 400 잘못된 user 토큰 정보 요청, 204 조회 성공 + 표시할 내용 없음, 500 알 수 없는 서버 오류")
+    @GetMapping("/myreviews")
+    public ResponseEntity<?> findMyReviewList(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,
+                                              @RequestParam(required = false, defaultValue = "1") int pageNumber) {
+        return boardService.findMyReviewList(userAccessDTO, pageNumber);
+    }
 }
