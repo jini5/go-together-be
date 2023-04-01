@@ -149,16 +149,14 @@ public class ReservationDTO {
     public static class AddReqDTO {
 
         @ApiModelProperty(value = "결제수단")
-        private PaymentMethod paymentMethod;
-        @ApiModelProperty(value = "예약상태")
-        private ReservationStatus reservationStatus;
+        private String paymentMethod;
         @ApiModelProperty(value = "예약리스트")
         private List<ReservationDetailDTO.AddReqDTO> reservationList;
 
-        public Reservation toEntity(User user) {
+        public Reservation toEntity(User user, ReservationStatus reservationStatus) {
             return Reservation.builder()
                     .user(user)
-                    .paymentMethod(paymentMethod)
+                    .paymentMethod(PaymentMethod.from(paymentMethod))
                     .reservationStatus(reservationStatus)
                     .build();
         }
