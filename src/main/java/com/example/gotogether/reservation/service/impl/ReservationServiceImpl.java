@@ -10,6 +10,7 @@ import com.example.gotogether.product.repository.ProductOptionRepository;
 import com.example.gotogether.product.repository.ProductRepository;
 import com.example.gotogether.reservation.dto.ReservationDTO;
 import com.example.gotogether.reservation.dto.ReservationDetailDTO;
+import com.example.gotogether.reservation.entity.PaymentMethod;
 import com.example.gotogether.reservation.entity.Reservation;
 import com.example.gotogether.reservation.entity.ReservationDetail;
 import com.example.gotogether.reservation.entity.ReservationStatus;
@@ -181,10 +182,26 @@ public class ReservationServiceImpl implements ReservationService {
     public ResponseEntity<?> addReservation(UserDTO.UserAccessDTO userAccessDTO, ReservationDTO.AddReqDTO addReqDTO) {
 
         try {
-            User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
-            Reservation reservation = addReqDTO.toEntity(user);
-            reservationRepository.save(reservation);
+            for (ReservationDetailDTO.AddReqDTO reqDTO : addReqDTO.getReservationList()) {
+                ProductOption productOption = productOptionRepository.findById(reqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
+                if (!isPeopleLessThanMax(productOption, reqDTO.getReservationPeopleNumber())
+                        || !isSingleRoomLessThanMax(productOption, reqDTO.getReservationSingleRoomNumber())) {
 
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+            }
+
+            ReservationStatus reservationStatus = null;
+            if (addReqDTO.getPaymentMethod().equals(PaymentMethod.BANK_TRANSFER.getValue())) {
+                reservationStatus = ReservationStatus.CONFIRMED;
+            }
+            if (addReqDTO.getPaymentMethod().equals(PaymentMethod.NON_BANK_ACCOUNT.getValue())) {
+                reservationStatus = ReservationStatus.PAYMENT_PENDING;
+            }
+
+            User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
+            Reservation reservation = addReqDTO.toEntity(user, reservationStatus);
+            reservationRepository.save(reservation);
             for (ReservationDetailDTO.AddReqDTO reqDTO : addReqDTO.getReservationList()) {
                 Product product = productRepository.findById(reqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
                 ProductOption productOption = productOptionRepository.findById(reqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
@@ -192,10 +209,34 @@ public class ReservationServiceImpl implements ReservationService {
                 reservationDetailRepository.save(reservationDetail);
             }
 
+            for (ReservationDetailDTO.AddReqDTO reqDTO : addReqDTO.getReservationList()) {
+                ProductOption productOption = productOptionRepository.findById(reqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
+                productOption.addPresentPeopleTo(reqDTO.getReservationPeopleNumber());
+                productOption.addPresentSingleRoomTo(reqDTO.getReservationSingleRoomNumber());
+            }
+
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * 예약 인원수가 예약가능 인원수를 넘지 않는지 체크
+     *
+     * @param reservationNumber 예약인원수
+     */
+    public boolean isPeopleLessThanMax(ProductOption productOption, int reservationNumber) {
+        return (productOption.getMaxPeople() - productOption.getPresentPeopleNumber() >= reservationNumber) ? true : false;
+    }
+
+    /**
+     * 예약 싱글룸개수가 예약가능 싱글룸개수를 넘지 않는지 체크
+     *
+     * @param reservationNumber 예약싱글룸개수
+     */
+    public boolean isSingleRoomLessThanMax(ProductOption productOption, int reservationNumber) {
+        return (productOption.getMaxSingleRoom() - productOption.getPresentSingleRoomNumber() >= reservationNumber) ? true : false;
     }
 }
