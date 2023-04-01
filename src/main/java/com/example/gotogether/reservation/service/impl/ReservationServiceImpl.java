@@ -147,7 +147,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     /**
-     * 회원 예약 취소로 해당 예약의 예약 상태 변경
+     * 회원 예약 취소
      *
      * @param userAccessDTO 토큰 정보
      * @param reservationId 취소할 예약 아이디
@@ -162,7 +162,19 @@ public class ReservationServiceImpl implements ReservationService {
 
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
-            reservation.updateStatus(ReservationStatus.CANCEL_REQUESTED);
+
+            if (reservation.getPaymentMethod().equals(PaymentMethod.BANK_TRANSFER)) {
+                reservation.updateStatus(ReservationStatus.CANCELLED);
+            }
+            if (reservation.getPaymentMethod().equals(PaymentMethod.NON_BANK_ACCOUNT)) {
+                reservation.updateStatus(ReservationStatus.CANCEL_REQUESTED);
+            }
+
+            for (ReservationDetail detail : reservation.getReservationDetails()) {
+                ProductOption option = productOptionRepository.findById(detail.getProductOptionId()).orElseThrow(NoSuchElementException::new);
+                option.subtractPresentPeopleFrom(detail.getNumberOfPeople());
+                option.subtractPresentSingleRoomFrom(detail.getSingleRoomNumber());
+            }
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
@@ -225,7 +237,8 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 예약 인원수가 예약가능 인원수를 넘지 않는지 체크
      *
-     * @param reservationNumber 예약인원수
+     * @param productOption 체크할 상품옵션
+     * @param reservationNumber 예약 인원수
      */
     public boolean isPeopleLessThanMax(ProductOption productOption, int reservationNumber) {
         return (productOption.getMaxPeople() - productOption.getPresentPeopleNumber() >= reservationNumber) ? true : false;
@@ -234,7 +247,8 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 예약 싱글룸개수가 예약가능 싱글룸개수를 넘지 않는지 체크
      *
-     * @param reservationNumber 예약싱글룸개수
+     * @param productOption 체크할 상품옵션
+     * @param reservationNumber 예약 싱글룸개수
      */
     public boolean isSingleRoomLessThanMax(ProductOption productOption, int reservationNumber) {
         return (productOption.getMaxSingleRoom() - productOption.getPresentSingleRoomNumber() >= reservationNumber) ? true : false;

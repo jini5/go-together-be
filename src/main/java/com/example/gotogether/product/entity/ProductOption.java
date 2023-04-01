@@ -71,4 +71,12 @@ public class ProductOption {
     public void addPresentSingleRoomTo(int singleRoomNumber) {
         this.PresentSingleRoomNumber += singleRoomNumber;
     }
+
+    public void subtractPresentPeopleFrom(int peopleNumber) {
+        this.PresentPeopleNumber -= peopleNumber;
+    }
+
+    public void subtractPresentSingleRoomFrom(int singleRoomNumber) {
+        this.PresentSingleRoomNumber -= singleRoomNumber;
+    }
 }
