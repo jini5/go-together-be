@@ -31,11 +31,32 @@ public class UserServiceImpl implements UserService {
     private final RedisTemplateRepository redisTemplateRepository;
     private final GroupingRepository groupingRepository;
 
+    public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    //이메일 형식
+    public static final String pattern ="^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
+    //비밀번호 조건: 최소 하나의 문자 (대문자 또는 소문자)를 포함, 8자 이상,특수문자 중 하나 이상 포함 (!@#$%^&*()), 적어도 하나의 숫자를 포함
+    public static final String PASSPORT_PATTERN = "^[A-Z]+$";
+    //여권 영어 이름, 성
+
     @Override
     public ResponseEntity<?> signup(UserDTO.SignupReqDTO signupReqDTO) {
         if (userRepository.findByEmail(signupReqDTO.getUserEmail()).isPresent() ||
                 !signupReqDTO.getUserPassword().equals(signupReqDTO.getPasswordConfirmation())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if(!signupReqDTO.getUserEmail().matches(EMAIL_PATTERN)) {
+            String str = "Please use the email format.";
+            return new ResponseEntity(str, HttpStatus.BAD_REQUEST);
+        }
+        if(!signupReqDTO.getUserPassword().matches(pattern)) {
+            String str = "The password can only use letters and numbers.\n" +
+                    "Please use at least one uppercase and lowercase letter, special character, and number. \nPlease set at least 8 characters";
+            return new ResponseEntity(str, HttpStatus.BAD_REQUEST);
+        }
+        if(!signupReqDTO.getPassportLastName().matches(PASSPORT_PATTERN)&&
+                !signupReqDTO.getPassportFirstName().matches(PASSPORT_PATTERN)){
+            String str = "Please use capital letters only";
+            return new ResponseEntity(str, HttpStatus.BAD_REQUEST);
         }
         String encodingPassword = encodingPassword(signupReqDTO.getUserPassword());
         signupReqDTO.setUserPassword(encodingPassword);
@@ -46,12 +67,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> login(UserDTO.LoginReqDTO loginReqDTO) {
         try {
-            User user = userRepository.findByEmail(loginReqDTO.getEmail())
+            User user = userRepository.findByEmail(loginReqDTO.getUserEmail())
                     .orElseThrow(IllegalArgumentException::new);
             if (!withDrawCheck(user)) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
-            passwordMustBeSame(loginReqDTO.getPassword(), user.getPassword());
+            passwordMustBeSame(loginReqDTO.getUserPassword(), user.getPassword());
             TokenDTO tokenDTO = jwtProvider.makeJwtToken(user);
             redisTemplateRepository.setDataExpire(tokenDTO.getRefreshToken(), user.getEmail(), jwtProvider.getExpiration(tokenDTO.getRefreshToken()));
             return new ResponseEntity<>(tokenDTO, HttpStatus.OK);
@@ -80,18 +101,18 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> updateUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.PatchUserReqDTO patchUserReqDTO) {
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(IllegalArgumentException::new);
-
+            if(!patchUserReqDTO.getUserPassword().matches(pattern)) {
+                String str = "The password can only use letters and numbers.\n" +
+                        "Please use at least one uppercase and lowercase letter, special character, and number. \nPlease set at least 8 characters";
+                return new ResponseEntity(str, HttpStatus.BAD_REQUEST);
+            }
             passwordMustBeSame(patchUserReqDTO.getUserPassword(), user.getPassword());
-
             if (!patchUserReqDTO.getChangePassword().equals(patchUserReqDTO.getPasswordConfirmation())) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-
             patchUserReqDTO.setChangePassword(encodingPassword(patchUserReqDTO.getChangePassword()));
-
             user.update(patchUserReqDTO.getChangePassword(), patchUserReqDTO.getUserPhoneNumber());
             return new ResponseEntity<>(HttpStatus.OK);
-
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
