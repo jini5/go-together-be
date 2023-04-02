@@ -100,6 +100,9 @@ public class ProductServiceImpl implements ProductService {
             List<Category> categoryList = categoryRepository.findAllByCategoryIdIn(productUpdateReqDTO.getCategoryIdList());
             if (categoryList.size() != productUpdateReqDTO.getCategoryIdList().size())
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if (!groupingRepository.existsByGroup(productUpdateReqDTO.getType())){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             List<ProductCategory> productCategories = new ArrayList<>();
             for (Category category : categoryList) {
                 productCategories.add(ProductCategory.builder()
