@@ -269,13 +269,13 @@ public class UserDTO {
         private String passportFirstName;
         @ApiModelProperty(value = "사용자 여권에 적힌 성", required = true)
         private String passportLastName;
-        @ApiModelProperty(value = "사용자 성별 입력\n male or female", required = true)
+        @ApiModelProperty(value = "사용자 성별 입력\n\n male or female", required = true)
         private String userGender;
         @ApiModelProperty(value = "사용자 여행 유형 입력", required = true)
         private String userType;
-        @ApiModelProperty(value = "사용자 권한 입력\n ROLE_ADMIN or ROLE_USER", required = true)
+        @ApiModelProperty(value = "사용자 권한 입력\n\n ROLE_ADMIN or ROLE_USER", required = true)
         private String userRole;
-        @ApiModelProperty(value = "사용자 탈퇴여부 입력\n available or withdraw", required = true)
+        @ApiModelProperty(value = "사용자 탈퇴여부 입력\n\n available or withdraw", required = true)
         private String deleteCheck;
         @ApiModelProperty(value = "소셜 로그인 여부 입력", required = true)
         private String sns;
