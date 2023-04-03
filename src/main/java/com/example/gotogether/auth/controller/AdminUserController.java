@@ -42,7 +42,7 @@ public class AdminUserController {
         return adminService.findUser(userId);
     }
 
-    @PutMapping("/userDetail/{userId}")
+    @PutMapping("/detail/{userId}")
     @ApiOperation(value = "회원 상세 정보 수정", notes = "관리자가 회원 상세 정보 수정.\n\n code: 200 수정 성공, 404 해당 사용자 없음,400 해당 사용자 타입 없음.")
     public ResponseEntity<?> updateUserInfo(@PathVariable Long userId, @RequestBody UserDTO.PatchUserByAdminReqDTO dto) {
         return adminService.updateUserInfo(userId, dto);
