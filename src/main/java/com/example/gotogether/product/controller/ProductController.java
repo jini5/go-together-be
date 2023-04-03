@@ -45,7 +45,7 @@ public class ProductController {
         return productService.findProductByKeyword(keyword,page,sort,date,people);
     }
 
-    @GetMapping("/details/{productId}")
+    @GetMapping("/detail/{productId}")
     @ApiOperation(value = "상품 상세 정보", notes = "사용자에게 상품 상세 정보를 보여줍니다.\n\n" +"code: 200 상품 상세 조회 성공, code: 404 해당 상품이 존재하지 않음. code:500 서버에러 ")
     public ResponseEntity<?> oneProductForUser(@PathVariable Long productId) {
         return productService.findDetailProduct(productId);
