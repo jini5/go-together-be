@@ -82,6 +82,9 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public ResponseEntity<?> updateUserInfo(Long userId, UserDTO.PatchUserByAdminReqDTO dto) {
         try {
+            if (!dto.getDeleteCheck().equals("withdraw") &&! dto.getDeleteCheck().equals("available")){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
             Grouping grouping = groupingRepository.findById(dto.getUserType()).orElseThrow(IllegalArgumentException::new);
             user.setName(dto.getUserName());

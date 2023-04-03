@@ -157,6 +157,7 @@ public class ProductDTO {
             this.productArea = product.getArea();
             this.productThumbnail = product.getThumbnail();
             this.productPrice=product.getPrice();
+            this.productStatus=product.getProductStatus();
         }
     }
 
