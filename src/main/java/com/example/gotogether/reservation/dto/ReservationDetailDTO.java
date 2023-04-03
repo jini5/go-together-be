@@ -4,6 +4,7 @@ import com.example.gotogether.product.entity.Product;
 import com.example.gotogether.product.entity.ProductOption;
 import com.example.gotogether.reservation.entity.Reservation;
 import com.example.gotogether.reservation.entity.ReservationDetail;
+import com.example.gotogether.reservation.entity.ReservationStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -119,7 +120,7 @@ public class ReservationDetailDTO {
         @ApiModelProperty(value = "상품옵션 아이디")
         private Long productOptionId;
 
-        public ReservationDetail toEntity(Reservation reservation, Product product, ProductOption productOption) {
+        public ReservationDetail toEntity(Reservation reservation, Product product, ProductOption productOption, ReservationStatus reservationStatus) {
             return ReservationDetail.builder()
                     .reservation(reservation)
                     .product(product)
@@ -129,6 +130,7 @@ public class ReservationDetailDTO {
                     .detailTotalPrice(product.getPrice() * reservationPeopleNumber + product.getSingleRoomPrice() * reservationSingleRoomNumber)
                     .startDate(productOption.getStartDate())
                     .endDate(productOption.getEndDate())
+                    .reservationStatus(reservationStatus)
                     .build();
         }
     }
