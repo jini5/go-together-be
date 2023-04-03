@@ -36,11 +36,12 @@ public class ReservationController {
     }
 
     @ApiOperation(value = "회원 예약 취소", notes = "회원의 예약을 취소한다.\n\n" +
-            "code: 200 예약 취소 성공, 400 잘못된 reservationId 요청, 403 권한없는 사용자 접근")
-    @PatchMapping("/{reservationId}")
+            "code: 200 예약 취소 성공, 400 (1) 잘못된 reservationDetailId 요청, 400 (2) 잘못된 예약상태를 가진 예약 요청," +
+            " 403 권한없는 사용자 접근")
+    @DeleteMapping("/{reservationDetailId}")
     public ResponseEntity<?> cancelReservation(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,
-                                               @PathVariable Long reservationId) {
-        return reservationService.cancelReservation(userAccessDTO, reservationId);
+                                               @PathVariable Long reservationDetailId) {
+        return reservationService.cancelReservation(userAccessDTO, reservationDetailId);
     }
 
     @ApiOperation(value = "회원 예약 추가", notes = "회원의 예약을 추가한다.\n\n" +
