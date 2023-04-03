@@ -51,7 +51,7 @@ public class AdminProductController {
 
 
     // 제품 상세 보기
-    @GetMapping("/products/details/{productId}")
+    @GetMapping("/products/detail/{productId}")
     @ApiOperation(value = "상품 상세 정보", notes = "상품 상세 정보를 보여줍니다.\n\n" +"code: 200 상품 상세 정보 조회 성공, code: 403 권한 없음, code: 404 해당 상품이 없음, code: 500 서버에러")
     public ResponseEntity<?> oneProduct(@PathVariable Long productId) {
         return productService.findDetailProduct(productId);

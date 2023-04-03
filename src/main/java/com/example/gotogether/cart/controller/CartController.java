@@ -41,7 +41,7 @@ public class CartController {
 
     @GetMapping("/user/cart")
     @ApiOperation(value = "내 장바구니 목록", notes = "회원의 장바구니 목록을 확인한다. \n\n" +"code: 200 장바구니 삭제 성공, code: 400 장바구니가 없음, code: 500 서버에러")
-    public ResponseEntity<?> findAlldCart(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO){
+    public ResponseEntity<?> findAllCart(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO){
         return cartService.getCartList(userAccessDTO);
     }
 

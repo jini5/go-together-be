@@ -40,16 +40,16 @@ public class CartServiceImpl implements CartService {
             Product product = productRepository.findById(addCartReqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
             ProductOption productOption = productOptionRepository.findById(addCartReqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
             if (cartRepository.existsByUserAndProductAndProductOption(user, product, productOption)) {
-                return new ResponseEntity<>("해당 상품과 그 상품에 하는 상품옵션은 이미 장바구니에 있습니다.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("The product and product options for that product are already in your shopping cart.", HttpStatus.BAD_REQUEST);
             }
             if (productOption.getProduct().getProductId() != addCartReqDTO.getProductId()){
-                return new ResponseEntity<>("존재하지 않는 옵션입니다.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("This option does not exist.", HttpStatus.BAD_REQUEST);
             }
             if(addCartReqDTO.getNumberOfPeople() >( productOption.getMaxPeople() - productOption.getPresentPeopleNumber())){
-                return new ResponseEntity<>("예약 가능한 최대 인원수를 초과하였습니다.",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("The maximum number of people that can be reserved has been exceeded.",HttpStatus.BAD_REQUEST);
             }
-            if(addCartReqDTO.getSingleRoomNumber()>(productOption.getMaxSingleRoom()-productOption.getPresentPeopleNumber())){
-                return new ResponseEntity<>("예약 가능한 최대 싱글를을 수를 초과하였습니다.",HttpStatus.BAD_REQUEST);
+            if(addCartReqDTO.getSingleRoomNumber()>(productOption.getMaxSingleRoom()-productOption.getPresentSingleRoomNumber())){
+                return new ResponseEntity<>("You have exceeded the maximum number of singles that can be booked.",HttpStatus.BAD_REQUEST);
             }
             Cart cart = Cart.builder()
                     .user(user)
@@ -122,14 +122,14 @@ public class CartServiceImpl implements CartService {
             //new 옵션
             ProductOption productOption = productOptionRepository.findById(updateCartReqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
             if (productOption.getProduct().getProductId() != cart.getProduct().getProductId()){
-                return new ResponseEntity<>("해당 상품에는 존재하지 않는 옵션입니다.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("This option does not exist.", HttpStatus.BAD_REQUEST);
             }
             // 인원 및 싱글룸 유효성 검사
-            if(updateCartReqDTO.getNumberOfPeople()>(productOption.getMaxPeople()- productOption.getPresentPeopleNumber())){
-                return new ResponseEntity<>("예약 가능한 최대 인원수를 초과하였습니다.",HttpStatus.BAD_REQUEST);
+            if(updateCartReqDTO.getNumberOfPeople() >( productOption.getMaxPeople() - productOption.getPresentPeopleNumber())){
+                return new ResponseEntity<>("The maximum number of people that can be reserved has been exceeded.",HttpStatus.BAD_REQUEST);
             }
-            if(updateCartReqDTO.getSingleRoomNumber()>(productOption.getMaxSingleRoom()-productOption.getPresentPeopleNumber())){
-                return new ResponseEntity<>("예약 가능한 최대 싱글를을 수를 초과하였습니다.",HttpStatus.BAD_REQUEST);
+            if(updateCartReqDTO.getSingleRoomNumber()>(productOption.getMaxSingleRoom()-productOption.getPresentSingleRoomNumber())){
+                return new ResponseEntity<>("You have exceeded the maximum number of singles that can be booked.",HttpStatus.BAD_REQUEST);
             }
             cart.update(updateCartReqDTO,productOption);
             return new ResponseEntity<>(HttpStatus.OK);
