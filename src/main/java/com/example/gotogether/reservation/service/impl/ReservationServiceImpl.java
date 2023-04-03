@@ -150,31 +150,36 @@ public class ReservationServiceImpl implements ReservationService {
      * 회원 예약 취소
      *
      * @param userAccessDTO 토큰 정보
-     * @param reservationId 취소할 예약 아이디
+     * @param reservationDetailId 취소할 예약 아이디
      */
     @Transactional
     @Override
-    public ResponseEntity<?> cancelReservation(UserDTO.UserAccessDTO userAccessDTO, Long reservationId) {
+    public ResponseEntity<?> cancelReservation(UserDTO.UserAccessDTO userAccessDTO, Long reservationDetailId) {
 
         try {
-            Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NoSuchElementException::new);
+            ReservationDetail reservationDetail = reservationDetailRepository.findById(reservationDetailId).orElseThrow(NoSuchElementException::new);
+            Reservation reservation = reservationDetail.getReservation();
             if (!userAccessDTO.getEmail().equals(reservation.getUser().getEmail())) {
 
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
 
-            if (reservation.getPaymentMethod().equals(PaymentMethod.BANK_TRANSFER)) {
-                reservation.updateStatus(ReservationStatus.CANCELLED);
-            }
-            if (reservation.getPaymentMethod().equals(PaymentMethod.NON_BANK_ACCOUNT)) {
-                reservation.updateStatus(ReservationStatus.CANCEL_REQUESTED);
+            if (!(reservationDetail.getReservationStatus().equals(ReservationStatus.PAYMENT_PENDING)
+                    || reservationDetail.getReservationStatus().equals(ReservationStatus.CONFIRMED))) {
+
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
 
-            for (ReservationDetail detail : reservation.getReservationDetails()) {
-                ProductOption option = productOptionRepository.findById(detail.getProductOptionId()).orElseThrow(NoSuchElementException::new);
-                option.subtractPresentPeopleFrom(detail.getNumberOfPeople());
-                option.subtractPresentSingleRoomFrom(detail.getSingleRoomNumber());
+            if (reservation.getPaymentMethod().equals(PaymentMethod.BANK_TRANSFER)) {
+                reservationDetail.updateStatus(ReservationStatus.CANCELLED);
             }
+            if (reservation.getPaymentMethod().equals(PaymentMethod.NON_BANK_ACCOUNT)) {
+                reservationDetail.updateStatus(ReservationStatus.CANCEL_REQUESTED);
+            }
+
+            ProductOption productOption = productOptionRepository.findById(reservationDetail.getProductOptionId()).orElseThrow(NoSuchElementException::new);
+            productOption.subtractPresentPeopleFrom(reservationDetail.getNumberOfPeople());
+            productOption.subtractPresentSingleRoomFrom(reservationDetail.getSingleRoomNumber());
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
