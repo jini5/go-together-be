@@ -203,21 +203,20 @@ public class ReservationServiceImpl implements ReservationService {
                 }
             }
 
-            ReservationStatus reservationStatus = null;
-            if (addReqDTO.getPaymentMethod().equals(PaymentMethod.BANK_TRANSFER.getValue())) {
-                reservationStatus = ReservationStatus.CONFIRMED;
-            }
-            if (addReqDTO.getPaymentMethod().equals(PaymentMethod.NON_BANK_ACCOUNT.getValue())) {
-                reservationStatus = ReservationStatus.PAYMENT_PENDING;
-            }
-
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
-            Reservation reservation = addReqDTO.toEntity(user, reservationStatus);
+            Reservation reservation = addReqDTO.toEntity(user);
             reservationRepository.save(reservation);
+
             for (ReservationDetailDTO.AddReqDTO reqDTO : addReqDTO.getReservationList()) {
                 Product product = productRepository.findById(reqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
                 ProductOption productOption = productOptionRepository.findById(reqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
-                ReservationDetail reservationDetail = reqDTO.toEntity(reservation, product, productOption);
+                ReservationDetail reservationDetail = null;
+                if (addReqDTO.getPaymentMethod().equals(PaymentMethod.BANK_TRANSFER.getValue())) {
+                    reservationDetail = reqDTO.toEntity(reservation, product, productOption, ReservationStatus.CONFIRMED);
+                }
+                if (addReqDTO.getPaymentMethod().equals(PaymentMethod.NON_BANK_ACCOUNT.getValue())) {
+                    reservationDetail = reqDTO.toEntity(reservation, product, productOption, ReservationStatus.PAYMENT_PENDING);
+                }
                 reservationDetailRepository.save(reservationDetail);
             }
 
