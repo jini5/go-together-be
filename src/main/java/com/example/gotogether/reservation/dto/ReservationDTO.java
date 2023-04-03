@@ -47,7 +47,6 @@ public class ReservationDTO {
             this.userName = reservation.getUser().getName();
             this.reservationId = reservation.getReservationId();
             this.reservationDate = reservation.getReservationDate();
-            this.reservationStatus = reservation.getReservationStatus();
             this.paymentMethod = reservation.getPaymentMethod();
             this.totalAmount = reservation.getReservationDetails().stream()
                     .mapToInt(r -> r.getDetailTotalPrice())
@@ -91,7 +90,6 @@ public class ReservationDTO {
             this.totalAmount = reservation.getReservationDetails().stream()
                     .mapToInt(r -> r.getDetailTotalPrice())
                     .sum();
-            this.reservationStatus = reservation.getReservationStatus();
             this.reservationDate = reservation.getReservationDate();
             this.reservationProductList = reservation.getReservationDetails().stream()
                     .map(ReservationDetailDTO.UserListResDTO::new)
@@ -131,7 +129,6 @@ public class ReservationDTO {
             this.userName = reservation.getUser().getName();
             this.reservationId = reservation.getReservationId();
             this.reservationDate = reservation.getReservationDate();
-            this.reservationStatus = reservation.getReservationStatus();
             this.paymentMethod = reservation.getPaymentMethod();
             this.totalAmount = reservation.getReservationDetails().stream()
                     .mapToInt(r -> r.getDetailTotalPrice())
@@ -153,11 +150,10 @@ public class ReservationDTO {
         @ApiModelProperty(value = "예약리스트")
         private List<ReservationDetailDTO.AddReqDTO> reservationList;
 
-        public Reservation toEntity(User user, ReservationStatus reservationStatus) {
+        public Reservation toEntity(User user) {
             return Reservation.builder()
                     .user(user)
                     .paymentMethod(PaymentMethod.from(paymentMethod))
-                    .reservationStatus(reservationStatus)
                     .build();
         }
     }
