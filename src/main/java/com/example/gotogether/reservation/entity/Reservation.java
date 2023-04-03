@@ -45,18 +45,12 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private ReservationStatus reservationStatus;
-
     @Builder
     public Reservation(User user, PaymentMethod paymentMethod, ReservationStatus reservationStatus) {
         this.user = user;
         this.paymentMethod = paymentMethod;
-        this.reservationStatus = reservationStatus;
     }
 
     public void updateStatus(ReservationStatus reservationStatus) {
-        this.reservationStatus = reservationStatus;
     }
 }
