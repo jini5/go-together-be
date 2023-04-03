@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
                     "Please use at least one uppercase and lowercase letter, special character, and number. \nPlease set at least 8 characters";
             return new ResponseEntity(str, HttpStatus.BAD_REQUEST);
         }
-        if(!signupReqDTO.getPassportLastName().matches(PASSPORT_PATTERN)&&
+        if(!signupReqDTO.getPassportLastName().matches(PASSPORT_PATTERN)||
                 !signupReqDTO.getPassportFirstName().matches(PASSPORT_PATTERN)){
             String str = "Please use capital letters only";
             return new ResponseEntity(str, HttpStatus.BAD_REQUEST);
