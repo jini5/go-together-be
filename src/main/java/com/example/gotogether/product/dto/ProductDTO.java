@@ -42,7 +42,7 @@ public class ProductDTO {
         private int singleRoomPrice;
         @ApiModelProperty(value = "상품 가격", required = true)
         private int price;
-        @ApiModelProperty(value = "상품 여행 유형", required = true)
+        @ApiModelProperty(value = "상품 여행 유형")
         private String type;
         @ApiModelProperty(value = "상품 썸네일", required = true)
         private String thumbnail;
