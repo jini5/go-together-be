@@ -82,17 +82,31 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public ResponseEntity<?> updateUserInfo(Long userId, UserDTO.PatchUserByAdminReqDTO dto) {
         try {
+            if (dto.getDeleteCheck()!=null && !dto.getDeleteCheck().equals("withdraw") &&! dto.getDeleteCheck().equals("available")){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
-            Grouping grouping = groupingRepository.findById(dto.getUserType()).orElseThrow(IllegalArgumentException::new);
-            user.setName(dto.getUserName());
-            user.setEmail(dto.getUserEmail());
-            user.setPhoneNumber(dto.getUserPhoneNumber());
-            user.setBirthday(dto.getUserBirthday());
-            user.setGender(dto.getUserGender());
-            user.setType(grouping);
-            user.setRole(dto.getUserRole());
-            user.setDeleteCheck(dto.getDeleteCheck());
-            user.setSns(dto.getSns());
+            if (dto.getUserName()!=null){
+                user.setName(dto.getUserName());
+            }
+            if (dto.getUserPhoneNumber()!=null){
+                user.setPhoneNumber(dto.getUserPhoneNumber());
+            }
+            if (dto.getUserGender()!=null){
+                user.setGender(dto.getUserGender());
+            }
+            if(dto.getUserBirthday()!=null){
+                user.setBirthday(dto.getUserBirthday());
+            }
+            if (dto.getPassportLastName()!=null){
+                user.setPassportLastName(dto.getPassportLastName());
+            }
+            if (dto.getPassportFirstName()!=null){
+                user.setPassportFirstName(dto.getPassportFirstName());
+            }
+            if (dto.getDeleteCheck()!=null){
+                user.setDeleteCheck(dto.getDeleteCheck());
+            }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

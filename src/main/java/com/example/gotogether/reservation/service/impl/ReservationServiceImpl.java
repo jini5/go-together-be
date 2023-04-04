@@ -10,6 +10,7 @@ import com.example.gotogether.product.repository.ProductOptionRepository;
 import com.example.gotogether.product.repository.ProductRepository;
 import com.example.gotogether.reservation.dto.ReservationDTO;
 import com.example.gotogether.reservation.dto.ReservationDetailDTO;
+import com.example.gotogether.reservation.entity.PaymentMethod;
 import com.example.gotogether.reservation.entity.Reservation;
 import com.example.gotogether.reservation.entity.ReservationDetail;
 import com.example.gotogether.reservation.entity.ReservationStatus;
@@ -24,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
 import static com.example.gotogether.global.config.PageSizeConfig.ADMIN_RESERVATION_LIST_SIZE;
@@ -42,14 +44,13 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 현 페이지의 전체 예약 목록 조회
      *
-     * @param pageNumber 현 페이지 번호
-     * @return
+     * @param page 현 페이지 번호
      */
     @Override
-    public ResponseEntity<?> findAllList(int pageNumber) {
+    public ResponseEntity<?> findAllList(int page) {
 
         try {
-            PageRequest pageRequest = PageRequest.of(pageNumber - 1, ADMIN_RESERVATION_LIST_SIZE);
+            PageRequest pageRequest = PageRequest.of(page - 1, ADMIN_RESERVATION_LIST_SIZE);
             Page<Reservation> reservationPage = reservationRepository.findAll(pageRequest);
             if (reservationPage == null) {
                 throw new NullPointerException();
@@ -70,21 +71,62 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 예약상태 수정
      *
-     * @param reservationId 예약상태 수정할 예약 아이디
+     * @param reservationDetailId 수정할 예약 상세 아이디
      * @param modifyStatusReqDTO 수정할 예약상태 (수정 후)
      */
     @Transactional
     @Override
-    public ResponseEntity<?> modifyReservationStatus(Long reservationId, ReservationDTO.ModifyStatusReqDTO modifyStatusReqDTO) {
+    public ResponseEntity<?> modifyReservationStatus(Long reservationDetailId, ReservationDTO.ModifyStatusReqDTO modifyStatusReqDTO) {
         try {
-            Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NoSuchElementException::new);
-            reservation.updateStatus(modifyStatusReqDTO.getReservationStatus());
+            ReservationDetail reservationDetail = reservationDetailRepository.findById(reservationDetailId).orElseThrow(NoSuchElementException::new);
+            ReservationStatus reqStatus = ReservationStatus.from(modifyStatusReqDTO.getReservationStatus());
+            if (!canStatusChange(reqStatus, reservationDetail)) {
+
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            reservationDetail.updateStatus(reqStatus);
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * 예약상태 변경 가능 여부 확인
+     *
+     * @param request 수정할 예약상태 (수정 후)
+     * @param reservation 수정할 예약 상세
+     */
+    public boolean canStatusChange(ReservationStatus request, ReservationDetail reservation) {
+
+        ReservationStatus current = reservation.getReservationStatus();
+        if (request.equals(ReservationStatus.PAYMENT_PENDING)) {
+            if (!current.equals(ReservationStatus.CANCEL_REQUESTED)) {
+                return false;
+            }
+        }
+        if (request.equals(ReservationStatus.CONFIRMED)) {
+            if (!(current.equals(ReservationStatus.PAYMENT_PENDING) || current.equals(ReservationStatus.CANCEL_REQUESTED))) {
+                return false;
+            }
+        }
+        if (request.equals(ReservationStatus.CANCEL_REQUESTED)) {
+            return false;
+        }
+        if (request.equals(ReservationStatus.CANCELLED)) {
+            if (!(current.equals(ReservationStatus.CANCEL_REQUESTED) || current.equals(ReservationStatus.CONFIRMED)
+                    || current.equals(ReservationStatus.PAYMENT_PENDING))) {
+                return false;
+            }
+        }
+        if (request.equals(ReservationStatus.COMPLETED)) {
+            if (!(current.equals(ReservationStatus.CONFIRMED) && LocalDate.now().isAfter(reservation.getStartDate()))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -123,22 +165,26 @@ public class ReservationServiceImpl implements ReservationService {
      * 예약 상세 정보 조회
      *
      * @param userAccessDTO 토큰 정보
-     * @param reservationId 조회할 예약 아이디
+     * @param reservationDetailId 조회할 예약 상세 아이디
      */
     @Override
-    public ResponseEntity<?> findDetailInfo(UserDTO.UserAccessDTO userAccessDTO, Long reservationId) {
+    public ResponseEntity<?> findDetail(UserDTO.UserAccessDTO userAccessDTO, Long reservationDetailId) {
 
         try {
-            Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NoSuchElementException::new);
+            ReservationDetail reservationDetail = reservationDetailRepository.findById(reservationDetailId).orElseThrow(NoSuchElementException::new);
+            Reservation reservation = reservationDetail.getReservation();
             if (!userAccessDTO.getRole().equals("ROLE_ADMIN")) {
                 if (!userAccessDTO.getEmail().equals(reservation.getUser().getEmail())) {
 
                     return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
                 }
             }
-            ReservationDTO.DetailInfoResDTO detailInfoResDTO = new ReservationDTO.DetailInfoResDTO(reservation);
+            ReservationDetailDTO.DetailResDTO detailResDTO = ReservationDetailDTO.DetailResDTO.builder()
+                    .reservation(reservation)
+                    .reservationDetail(reservationDetail)
+                    .build();
 
-            return new ResponseEntity<>(detailInfoResDTO, HttpStatus.OK);
+            return new ResponseEntity<>(detailResDTO, HttpStatus.OK);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -146,22 +192,39 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     /**
-     * 회원 예약 취소로 해당 예약의 예약 상태 변경
+     * 회원 예약 취소
      *
      * @param userAccessDTO 토큰 정보
-     * @param reservationId 취소할 예약 아이디
+     * @param reservationDetailId 취소할 예약 상세 아이디
      */
     @Transactional
     @Override
-    public ResponseEntity<?> cancelReservation(UserDTO.UserAccessDTO userAccessDTO, Long reservationId) {
+    public ResponseEntity<?> cancelReservation(UserDTO.UserAccessDTO userAccessDTO, Long reservationDetailId) {
 
         try {
-            Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NoSuchElementException::new);
+            ReservationDetail reservationDetail = reservationDetailRepository.findById(reservationDetailId).orElseThrow(NoSuchElementException::new);
+            Reservation reservation = reservationDetail.getReservation();
             if (!userAccessDTO.getEmail().equals(reservation.getUser().getEmail())) {
 
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
-            reservation.updateStatus(ReservationStatus.CANCEL_REQUESTED);
+
+            if (!(reservationDetail.getReservationStatus().equals(ReservationStatus.PAYMENT_PENDING)
+                    || reservationDetail.getReservationStatus().equals(ReservationStatus.CONFIRMED))) {
+
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            if (reservation.getPaymentMethod().equals(PaymentMethod.BANK_TRANSFER)) {
+                reservationDetail.updateStatus(ReservationStatus.CANCELLED);
+            }
+            if (reservation.getPaymentMethod().equals(PaymentMethod.NON_BANK_ACCOUNT)) {
+                reservationDetail.updateStatus(ReservationStatus.CANCEL_REQUESTED);
+            }
+
+            ProductOption productOption = productOptionRepository.findById(reservationDetail.getProductOptionId()).orElseThrow(NoSuchElementException::new);
+            productOption.subtractPresentPeopleFrom(reservationDetail.getNumberOfPeople());
+            productOption.subtractPresentSingleRoomFrom(reservationDetail.getSingleRoomNumber());
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
@@ -181,6 +244,15 @@ public class ReservationServiceImpl implements ReservationService {
     public ResponseEntity<?> addReservation(UserDTO.UserAccessDTO userAccessDTO, ReservationDTO.AddReqDTO addReqDTO) {
 
         try {
+            for (ReservationDetailDTO.AddReqDTO reqDTO : addReqDTO.getReservationList()) {
+                ProductOption productOption = productOptionRepository.findById(reqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
+                if (!isPeopleLessThanMax(productOption, reqDTO.getReservationPeopleNumber())
+                        || !isSingleRoomLessThanMax(productOption, reqDTO.getReservationSingleRoomNumber())) {
+
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+            }
+
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
             Reservation reservation = addReqDTO.toEntity(user);
             reservationRepository.save(reservation);
@@ -188,8 +260,20 @@ public class ReservationServiceImpl implements ReservationService {
             for (ReservationDetailDTO.AddReqDTO reqDTO : addReqDTO.getReservationList()) {
                 Product product = productRepository.findById(reqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
                 ProductOption productOption = productOptionRepository.findById(reqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
-                ReservationDetail reservationDetail = reqDTO.toEntity(reservation, product, productOption);
+                ReservationDetail reservationDetail = null;
+                if (addReqDTO.getPaymentMethod().equals(PaymentMethod.BANK_TRANSFER.getValue())) {
+                    reservationDetail = reqDTO.toEntity(reservation, product, productOption, ReservationStatus.CONFIRMED);
+                }
+                if (addReqDTO.getPaymentMethod().equals(PaymentMethod.NON_BANK_ACCOUNT.getValue())) {
+                    reservationDetail = reqDTO.toEntity(reservation, product, productOption, ReservationStatus.PAYMENT_PENDING);
+                }
                 reservationDetailRepository.save(reservationDetail);
+            }
+
+            for (ReservationDetailDTO.AddReqDTO reqDTO : addReqDTO.getReservationList()) {
+                ProductOption productOption = productOptionRepository.findById(reqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
+                productOption.addPresentPeopleTo(reqDTO.getReservationPeopleNumber());
+                productOption.addPresentSingleRoomTo(reqDTO.getReservationSingleRoomNumber());
             }
 
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -197,5 +281,25 @@ public class ReservationServiceImpl implements ReservationService {
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * 예약 인원수가 예약가능 인원수를 넘지 않는지 체크
+     *
+     * @param productOption 체크할 상품옵션
+     * @param reservationNumber 예약 인원수
+     */
+    public boolean isPeopleLessThanMax(ProductOption productOption, int reservationNumber) {
+        return (productOption.getMaxPeople() - productOption.getPresentPeopleNumber() >= reservationNumber) ? true : false;
+    }
+
+    /**
+     * 예약 싱글룸개수가 예약가능 싱글룸개수를 넘지 않는지 체크
+     *
+     * @param productOption 체크할 상품옵션
+     * @param reservationNumber 예약 싱글룸개수
+     */
+    public boolean isSingleRoomLessThanMax(ProductOption productOption, int reservationNumber) {
+        return (productOption.getMaxSingleRoom() - productOption.getPresentSingleRoomNumber() >= reservationNumber) ? true : false;
     }
 }

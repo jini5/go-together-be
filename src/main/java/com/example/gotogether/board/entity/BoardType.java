@@ -16,6 +16,7 @@ public enum BoardType {
 
         for (BoardType boardType : BoardType.values()) {
             if (boardType.value.equals(type)) {
+
                 return boardType;
             }
         }

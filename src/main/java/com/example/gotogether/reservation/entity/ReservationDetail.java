@@ -45,8 +45,13 @@ public class ReservationDetail {
     @Column(name = "end_date")
     private LocalDate endDate;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus reservationStatus;
+
+
     @Builder
-    public ReservationDetail(Reservation reservation, Product product, Long productOptionId, int numberOfPeople, int singleRoomNumber, int detailTotalPrice, LocalDate startDate, LocalDate endDate) {
+    public ReservationDetail(Reservation reservation, Product product, Long productOptionId, int numberOfPeople, int singleRoomNumber, int detailTotalPrice, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus) {
         this.reservation = reservation;
         this.product = product;
         this.productOptionId = productOptionId;
@@ -55,5 +60,10 @@ public class ReservationDetail {
         this.detailTotalPrice = detailTotalPrice;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.reservationStatus = reservationStatus;
+    }
+
+    public void updateStatus(ReservationStatus reservationStatus) {
+        this.reservationStatus = reservationStatus;
     }
 }

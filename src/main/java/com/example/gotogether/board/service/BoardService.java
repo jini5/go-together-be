@@ -19,5 +19,7 @@ public interface BoardService {
 
     ResponseEntity<?> deletePost(UserDTO.UserAccessDTO userAccessDTO, Long boardId);
 
-    ResponseEntity<?> searchPost(String keyword, int pageNumber);
+    ResponseEntity<?> searchPost(BoardType type, String keyword, int pageNumber);
+
+    ResponseEntity<?> findMyReviewList(UserDTO.UserAccessDTO userAccessDTO, int pageNumber);
 }

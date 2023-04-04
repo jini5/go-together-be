@@ -1,6 +1,5 @@
 package com.example.gotogether.product.entity;
 
-import com.example.gotogether.product.dto.ProductDTO;
 import com.example.gotogether.product.dto.ProductOptionDTO;
 import lombok.Builder;
 import lombok.Getter;
@@ -63,5 +62,21 @@ public class ProductOption {
 
     public void setProductOptionId(Long productOptionId) {
         this.productOptionId=productOptionId;
+    }
+
+    public void addPresentPeopleTo(int peopleNumber) {
+        this.PresentPeopleNumber += peopleNumber;
+    }
+
+    public void addPresentSingleRoomTo(int singleRoomNumber) {
+        this.PresentSingleRoomNumber += singleRoomNumber;
+    }
+
+    public void subtractPresentPeopleFrom(int peopleNumber) {
+        this.PresentPeopleNumber -= peopleNumber;
+    }
+
+    public void subtractPresentSingleRoomFrom(int singleRoomNumber) {
+        this.PresentSingleRoomNumber -= singleRoomNumber;
     }
 }

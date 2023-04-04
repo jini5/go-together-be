@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.NoSuchElementException;
 
 import static com.example.gotogether.global.config.PageSizeConfig.BOARD_LIST_SIZE;
+import static com.example.gotogether.global.config.PageSizeConfig.USER_REVIEW_LIST_SIZE;
 
 @RequiredArgsConstructor
 @Service
@@ -40,21 +41,8 @@ public class BoardServiceImpl implements BoardService {
         try {
             PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
             Page<Board> boardPage = boardRepository.findByType(type, pageRequest);
-            if (boardPage == null) {
-                throw new NullPointerException();
-            }
-            if (boardPage.getTotalElements() < 1) {
 
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
-            if (type.equals(BoardType.NOTICE)) {
-                for (BoardDTO.ListResDTO resDTO : boardListResDTO.getContent()) {
-                    resDTO.setUserName("관리자");
-                }
-            }
-
-            return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
+            return getResponseEntityForList(type, boardPage);
         } catch (NullPointerException e) {
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -187,6 +175,59 @@ public class BoardServiceImpl implements BoardService {
     }
 
     /**
+     * 게시글 검색 (범위: 제목)
+     *
+     * @param type 검색할 게시판 타입
+     * @param keyword 검색할 단어
+     * @param pageNumber 현 페이지 번호
+     */
+    @Override
+    public ResponseEntity<?> searchPost(BoardType type, String keyword, int pageNumber) {
+
+        try {
+            PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
+            Page<Board> boardPage = boardRepository.findByTypeAndTitleContaining(type, keyword, pageRequest);
+
+            return getResponseEntityForList(type, boardPage);
+        } catch (NullPointerException e) {
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * 로그인 중인 회원의 여행후기 목록 조회
+     *
+     * @param userAccessDTO 토큰 정보
+     * @param pageNumber 현재 페이지 번호
+     */
+    @Override
+    public ResponseEntity<?> findMyReviewList(UserDTO.UserAccessDTO userAccessDTO, int pageNumber) {
+
+        try {
+            User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
+            PageRequest pageRequest = PageRequest.of(pageNumber - 1, USER_REVIEW_LIST_SIZE);
+            Page<Board> reviewPage = boardRepository.findByUserAndType(user, BoardType.TRAVEL_REVIEW, pageRequest);
+            if (reviewPage == null) {
+                throw new NullPointerException();
+            }
+            if (reviewPage.getTotalElements() < 1) {
+
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            Page<BoardDTO.ReviewListResDTO> reviewListResDTO = reviewPage.map(BoardDTO.ReviewListResDTO::new);
+
+            return new ResponseEntity<>(new PageResponseDTO(reviewListResDTO), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (NullPointerException e) {
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
      * 해당 게시글에 대한 로그인 중인 회원의 권한 확인
      *
      * @param userEmail 로그인 중인 회원의 이메일
@@ -205,27 +246,7 @@ public class BoardServiceImpl implements BoardService {
         return false;
     }
 
-    /**
-     * 게시글 검색 (범위: 제목 + 내용)
-     *
-     * @param keyword 검색할 단어
-     * @param pageNumber 현 페이지 번호
-     */
-    @Override
-    public ResponseEntity<?> searchPost(String keyword, int pageNumber) {
-
-        try {
-            PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
-            Page<Board> boardPage = boardRepository.findByTitleContaining(keyword, pageRequest);
-
-            return getResponseEntityFrom(boardPage);
-        } catch (NullPointerException e) {
-
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    private ResponseEntity<?> getResponseEntityFrom(Page<Board> boardPage) {
+    private ResponseEntity<?> getResponseEntityForList(BoardType type, Page<Board> boardPage) {
 
         if (boardPage == null) {
             throw new NullPointerException();
@@ -235,6 +256,11 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
+        if (type.equals(BoardType.NOTICE)) {
+            for (BoardDTO.ListResDTO resDTO : boardListResDTO.getContent()) {
+                resDTO.setUserName("관리자");
+            }
+        }
 
         return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
     }
