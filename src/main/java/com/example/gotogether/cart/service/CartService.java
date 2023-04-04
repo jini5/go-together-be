@@ -5,13 +5,14 @@ import com.example.gotogether.cart.dto.CartDTO;
 import org.springframework.http.ResponseEntity;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface CartService {
     @Transactional
     ResponseEntity<?> addCart(UserDTO.UserAccessDTO userAccessDTO, CartDTO.AddCartReqDTO addCartReqDTO);
 
     @Transactional
-    ResponseEntity<?> deleteCart(UserDTO.UserAccessDTO userAccessDTO, Long cartId);
+    ResponseEntity<?> deleteCart(UserDTO.UserAccessDTO userAccessDTO, List<Long> cartId);
 
     @Transactional
     ResponseEntity<?> getCartList(UserDTO.UserAccessDTO userAccessDTO);
