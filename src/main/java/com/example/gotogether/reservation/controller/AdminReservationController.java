@@ -25,9 +25,10 @@ public class AdminReservationController {
     }
 
     @ApiOperation(value = "예약상태 수정", notes = "예약 상태를 수정한다.\n\n" +
-            "code: 200 수정 성공, 400 잘못된 reservationId 또는 ReservationStatus 요청")
-    @PatchMapping("/{reservationId}")
-    public ResponseEntity<?> modifyReservationStatus(@PathVariable Long reservationId, @RequestBody ReservationDTO.ModifyStatusReqDTO modifyStatusReqDTO) {
-        return reservationService.modifyReservationStatus(reservationId, modifyStatusReqDTO);
+            "code: 200 수정 성공, 400 잘못된 reservationDetailId 또는 ReservationStatus 요청")
+    @PatchMapping("/{reservationDetailId}")
+    public ResponseEntity<?> modifyReservationStatus(@PathVariable Long reservationDetailId,
+                                                     @RequestBody ReservationDTO.ModifyStatusReqDTO modifyStatusReqDTO) {
+        return reservationService.modifyReservationStatus(reservationDetailId, modifyStatusReqDTO);
     }
 }

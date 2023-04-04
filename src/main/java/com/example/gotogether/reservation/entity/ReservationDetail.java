@@ -62,4 +62,8 @@ public class ReservationDetail {
         this.endDate = endDate;
         this.reservationStatus = reservationStatus;
     }
+
+    public void updateStatus(ReservationStatus reservationStatus) {
+        this.reservationStatus = reservationStatus;
+    }
 }
