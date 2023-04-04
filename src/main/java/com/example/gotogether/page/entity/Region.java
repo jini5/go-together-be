@@ -28,15 +28,15 @@ public class Region {
     private int rate;
 
     @Builder
-    public Region(String image, String regionName, int rate){
+    public Region(String image, String regionName, int rate) {
         this.image = image;
         this.regionName = regionName;
         this.rate = rate;
     }
 
-    public void update(RegionDTO.RegionUpdateReqDTO dto){
+    public void update(RegionDTO.RegionUpdateReqDTO dto) {
         this.image = dto.getImage();
-        this.regionName=dto.getRegionName();
-        this.rate=dto.getRate();
+        this.regionName = dto.getRegionName();
+        this.rate = dto.getRate();
     }
 }

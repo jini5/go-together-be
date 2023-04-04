@@ -23,27 +23,28 @@ public class PageContentsAdminController {
     @PostMapping("/regions")
     @ApiOperation(value = "인기 지역 추가", notes = "관리자가 인기 여행지역 추가. rate 는 노출 단계(낮을수록 먼저 노출) \n\n" +
             "code: 201 추가 성공, 400 지역 이름 중복")
-    public ResponseEntity<?> addRegion(@RequestBody RegionDTO.RegionReqDTO dto){
+    public ResponseEntity<?> addRegion(@RequestBody RegionDTO.RegionReqDTO dto) {
         return pageContentsService.addRegion(dto);
     }
 
     @PutMapping("/regions/{regionId}")
     @ApiOperation(value = "인기 지역 수정", notes = "관리자가 인기 여행지역 수정.\n\n" +
             "code: 200 수정 성공, 400 지역 이름 중복, 404 잘못된 ID")
-    public ResponseEntity<?> updateRegion(@PathVariable Long regionId,@RequestBody RegionDTO.RegionUpdateReqDTO dto){
-        return pageContentsService.updateRegion(regionId,dto);
+    public ResponseEntity<?> updateRegion(@PathVariable Long regionId, @RequestBody RegionDTO.RegionUpdateReqDTO dto) {
+        return pageContentsService.updateRegion(regionId, dto);
     }
 
     @DeleteMapping("/regions/{regionId}")
     @ApiOperation(value = "인기 지역 삭제", notes = "관리자가 인기 여행지역 삭제.\n\n" +
             "code: 200 삭제 성공, 404 잘못된 ID")
-    public ResponseEntity<?> deleteRegion(@PathVariable Long regionId){
+    public ResponseEntity<?> deleteRegion(@PathVariable Long regionId) {
         return pageContentsService.deleteRegion(regionId);
     }
+
     @GetMapping("/regions/{regionId}")
     @ApiOperation(value = "인기 지역 상세 조회", notes = "관리자가 인기 여행지역 상세 조회.\n\n" +
             "code: 200 조회 성공, 404 잘못된 ID")
-    public ResponseEntity<?> getRegionDetail(@PathVariable Long regionId){
+    public ResponseEntity<?> getRegionDetail(@PathVariable Long regionId) {
         return pageContentsService.getRegionDetail(regionId);
     }
 
@@ -52,21 +53,21 @@ public class PageContentsAdminController {
     @PostMapping("/banner")
     @ApiOperation(value = "배너 추가", notes = "관리자가 배너 추가.  \n\n" +
             "code: 201 추가 성공, 400 추가 불가능")
-    public ResponseEntity<?> addBanner(@RequestBody BannerDTO.BannerReqDTO bannerReqDTO){
+    public ResponseEntity<?> addBanner(@RequestBody BannerDTO.BannerReqDTO bannerReqDTO) {
         return bannerService.addBanner(bannerReqDTO);
     }
 
     @PutMapping("/banner/{bannerId}")
     @ApiOperation(value = "배너 수정", notes = "관리자가 배너 수정.\n\n" +
             "code: 200 수정 성공, 400 배너 중복, 400 잘못된 요청, 404 잘못된 ID")
-    public ResponseEntity<?> updateBanner(@PathVariable Long bannerId, @RequestBody BannerDTO.BannerUpdateReqDTO bannerUpdateReqDTO){
+    public ResponseEntity<?> updateBanner(@PathVariable Long bannerId, @RequestBody BannerDTO.BannerUpdateReqDTO bannerUpdateReqDTO) {
         return bannerService.updateBanner(bannerId, bannerUpdateReqDTO);
     }
 
     @DeleteMapping("/banner/{bannerId}")
     @ApiOperation(value = "배너 삭제", notes = "관리자가 배너 삭제.\n\n" +
             "code: 200 삭제 성공, 404 잘못된 ID, 400 잘못된 요청")
-    public ResponseEntity<?> deleteBanner(@PathVariable Long bannerId){
+    public ResponseEntity<?> deleteBanner(@PathVariable Long bannerId) {
         return bannerService.deleteBanner(bannerId);
     }
 

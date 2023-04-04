@@ -25,49 +25,50 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public ResponseEntity<?> addBanner(BannerDTO.BannerReqDTO bannerReqDTO) {
-        try{
+        try {
             Product product = productRepository.findById(bannerReqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
             Banner banner = bannerReqDTO.toEntity();
             banner.setProduct(product);
             bannerRepository.save(banner);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
     @Override
     public ResponseEntity<?> deleteBanner(Long bannerId) {
-        try{
+        try {
             bannerRepository.deleteById(bannerId);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
     public ResponseEntity<?> updateBanner(Long bannerId, BannerDTO.BannerUpdateReqDTO bannerUpdateReqDTO) {
-        try{
+        try {
             Banner banner = bannerRepository.findById(bannerId).orElseThrow(NoSuchElementException::new);
             Product product = productRepository.findById(bannerUpdateReqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
             banner.update(bannerUpdateReqDTO, product);
             bannerRepository.save(banner);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?>  findAllBanner() {
-        try{
+    public ResponseEntity<?> findAllBanner() {
+        try {
             List<Banner> bannerList = bannerRepository.findAll();
-            if(bannerList.size()<1){
+            if (bannerList.size() < 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(bannerList.stream().map(BannerDTO.BannerResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -75,16 +76,15 @@ public class BannerServiceImpl implements BannerService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findBanner(Long bannerId) {
-        try{
-            Banner banner =  bannerRepository.findById(bannerId).orElseThrow(NoSuchElementException::new);
+        try {
+            Banner banner = bannerRepository.findById(bannerId).orElseThrow(NoSuchElementException::new);
 
-            return new ResponseEntity<>(new BannerDTO.BannerResDTO(banner),HttpStatus.OK);
-        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(new BannerDTO.BannerResDTO(banner), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
     }
-
 
 
 }
