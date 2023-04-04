@@ -1,5 +1,6 @@
 package com.example.gotogether.reservation.dto;
 
+import com.example.gotogether.global.response.PageResponseDTO;
 import com.example.gotogether.product.entity.Product;
 import com.example.gotogether.product.entity.ProductOption;
 import com.example.gotogether.reservation.entity.Reservation;
@@ -47,12 +48,23 @@ public class ReservationDetailDTO {
     @Setter
     public static class UserListResDTO {
 
+        @ApiModelProperty(value = "예약 아이디")
+        private Long reservationId;
+        @ApiModelProperty(value = "결제수단")
+        private String paymentMethod;
+        @ApiModelProperty(value = "예약일")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private LocalDateTime reservationDate;
         @ApiModelProperty(value = "예약 상세 아이디")
         private Long reservationDetailId;
         @ApiModelProperty(value = "상품 아이디")
         private Long productId;
+        @ApiModelProperty(value = "상품명")
+        private String productName;
         @ApiModelProperty(value = "상품 썸네일")
         private String productThumbnail;
+        @ApiModelProperty(value = "예약상태")
+        private String reservationStatus;
         @ApiModelProperty(value = "출발일")
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate startDate;
@@ -63,24 +75,39 @@ public class ReservationDetailDTO {
         private int reservationPeopleNumber;
         @ApiModelProperty(value = "예약 싱글룸 개수")
         private int reservationSingleRoomNumber;
-        @ApiModelProperty(value = "싱글룸 가격")
-        private int productSingleRoomPrice;
-        @ApiModelProperty(value = "상품 가격")
-        private int productPrice;
         @ApiModelProperty(value = "예약금액")
         private int detailTotalPrice;
 
         public UserListResDTO(ReservationDetail reservationDetail) {
+            this.reservationId = reservationDetail.getReservation().getReservationId();
+            this.paymentMethod = reservationDetail.getReservation().getPaymentMethod().getValue();
+            this.reservationDate = reservationDetail.getReservation().getReservationDate();
             this.reservationDetailId = reservationDetail.getReservationDetailId();
             this.productId = reservationDetail.getProduct().getProductId();
+            this.productName = reservationDetail.getProduct().getName();
             this.productThumbnail = reservationDetail.getProduct().getThumbnail();
+            this.reservationStatus = reservationDetail.getReservationStatus().getValue();
             this.startDate = reservationDetail.getStartDate();
             this.endDate = reservationDetail.getEndDate();
             this.reservationPeopleNumber = reservationDetail.getNumberOfPeople();
             this.reservationSingleRoomNumber = reservationDetail.getSingleRoomNumber();
-            this.productSingleRoomPrice = reservationDetail.getProduct().getSingleRoomPrice();
-            this.productPrice = reservationDetail.getProduct().getPrice();
             this.detailTotalPrice = reservationDetail.getDetailTotalPrice();
+        }
+    }
+
+    @ApiModel(value = "사용자 페이지 예약상태별 예약 목록 조회 응답")
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class UserListByStatusResDTO {
+
+        private PageResponseDTO scheduledTravel;
+        private PageResponseDTO pastTravel;
+
+        @Builder
+        public UserListByStatusResDTO(PageResponseDTO scheduledTravel, PageResponseDTO pastTravel) {
+            this.scheduledTravel = scheduledTravel;
+            this.pastTravel = pastTravel;
         }
     }
 
