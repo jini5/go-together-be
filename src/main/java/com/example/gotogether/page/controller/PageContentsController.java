@@ -35,14 +35,14 @@ public class PageContentsController {
     @GetMapping("/page/popular/products")
     @ApiOperation(value = "인기 상품 검색(전체 or 특정 카테고리 가능)", notes = "categoryID 를 받을경우 그 카테고리의 인기순 상품 10개 제공.없을시 전체 상품 중 인기순 10개 제공. \n\n" +
             "code: 200 상품 목록 조회 성공, 204 표시할 상품 없음, 400 잘못된 카테고리 요청, 500 서버에러 ")
-    public ResponseEntity<?> findPopularProducts(@RequestParam(required = false) Long categoryId){
+    public ResponseEntity<?> findPopularProducts(@RequestParam(required = false) Long categoryId) {
         return productService.findPopularProducts(categoryId);
     }
 
     @GetMapping("/page/group/products")
     @ApiOperation(value = "사용자 그룹의 상품 추천", notes = "사용자가 속한 그룹의 추천 상품 제공. \n\n" +
             "code: 200 그룹 상품 목록 조회 성공, 204 표시할 상품 없음, 400 사용자의 타입 없음, 500 서버에러, 404 없는 사용자 ")
-    public ResponseEntity<?> findGroupProduct(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO){
+    public ResponseEntity<?> findGroupProduct(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
         return pageContentsService.findGroupProduct(userAccessDTO);
     }
 

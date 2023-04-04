@@ -4,8 +4,6 @@ import com.example.gotogether.wishlist.entity.Wishlist;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
 
-import java.util.List;
-
 public class WishlistDTO {
 
     @NoArgsConstructor
@@ -13,7 +11,7 @@ public class WishlistDTO {
     @Setter
     @ApiModel(value = "위시 추가")
     @ToString
-    public static class WishReqDTO{
+    public static class WishReqDTO {
         private Long productId;
     }
 
@@ -22,7 +20,7 @@ public class WishlistDTO {
     @Setter
     @ApiModel(value = "위시 삭제")
     @ToString
-    public static class DeleteWishReqDTO{
+    public static class DeleteWishReqDTO {
         private Long wishlistId;
     }
 
@@ -32,7 +30,7 @@ public class WishlistDTO {
     @Getter
     @ApiModel(value = "위시리스트 목록 조회")
     @ToString
-    public static class WishlistResDTO{
+    public static class WishlistResDTO {
 
         private Long wishlistId;
         private Long productId;
@@ -51,7 +49,7 @@ public class WishlistDTO {
                     '}';
         }
 
-        public WishlistResDTO(Wishlist wishlist){
+        public WishlistResDTO(Wishlist wishlist) {
             wishlistId = wishlist.getWishlistId();
             productId = wishlist.getProduct().getProductId();
             productName = wishlist.getProduct().getName();

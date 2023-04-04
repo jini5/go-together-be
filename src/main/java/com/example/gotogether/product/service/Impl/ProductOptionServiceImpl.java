@@ -65,8 +65,8 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     public ResponseEntity<?> getAllProductOptions(Long productId) {
         try {
             Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
-            List<ProductOption> productOptionList= productOptionRepository.findAllByProduct(product);
-            if (productOptionList.size()<1)return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            List<ProductOption> productOptionList = productOptionRepository.findAllByProduct(product);
+            if (productOptionList.size() < 1) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             return new ResponseEntity<>(productOptionList.stream().map(ProductOptionDTO.ProductOptionResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

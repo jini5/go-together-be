@@ -2,7 +2,6 @@ package com.example.gotogether.product.dto;
 
 import com.example.gotogether.category.dto.CategoryDTO;
 import com.example.gotogether.product.entity.Product;
-import com.example.gotogether.product.entity.ProductCategory;
 import com.example.gotogether.product.entity.ProductStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -42,7 +41,7 @@ public class ProductDTO {
         private int singleRoomPrice;
         @ApiModelProperty(value = "상품 가격", required = true)
         private int price;
-        @ApiModelProperty(value = "상품 여행 유형", required = true)
+        @ApiModelProperty(value = "상품 여행 유형")
         private String type;
         @ApiModelProperty(value = "상품 썸네일", required = true)
         private String thumbnail;
@@ -144,7 +143,6 @@ public class ProductDTO {
         private int productPrice;
 
 
-
         private ProductStatus productStatus;
 
         public ProductListResDTO(Product product) {
@@ -156,8 +154,8 @@ public class ProductDTO {
             this.productSummary = product.getSummary();
             this.productArea = product.getArea();
             this.productThumbnail = product.getThumbnail();
-            this.productPrice=product.getPrice();
-            this.productStatus=product.getProductStatus();
+            this.productPrice = product.getPrice();
+            this.productStatus = product.getProductStatus();
         }
     }
 

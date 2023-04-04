@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface GroupingRepository extends JpaRepository<Grouping, String> {
     List<Grouping> findAllByGroup(String group);
+
     boolean existsByGroup(String group);
 }

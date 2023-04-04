@@ -10,7 +10,7 @@ public interface BannerService {
     ResponseEntity<?> deleteBanner(Long bannerId);
 
     @Transactional(readOnly = true)
-    ResponseEntity<?>  findAllBanner();
+    ResponseEntity<?> findAllBanner();
 
     @Transactional(readOnly = true)
     ResponseEntity<?> findBanner(Long bannerId);

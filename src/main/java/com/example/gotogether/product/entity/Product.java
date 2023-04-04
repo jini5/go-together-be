@@ -33,7 +33,7 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProductOption> productOptions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product" , fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<ReservationDetail> reservationDetails = new ArrayList<>();
 
     @Column(name = "name")
@@ -92,7 +92,7 @@ public class Product {
     }
 
 
-    public void update(ProductDTO.ProductUpdateReqDTO productReq,List<ProductCategory> categoryList) {
+    public void update(ProductDTO.ProductUpdateReqDTO productReq, List<ProductCategory> categoryList) {
         this.categories = categoryList;
         this.name = productReq.getName();
         this.summary = productReq.getSummary();

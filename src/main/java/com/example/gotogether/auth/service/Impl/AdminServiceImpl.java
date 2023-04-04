@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -82,51 +81,62 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public ResponseEntity<?> updateUserInfo(Long userId, UserDTO.PatchUserByAdminReqDTO dto) {
         try {
-            if (!dto.getDeleteCheck().equals("withdraw") &&! dto.getDeleteCheck().equals("available")){
+            if (dto.getDeleteCheck() != null && !dto.getDeleteCheck().equals("withdraw") && !dto.getDeleteCheck().equals("available")) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
-            Grouping grouping = groupingRepository.findById(dto.getUserType()).orElseThrow(IllegalArgumentException::new);
-            user.setName(dto.getUserName());
-            user.setEmail(dto.getUserEmail());
-            user.setPhoneNumber(dto.getUserPhoneNumber());
-            user.setBirthday(dto.getUserBirthday());
-            user.setGender(dto.getUserGender());
-            user.setType(grouping);
-            user.setRole(dto.getUserRole());
-            user.setDeleteCheck(dto.getDeleteCheck());
-            user.setSns(dto.getSns());
+            if (dto.getUserName() != null) {
+                user.setName(dto.getUserName());
+            }
+            if (dto.getUserPhoneNumber() != null) {
+                user.setPhoneNumber(dto.getUserPhoneNumber());
+            }
+            if (dto.getUserGender() != null) {
+                user.setGender(dto.getUserGender());
+            }
+            if (dto.getUserBirthday() != null) {
+                user.setBirthday(dto.getUserBirthday());
+            }
+            if (dto.getPassportLastName() != null) {
+                user.setPassportLastName(dto.getPassportLastName());
+            }
+            if (dto.getPassportFirstName() != null) {
+                user.setPassportFirstName(dto.getPassportFirstName());
+            }
+            if (dto.getDeleteCheck() != null) {
+                user.setDeleteCheck(dto.getDeleteCheck());
+            }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @Override
     public ResponseEntity<?> makeGroup(GroupDTO groupDTO) {
-        if (groupingRepository.existsById(groupDTO.getUserType())){
+        if (groupingRepository.existsById(groupDTO.getUserType())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        groupingRepository.save(new Grouping(groupDTO.getUserType(),groupDTO.getGroup()));
+        groupingRepository.save(new Grouping(groupDTO.getUserType(), groupDTO.getGroup()));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<?> findAllGrouping() {
         List<GroupDTO> list = groupingRepository.findAll().stream().map(GroupDTO::new).collect(Collectors.toList());
-        if (list.size()<1){
+        if (list.size() < 1) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(list,HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<?> getGroupingByType(String type) {
         try {
-            return new ResponseEntity<>(groupingRepository.findById(type).orElseThrow(NoSuchElementException::new),HttpStatus.OK);
-        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(groupingRepository.findById(type).orElseThrow(NoSuchElementException::new), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -134,10 +144,10 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ResponseEntity<?> getGroupingByGroup(String group) {
         List<GroupDTO> list = groupingRepository.findAllByGroup(group).stream().map(GroupDTO::new).collect(Collectors.toList());
-        if (list.size()<1){
+        if (list.size() < 1) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(list,HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @Override
@@ -147,7 +157,7 @@ public class AdminServiceImpl implements AdminService {
             Grouping grouping = groupingRepository.findById(dto.getUserType()).orElseThrow(NoSuchElementException::new);
             grouping.setGroup(dto.getGroup());
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -159,9 +169,9 @@ public class AdminServiceImpl implements AdminService {
             Grouping grouping = groupingRepository.findById(type).orElseThrow(NoSuchElementException::new);
             groupingRepository.delete(grouping);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

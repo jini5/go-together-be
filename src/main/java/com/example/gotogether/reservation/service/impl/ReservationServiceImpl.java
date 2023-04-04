@@ -73,7 +73,7 @@ public class ReservationServiceImpl implements ReservationService {
      * 예약상태 수정
      *
      * @param reservationDetailId 수정할 예약 상세 아이디
-     * @param modifyStatusReqDTO 수정할 예약상태 (수정 후)
+     * @param modifyStatusReqDTO  수정할 예약상태 (수정 후)
      */
     @Transactional
     @Override
@@ -97,7 +97,7 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 예약상태 변경 가능 여부 확인
      *
-     * @param request 수정할 예약상태 (수정 후)
+     * @param request     수정할 예약상태 (수정 후)
      * @param reservation 수정할 예약 상세
      */
     public boolean canStatusChange(ReservationStatus request, ReservationDetail reservation) {
@@ -134,7 +134,7 @@ public class ReservationServiceImpl implements ReservationService {
      * 로그인 중인 회원의 예약 목록 조회
      *
      * @param userAccessDTO 토큰 정보
-     * @param page 현 페이지 번호
+     * @param page          현 페이지 번호
      */
     @Override
     public ResponseEntity<?> findList(UserDTO.UserAccessDTO userAccessDTO, int page) {
@@ -172,7 +172,7 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 예약 상세 정보 조회
      *
-     * @param userAccessDTO 토큰 정보
+     * @param userAccessDTO       토큰 정보
      * @param reservationDetailId 조회할 예약 상세 아이디
      */
     @Override
@@ -202,7 +202,7 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 회원 예약 취소
      *
-     * @param userAccessDTO 토큰 정보
+     * @param userAccessDTO       토큰 정보
      * @param reservationDetailId 취소할 예약 상세 아이디
      */
     @Transactional
@@ -245,7 +245,7 @@ public class ReservationServiceImpl implements ReservationService {
      * 회원 예약 추가
      *
      * @param userAccessDTO 토큰 정보
-     * @param addReqDTO 추가할 예약 정보
+     * @param addReqDTO     추가할 예약 정보
      */
     @Transactional
     @Override
@@ -294,7 +294,7 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 예약 인원수가 예약가능 인원수를 넘지 않는지 체크
      *
-     * @param productOption 체크할 상품옵션
+     * @param productOption     체크할 상품옵션
      * @param reservationNumber 예약 인원수
      */
     public boolean isPeopleLessThanMax(ProductOption productOption, int reservationNumber) {
@@ -304,7 +304,7 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 예약 싱글룸개수가 예약가능 싱글룸개수를 넘지 않는지 체크
      *
-     * @param productOption 체크할 상품옵션
+     * @param productOption     체크할 상품옵션
      * @param reservationNumber 예약 싱글룸개수
      */
     public boolean isSingleRoomLessThanMax(ProductOption productOption, int reservationNumber) {
