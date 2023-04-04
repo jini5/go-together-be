@@ -61,7 +61,7 @@ public class ReservationDTO {
     public static class ModifyStatusReqDTO {
 
         @ApiModelProperty(value = "예약상태")
-        private ReservationStatus reservationStatus;
+        private String reservationStatus;
     }
 
     @ApiModel(value = "사용자 페이지 예약 목록 조회 응답")

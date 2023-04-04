@@ -50,7 +50,4 @@ public class Reservation {
         this.user = user;
         this.paymentMethod = paymentMethod;
     }
-
-    public void updateStatus(ReservationStatus reservationStatus) {
-    }
 }
