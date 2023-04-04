@@ -31,7 +31,7 @@ public class CartController {
 
     @DeleteMapping("/cart")
     @ApiOperation(value = "장바구니 상품 삭제", notes = "장바구니 안에 있는 상품들을 삭제한다. \n\n" +"code: 200 장바구니 내 상품들 삭제 성공, code: 204 삭제 대상이 장바구니에 없는 상품, code: 400 잘못된 요청 형식이나 파라미터가 전달, code: 500 서버에러")
-    public ResponseEntity<?> deletedCart(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,@RequestParam List<Long> cartId){
+    public ResponseEntity<?> deletedCart(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,@RequestBody List<Long> cartId){
         return cartService.deleteCart(userAccessDTO, cartId);
     }
 
