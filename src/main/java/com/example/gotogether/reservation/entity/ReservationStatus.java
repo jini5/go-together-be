@@ -3,6 +3,8 @@ package com.example.gotogether.reservation.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.NoSuchElementException;
+
 @AllArgsConstructor
 @Getter
 public enum ReservationStatus {
@@ -13,4 +15,15 @@ public enum ReservationStatus {
     COMPLETED("여행 완료");
 
     private final String value;
+
+    public static ReservationStatus from(String status) {
+
+        for (ReservationStatus reservationStatus : ReservationStatus.values()) {
+            if (reservationStatus.value.equals(status)) {
+
+                return reservationStatus;
+            }
+        }
+        throw new NoSuchElementException();
+    }
 }
