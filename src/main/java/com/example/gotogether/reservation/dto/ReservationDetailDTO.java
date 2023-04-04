@@ -16,6 +16,29 @@ import java.time.LocalDate;
 
 public class ReservationDetailDTO {
 
+    @ApiModel(value = "관리자 페이지 전체 예약 목록 조회 응답")
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class AdminListResDTO {
+
+        @ApiModelProperty(value = "예약 상세 아이디")
+        private Long reservationDetailId;
+        @ApiModelProperty(value = "상품 아이디")
+        private Long productId;
+        @ApiModelProperty(value = "상품명")
+        private String productName;
+        @ApiModelProperty(value = "예약상태")
+        private String reservationStatus;
+
+        public AdminListResDTO(ReservationDetail reservationDetail) {
+            this.reservationDetailId = reservationDetail.getReservationDetailId();
+            this.productId = reservationDetail.getProduct().getProductId();
+            this.productName = reservationDetail.getProduct().getName();
+            this.reservationStatus = reservationDetail.getReservationStatus().getValue();
+        }
+    }
+
     @ApiModel(value = "사용자 페이지 예약 목록 조회 응답")
     @NoArgsConstructor
     @Getter
