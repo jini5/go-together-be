@@ -15,10 +15,16 @@ public interface AdminService {
     ResponseEntity<?> findUser(Long id);
 
     ResponseEntity<?> updateUserInfo(Long userId, UserDTO.PatchUserByAdminReqDTO dto);
+
     ResponseEntity<?> makeGroup(GroupDTO groupDTO);
+
     ResponseEntity<?> findAllGrouping();
+
     ResponseEntity<?> getGroupingByType(String type);
+
     ResponseEntity<?> getGroupingByGroup(String group);
+
     ResponseEntity<?> updateGrouping(GroupDTO dto);
+
     ResponseEntity<?> deleteGrouping(String type);
 }

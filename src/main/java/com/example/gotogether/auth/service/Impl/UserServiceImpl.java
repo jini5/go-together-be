@@ -44,17 +44,17 @@ public class UserServiceImpl implements UserService {
                 !signupReqDTO.getUserPassword().equals(signupReqDTO.getPasswordConfirmation())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if(!signupReqDTO.getUserEmail().matches(EMAIL_PATTERN)) {
+        if (!signupReqDTO.getUserEmail().matches(EMAIL_PATTERN)) {
             String str = "Please use the email format.";
             return new ResponseEntity(str, HttpStatus.BAD_REQUEST);
         }
-        if(!signupReqDTO.getUserPassword().matches(pattern)) {
+        if (!signupReqDTO.getUserPassword().matches(pattern)) {
             String str = "The password can only use letters and numbers.\n" +
                     "Please use at least one uppercase and lowercase letter, special character, and number. \nPlease set at least 8 characters";
             return new ResponseEntity(str, HttpStatus.BAD_REQUEST);
         }
-        if(!signupReqDTO.getPassportLastName().matches(PASSPORT_PATTERN)||
-                !signupReqDTO.getPassportFirstName().matches(PASSPORT_PATTERN)){
+        if (!signupReqDTO.getPassportLastName().matches(PASSPORT_PATTERN) ||
+                !signupReqDTO.getPassportFirstName().matches(PASSPORT_PATTERN)) {
             String str = "Please use capital letters only";
             return new ResponseEntity(str, HttpStatus.BAD_REQUEST);
         }
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> updateUser(UserDTO.UserAccessDTO userAccessDTO, UserDTO.PatchUserReqDTO patchUserReqDTO) {
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(IllegalArgumentException::new);
-            if(!patchUserReqDTO.getUserPassword().matches(pattern)) {
+            if (!patchUserReqDTO.getUserPassword().matches(pattern)) {
                 String str = "The password can only use letters and numbers.\n" +
                         "Please use at least one uppercase and lowercase letter, special character, and number. \nPlease set at least 8 characters";
                 return new ResponseEntity(str, HttpStatus.BAD_REQUEST);
