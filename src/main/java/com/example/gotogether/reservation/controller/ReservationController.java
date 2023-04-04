@@ -23,8 +23,8 @@ public class ReservationController {
             "code: 200 조회 성공, 204 조회 성공 + 표시할 내용 없음, 403 권한없는 사용자 접근, 500 알 수 없는 서버 오류")
     @GetMapping
     public ResponseEntity<?> findList(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,
-                                      @RequestParam(required = false, defaultValue = "1") int pageNumber) {
-        return reservationService.findList(userAccessDTO, pageNumber);
+                                      @RequestParam(required = false, defaultValue = "1") int page) {
+        return reservationService.findList(userAccessDTO, page);
     }
 
     @ApiOperation(value = "예약 상세 정보 조회", notes = "예약 상세 정보를 조회한다.\n\n"
