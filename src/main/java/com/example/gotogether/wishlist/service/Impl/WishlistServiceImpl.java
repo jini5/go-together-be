@@ -34,7 +34,7 @@ public class WishlistServiceImpl implements WishlistService {
         try {
             Product product = productRepository.findById(wishReqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
-            if(wishlistRepository.existsByUserAndProduct(user, product)){
+            if (wishlistRepository.existsByUserAndProduct(user, product)) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             wishlistRepository.save(new Wishlist(user, product));
@@ -49,8 +49,8 @@ public class WishlistServiceImpl implements WishlistService {
     public ResponseEntity<?> deleteWishlist(UserDTO.UserAccessDTO userAccessDTO, WishlistDTO.DeleteWishReqDTO deletewishReqDTO) {
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
-            if(wishlistRepository.existsByUserAndWishlistId(user, deletewishReqDTO.getWishlistId())){
-                wishlistRepository.deleteByUserAndWishlistId(user,deletewishReqDTO.getWishlistId());
+            if (wishlistRepository.existsByUserAndWishlistId(user, deletewishReqDTO.getWishlistId())) {
+                wishlistRepository.deleteByUserAndWishlistId(user, deletewishReqDTO.getWishlistId());
                 return new ResponseEntity<>(HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -71,7 +71,6 @@ public class WishlistServiceImpl implements WishlistService {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
 
 
 }

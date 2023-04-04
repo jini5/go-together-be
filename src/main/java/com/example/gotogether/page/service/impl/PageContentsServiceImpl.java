@@ -10,7 +10,6 @@ import com.example.gotogether.page.service.PageContentsService;
 import com.example.gotogether.product.dto.ProductDTO;
 import com.example.gotogether.product.entity.ProductStatus;
 import com.example.gotogether.product.repository.ProductRepository;
-import com.example.gotogether.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -32,34 +31,34 @@ public class PageContentsServiceImpl implements PageContentsService {
 
     @Override
     public ResponseEntity<?> addRegion(RegionDTO.RegionReqDTO dto) {
-        if(regionRepository.existsByRegionName(dto.getRegionName())){
+        if (regionRepository.existsByRegionName(dto.getRegionName())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         regionRepository.save(dto.toEntity());
-        return new  ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<?> getRegionList() {
-        Sort sort = Sort.by(Sort.Direction.ASC,"rate");
+        Sort sort = Sort.by(Sort.Direction.ASC, "rate");
         List<Region> regionList = regionRepository.findAll(sort);
-        if (regionList.size()<1){
+        if (regionList.size() < 1) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(regionList.stream().map(RegionDTO.RegionResDTO::new).collect(Collectors.toList()),HttpStatus.OK);
+        return new ResponseEntity<>(regionList.stream().map(RegionDTO.RegionResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> updateRegion(Long regionId,RegionDTO.RegionUpdateReqDTO dto) {
+    public ResponseEntity<?> updateRegion(Long regionId, RegionDTO.RegionUpdateReqDTO dto) {
         try {
             Region region = regionRepository.findById(regionId).orElseThrow(IllegalArgumentException::new);
-            if (!region.getRegionName().equals(dto.getRegionName()) && regionRepository.existsByRegionName(dto.getRegionName())){
+            if (!region.getRegionName().equals(dto.getRegionName()) && regionRepository.existsByRegionName(dto.getRegionName())) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             region.update(dto);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -71,7 +70,7 @@ public class PageContentsServiceImpl implements PageContentsService {
             Region region = regionRepository.findById(regionId).orElseThrow(IllegalArgumentException::new);
             regionRepository.delete(region);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -80,8 +79,8 @@ public class PageContentsServiceImpl implements PageContentsService {
     public ResponseEntity<?> getRegionDetail(Long regionId) {
         try {
             Region region = regionRepository.findById(regionId).orElseThrow(NoSuchElementException::new);
-            return new ResponseEntity<>(new RegionDTO.RegionResDTO(region),HttpStatus.OK);
-        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(new RegionDTO.RegionResDTO(region), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -90,18 +89,18 @@ public class PageContentsServiceImpl implements PageContentsService {
     public ResponseEntity<?> findGroupProduct(UserDTO.UserAccessDTO userAccessDTO) {
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
-            if (user.getType()==null){
+            if (user.getType() == null) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             List<ProductDTO.ProductListResDTO> list = productRepository.findAllByTypeAndProductStatus(user.getType().getGroup(), ProductStatus.FOR_SALE)
                     .stream()
                     .map(ProductDTO.ProductListResDTO::new)
                     .collect(Collectors.toList());
-            if (list.size()<1){
+            if (list.size() < 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(list,HttpStatus.OK);
-        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

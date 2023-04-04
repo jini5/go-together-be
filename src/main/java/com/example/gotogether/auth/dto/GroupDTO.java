@@ -15,7 +15,7 @@ public class GroupDTO {
     private String userType;
     private String group;
 
-    public GroupDTO(Grouping grouping){
+    public GroupDTO(Grouping grouping) {
         this.userType = grouping.getUserType();
         this.group = grouping.getGroup();
     }

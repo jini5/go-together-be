@@ -4,7 +4,6 @@ import com.example.gotogether.category.dto.CategoryDTO;
 import com.example.gotogether.category.entity.Category;
 import com.example.gotogether.category.repository.CategoryRepository;
 import com.example.gotogether.category.service.CategoryService;
-import com.example.gotogether.product.entity.ProductCategory;
 import com.example.gotogether.product.repository.ProductCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -78,7 +77,7 @@ public class CategoryServiceImpl implements CategoryService {
             categoryRepository.delete(category);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -89,8 +88,8 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<?> viewCategoryDetail(Long categoryId) {
         try {
             Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
-            return new ResponseEntity<>(CategoryDTO.ViewCategory.of(category),HttpStatus.OK);
-        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(CategoryDTO.ViewCategory.of(category), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

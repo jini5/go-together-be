@@ -1,11 +1,9 @@
 package com.example.gotogether.product.service;
 
 import com.example.gotogether.product.dto.ProductDTO;
-import com.example.gotogether.product.entity.Product;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public interface ProductService {
 

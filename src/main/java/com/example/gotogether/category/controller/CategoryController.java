@@ -27,7 +27,7 @@ public class CategoryController {
     @GetMapping("/categories/{categoryId}")
     @ApiOperation(value = "카테고리 상세 조회", notes = "카테고리 아이디를 입력하면 상세정보 반환.\n\n" +
             "code: 200 조회 성공, 404 해당 카테고리 ID 가 없음.")
-    public ResponseEntity<?> viewCategoryDetail(@PathVariable Long categoryId){
+    public ResponseEntity<?> viewCategoryDetail(@PathVariable Long categoryId) {
         return categoryService.viewCategoryDetail(categoryId);
     }
 }
