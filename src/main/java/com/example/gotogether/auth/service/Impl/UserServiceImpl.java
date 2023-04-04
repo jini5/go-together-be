@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     //이메일 형식
-    public static final String pattern ="^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
+    public static final String pattern = "[a-zA-Z!@#$%^&*()_+\\[\\]{};':\"\\\\|,.<>\\/?\\d]{8,}";
     //비밀번호 조건: 최소 하나의 문자 (대문자 또는 소문자)를 포함, 8자 이상,특수문자 중 하나 이상 포함 (!@#$%^&*()), 적어도 하나의 숫자를 포함
     public static final String PASSPORT_PATTERN = "^[A-Z]+$";
     //여권 영어 이름, 성
