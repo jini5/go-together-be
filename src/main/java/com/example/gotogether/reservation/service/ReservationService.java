@@ -6,15 +6,15 @@ import org.springframework.http.ResponseEntity;
 
 public interface ReservationService {
 
-    ResponseEntity<?> findAllList(int pageNumber);
+    ResponseEntity<?> findAllList(int page);
 
     ResponseEntity<?> modifyReservationStatus(Long reservationId, ReservationDTO.ModifyStatusReqDTO modifyStatusReqDTO);
 
     ResponseEntity<?> findList(UserDTO.UserAccessDTO userAccessDTO, int pageNumber);
 
-    ResponseEntity<?> findDetailInfo(UserDTO.UserAccessDTO userAccessDTO, Long reservationId);
+    ResponseEntity<?> findDetail(UserDTO.UserAccessDTO userAccessDTO, Long reservationDetailId);
 
-    ResponseEntity<?> cancelReservation(UserDTO.UserAccessDTO userAccessDTO, Long reservationId);
+    ResponseEntity<?> cancelReservation(UserDTO.UserAccessDTO userAccessDTO, Long reservationDetailId);
 
     ResponseEntity<?> addReservation(UserDTO.UserAccessDTO userAccessDTO, ReservationDTO.AddReqDTO addReqDTO);
 }

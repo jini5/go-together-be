@@ -25,8 +25,6 @@ public class ReservationDTO {
 
         @ApiModelProperty(value = "예약자 아이디")
         private Long userId;
-        @ApiModelProperty(value = "예약자 이메일")
-        private String userEmail;
         @ApiModelProperty(value = "예약자 이름")
         private String userName;
         @ApiModelProperty(value = "예약 아이디")
@@ -34,23 +32,25 @@ public class ReservationDTO {
         @ApiModelProperty(value = "예약일")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime reservationDate;
-        @ApiModelProperty(value = "예약 상태")
-        private ReservationStatus reservationStatus;
         @ApiModelProperty(value = "결제 수단")
-        private PaymentMethod paymentMethod;
+        private String paymentMethod;
         @ApiModelProperty(value = "총 예약 금액")
         private int totalAmount;
+        @ApiModelProperty(value = "예약상품리스트")
+        private List<ReservationDetailDTO.AdminListResDTO> reservationProductList;
 
         public AdminListResDTO(Reservation reservation) {
             this.userId = reservation.getUser().getUserId();
-            this.userEmail = reservation.getUser().getEmail();
             this.userName = reservation.getUser().getName();
             this.reservationId = reservation.getReservationId();
             this.reservationDate = reservation.getReservationDate();
-            this.paymentMethod = reservation.getPaymentMethod();
+            this.paymentMethod = reservation.getPaymentMethod().getValue();
             this.totalAmount = reservation.getReservationDetails().stream()
                     .mapToInt(r -> r.getDetailTotalPrice())
                     .sum();
+            this.reservationProductList = reservation.getReservationDetails().stream()
+                    .map(ReservationDetailDTO.AdminListResDTO::new)
+                    .collect(Collectors.toList());
         }
     }
 
@@ -93,48 +93,6 @@ public class ReservationDTO {
             this.reservationDate = reservation.getReservationDate();
             this.reservationProductList = reservation.getReservationDetails().stream()
                     .map(ReservationDetailDTO.UserListResDTO::new)
-                    .collect(Collectors.toList());
-        }
-    }
-
-    @ApiModel(value = "예약 상세 정보 조회 응답")
-    @NoArgsConstructor
-    @Getter
-    @Setter
-    public static class DetailInfoResDTO {
-
-        @ApiModelProperty(value = "예약자 아이디")
-        private Long userId;
-        @ApiModelProperty(value = "예약자 이메일")
-        private String userEmail;
-        @ApiModelProperty(value = "예약자 이름")
-        private String userName;
-        @ApiModelProperty(value = "예약 아이디")
-        private Long reservationId;
-        @ApiModelProperty(value = "예약일")
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime reservationDate;
-        @ApiModelProperty(value = "예약상태")
-        private ReservationStatus reservationStatus;
-        @ApiModelProperty(value = "결제수단")
-        private PaymentMethod paymentMethod;
-        @ApiModelProperty(value = "총 예약금액")
-        private int totalAmount;
-        @ApiModelProperty(value = "예약상품리스트")
-        private List<ReservationDetailDTO.DetailInfoResDTO> reservationProductList;
-
-        public DetailInfoResDTO(Reservation reservation) {
-            this.userId = reservation.getUser().getUserId();
-            this.userEmail = reservation.getUser().getEmail();
-            this.userName = reservation.getUser().getName();
-            this.reservationId = reservation.getReservationId();
-            this.reservationDate = reservation.getReservationDate();
-            this.paymentMethod = reservation.getPaymentMethod();
-            this.totalAmount = reservation.getReservationDetails().stream()
-                    .mapToInt(r -> r.getDetailTotalPrice())
-                    .sum();
-            this.reservationProductList = reservation.getReservationDetails().stream()
-                    .map(ReservationDetailDTO.DetailInfoResDTO::new)
                     .collect(Collectors.toList());
         }
     }

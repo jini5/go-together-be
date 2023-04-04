@@ -44,14 +44,13 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 현 페이지의 전체 예약 목록 조회
      *
-     * @param pageNumber 현 페이지 번호
-     * @return
+     * @param page 현 페이지 번호
      */
     @Override
-    public ResponseEntity<?> findAllList(int pageNumber) {
+    public ResponseEntity<?> findAllList(int page) {
 
         try {
-            PageRequest pageRequest = PageRequest.of(pageNumber - 1, ADMIN_RESERVATION_LIST_SIZE);
+            PageRequest pageRequest = PageRequest.of(page - 1, ADMIN_RESERVATION_LIST_SIZE);
             Page<Reservation> reservationPage = reservationRepository.findAll(pageRequest);
             if (reservationPage == null) {
                 throw new NullPointerException();
@@ -123,7 +122,7 @@ public class ReservationServiceImpl implements ReservationService {
             }
         }
         if (request.equals(ReservationStatus.COMPLETED)) {
-            if (!(current.equals(ReservationStatus.CONFIRMED) || LocalDate.now().isBefore(reservation.getStartDate()))) {
+            if (!(current.equals(ReservationStatus.CONFIRMED) && LocalDate.now().isAfter(reservation.getStartDate()))) {
                 return false;
             }
         }
@@ -166,22 +165,26 @@ public class ReservationServiceImpl implements ReservationService {
      * 예약 상세 정보 조회
      *
      * @param userAccessDTO 토큰 정보
-     * @param reservationId 조회할 예약 아이디
+     * @param reservationDetailId 조회할 예약 상세 아이디
      */
     @Override
-    public ResponseEntity<?> findDetailInfo(UserDTO.UserAccessDTO userAccessDTO, Long reservationId) {
+    public ResponseEntity<?> findDetail(UserDTO.UserAccessDTO userAccessDTO, Long reservationDetailId) {
 
         try {
-            Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NoSuchElementException::new);
+            ReservationDetail reservationDetail = reservationDetailRepository.findById(reservationDetailId).orElseThrow(NoSuchElementException::new);
+            Reservation reservation = reservationDetail.getReservation();
             if (!userAccessDTO.getRole().equals("ROLE_ADMIN")) {
                 if (!userAccessDTO.getEmail().equals(reservation.getUser().getEmail())) {
 
                     return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
                 }
             }
-            ReservationDTO.DetailInfoResDTO detailInfoResDTO = new ReservationDTO.DetailInfoResDTO(reservation);
+            ReservationDetailDTO.DetailResDTO detailResDTO = ReservationDetailDTO.DetailResDTO.builder()
+                    .reservation(reservation)
+                    .reservationDetail(reservationDetail)
+                    .build();
 
-            return new ResponseEntity<>(detailInfoResDTO, HttpStatus.OK);
+            return new ResponseEntity<>(detailResDTO, HttpStatus.OK);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
