@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
 import static com.example.gotogether.global.config.PageSizeConfig.ADMIN_RESERVATION_LIST_SIZE;
@@ -71,21 +72,62 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 예약상태 수정
      *
-     * @param reservationId 예약상태 수정할 예약 아이디
+     * @param reservationDetailId 수정할 예약 상세 아이디
      * @param modifyStatusReqDTO 수정할 예약상태 (수정 후)
      */
     @Transactional
     @Override
-    public ResponseEntity<?> modifyReservationStatus(Long reservationId, ReservationDTO.ModifyStatusReqDTO modifyStatusReqDTO) {
+    public ResponseEntity<?> modifyReservationStatus(Long reservationDetailId, ReservationDTO.ModifyStatusReqDTO modifyStatusReqDTO) {
         try {
-            Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NoSuchElementException::new);
-            reservation.updateStatus(modifyStatusReqDTO.getReservationStatus());
+            ReservationDetail reservationDetail = reservationDetailRepository.findById(reservationDetailId).orElseThrow(NoSuchElementException::new);
+            ReservationStatus reqStatus = ReservationStatus.from(modifyStatusReqDTO.getReservationStatus());
+            if (!canStatusChange(reqStatus, reservationDetail)) {
+
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            reservationDetail.updateStatus(reqStatus);
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * 예약상태 변경 가능 여부 확인
+     *
+     * @param request 수정할 예약상태 (수정 후)
+     * @param reservation 수정할 예약 상세
+     */
+    public boolean canStatusChange(ReservationStatus request, ReservationDetail reservation) {
+
+        ReservationStatus current = reservation.getReservationStatus();
+        if (request.equals(ReservationStatus.PAYMENT_PENDING)) {
+            if (!current.equals(ReservationStatus.CANCEL_REQUESTED)) {
+                return false;
+            }
+        }
+        if (request.equals(ReservationStatus.CONFIRMED)) {
+            if (!(current.equals(ReservationStatus.PAYMENT_PENDING) || current.equals(ReservationStatus.CANCEL_REQUESTED))) {
+                return false;
+            }
+        }
+        if (request.equals(ReservationStatus.CANCEL_REQUESTED)) {
+            return false;
+        }
+        if (request.equals(ReservationStatus.CANCELLED)) {
+            if (!(current.equals(ReservationStatus.CANCEL_REQUESTED) || current.equals(ReservationStatus.CONFIRMED)
+                    || current.equals(ReservationStatus.PAYMENT_PENDING))) {
+                return false;
+            }
+        }
+        if (request.equals(ReservationStatus.COMPLETED)) {
+            if (!(current.equals(ReservationStatus.CONFIRMED) || LocalDate.now().isBefore(reservation.getStartDate()))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -150,7 +192,7 @@ public class ReservationServiceImpl implements ReservationService {
      * 회원 예약 취소
      *
      * @param userAccessDTO 토큰 정보
-     * @param reservationDetailId 취소할 예약 아이디
+     * @param reservationDetailId 취소할 예약 상세 아이디
      */
     @Transactional
     @Override
