@@ -235,7 +235,7 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<?> getProductByType(Long productId) {
         try {
             Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
-            List<Product> productTypeList= productRepository.findAllByType(product.getType());
+            List<Product> productTypeList= productRepository.findAllByTypeAndIdNot(product.getType(),productId);
             if (productTypeList.size()<1)return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             return new ResponseEntity<>(productTypeList.stream().map(ProductDTO.ProductDetailResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
         } catch (NoSuchElementException e) {
