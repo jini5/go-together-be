@@ -44,14 +44,13 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 현 페이지의 전체 예약 목록 조회
      *
-     * @param pageNumber 현 페이지 번호
-     * @return
+     * @param page 현 페이지 번호
      */
     @Override
-    public ResponseEntity<?> findAllList(int pageNumber) {
+    public ResponseEntity<?> findAllList(int page) {
 
         try {
-            PageRequest pageRequest = PageRequest.of(pageNumber - 1, ADMIN_RESERVATION_LIST_SIZE);
+            PageRequest pageRequest = PageRequest.of(page - 1, ADMIN_RESERVATION_LIST_SIZE);
             Page<Reservation> reservationPage = reservationRepository.findAll(pageRequest);
             if (reservationPage == null) {
                 throw new NullPointerException();
