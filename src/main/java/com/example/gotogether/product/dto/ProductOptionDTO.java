@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 public class ProductOptionDTO {
@@ -108,10 +109,10 @@ public class ProductOptionDTO {
         private Long ProductOptionId;
 
         @ApiModelProperty(value = "출발일", required = true)
-        private LocalDate startDate;
+        private String startDate;
 
         @ApiModelProperty(value = "도착일", required = true)
-        private LocalDate endDate;
+        private String endDate;
 
         @ApiModelProperty(value = "최대 인원 수", required = true)
         private int maxPeople;
@@ -127,8 +128,8 @@ public class ProductOptionDTO {
 
         public ProductOptionResDTO(ProductOption productOption) {
             this.ProductOptionId = productOption.getProductOptionId();
-            this.startDate = productOption.getStartDate();
-            this.endDate = productOption.getEndDate();
+            this.startDate = productOption.getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            this.endDate = productOption.getEndDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             this.maxPeople = productOption.getMaxPeople();
             this.maxSingleRoom = productOption.getMaxSingleRoom();
             this.PresentPeopleNumber = productOption.getPresentPeopleNumber();

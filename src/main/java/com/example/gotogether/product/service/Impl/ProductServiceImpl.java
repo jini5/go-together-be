@@ -41,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<?> createProduct(ProductDTO.ProductCreateReqDTO productCreateReqDTO) {
         try {
             if (productRepository.existsByName(productCreateReqDTO.getName()))return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            if (!groupingRepository.existsByGroup(productCreateReqDTO.getType())){
+            if (productCreateReqDTO.getType()!=null && !groupingRepository.existsByGroup(productCreateReqDTO.getType())){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             //상품 엔티티 생성
