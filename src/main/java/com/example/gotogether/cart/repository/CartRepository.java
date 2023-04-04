@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
     List<Cart> findAllByUser(User user);
+
     boolean existsByUserAndProductAndProductOption(User user, Product product, ProductOption productOption);
 
 }

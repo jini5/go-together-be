@@ -7,7 +7,6 @@ import com.example.gotogether.product.entity.ProductOption;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -57,7 +56,7 @@ public class Cart {
         this.singleRoomNumber = singleRoomNumber;
     }
 
-    public void update(CartDTO.UpdateCartReqDTO updateCartReqDTO,ProductOption productOption){
+    public void update(CartDTO.UpdateCartReqDTO updateCartReqDTO, ProductOption productOption) {
         this.productOption = productOption;
         this.numberOfPeople = updateCartReqDTO.getNumberOfPeople();
         this.singleRoomNumber = updateCartReqDTO.getSingleRoomNumber();

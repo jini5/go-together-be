@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import java.time.LocalDate;
-
 public class CartDTO {
 
 
@@ -15,7 +13,7 @@ public class CartDTO {
     @Setter
     @ApiModel(value = "장바구니 추가")
     @ToString
-    public static class AddCartReqDTO{
+    public static class AddCartReqDTO {
         private Long productId;
         private Long productOptionId;
         private int numberOfPeople;
@@ -28,7 +26,7 @@ public class CartDTO {
     @Setter
     @ApiModel(value = "장바구니 삭제")
     @ToString
-    public static class CartDeleteReqDTO{
+    public static class CartDeleteReqDTO {
         private Long cartId;
     }
 
@@ -60,7 +58,7 @@ public class CartDTO {
     @Setter
     @ApiModel(value = "장바구니 조회")
     @ToString
-    public static class CartListResDTO{
+    public static class CartListResDTO {
         private Long cartId;
         private Long productId;
         private Long productOptionId;
