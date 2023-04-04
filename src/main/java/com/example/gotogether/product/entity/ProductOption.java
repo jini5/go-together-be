@@ -53,15 +53,15 @@ public class ProductOption {
         this.PresentSingleRoomNumber = presentSingleRoomNumber;
     }
 
-    public void update(ProductOptionDTO.OptionUpdateReqDTO optionUpdateReqDTO){
-        this.startDate=optionUpdateReqDTO.getStartDate();
-        this.endDate=optionUpdateReqDTO.getEndDate();
-        this.maxPeople=optionUpdateReqDTO.getMaxPeople();
-        this.maxSingleRoom=optionUpdateReqDTO.getMaxSingleRoom();
+    public void update(ProductOptionDTO.OptionUpdateReqDTO optionUpdateReqDTO) {
+        this.startDate = optionUpdateReqDTO.getStartDate();
+        this.endDate = optionUpdateReqDTO.getEndDate();
+        this.maxPeople = optionUpdateReqDTO.getMaxPeople();
+        this.maxSingleRoom = optionUpdateReqDTO.getMaxSingleRoom();
     }
 
     public void setProductOptionId(Long productOptionId) {
-        this.productOptionId=productOptionId;
+        this.productOptionId = productOptionId;
     }
 
     public void addPresentPeopleTo(int peopleNumber) {

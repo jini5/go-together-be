@@ -1,6 +1,5 @@
 package com.example.gotogether.product.service.Impl;
 
-import com.example.gotogether.auth.entity.Grouping;
 import com.example.gotogether.auth.repository.GroupingRepository;
 import com.example.gotogether.category.entity.Category;
 import com.example.gotogether.category.repository.CategoryRepository;
@@ -40,8 +39,9 @@ public class ProductServiceImpl implements ProductService {
 
     public ResponseEntity<?> createProduct(ProductDTO.ProductCreateReqDTO productCreateReqDTO) {
         try {
-            if (productRepository.existsByName(productCreateReqDTO.getName()))return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            if (productCreateReqDTO.getType()!=null && !groupingRepository.existsByGroup(productCreateReqDTO.getType())){
+            if (productRepository.existsByName(productCreateReqDTO.getName()))
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            if (productCreateReqDTO.getType() != null && !groupingRepository.existsByGroup(productCreateReqDTO.getType())) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             //상품 엔티티 생성
@@ -100,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
             List<Category> categoryList = categoryRepository.findAllByCategoryIdIn(productUpdateReqDTO.getCategoryIdList());
             if (categoryList.size() != productUpdateReqDTO.getCategoryIdList().size())
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            if (!groupingRepository.existsByGroup(productUpdateReqDTO.getType())){
+            if (!groupingRepository.existsByGroup(productUpdateReqDTO.getType())) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             List<ProductCategory> productCategories = new ArrayList<>();
@@ -110,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
                         .product(product)
                         .build());
             }
-            product.update(productUpdateReqDTO,productCategories);
+            product.update(productUpdateReqDTO, productCategories);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -123,7 +123,7 @@ public class ProductServiceImpl implements ProductService {
             if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Admin);
             Page<Product> productList = productRepository.findAll(pageable);
-            if (productList.getContent().size()<1){
+            if (productList.getContent().size() < 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             PageResponseDTO pageResponseDTO = new PageResponseDTO(productList);
@@ -131,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
                     pageResponseDTO
                             .getContent()
                             .stream()
-                            .map(e -> new ProductDTO.ProductListResDTO((Product)e))
+                            .map(e -> new ProductDTO.ProductListResDTO((Product) e))
                             .collect(Collectors.toList())
             );
             return new ResponseEntity<>(pageResponseDTO, HttpStatus.OK);
@@ -144,7 +144,7 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<?> findDetailProduct(Long productId) {
         try {
             Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
-            return new ResponseEntity<>(new ProductDTO.ProductDetailResDTO(product),HttpStatus.OK);
+            return new ResponseEntity<>(new ProductDTO.ProductDetailResDTO(product), HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -158,10 +158,10 @@ public class ProductServiceImpl implements ProductService {
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Category);
             //카테고리 검색
             Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
-            Page<Product> products = productRepository.searchByCategories(pageable,listOfCategory(category));
+            Page<Product> products = productRepository.searchByCategories(pageable, listOfCategory(category));
             PageResponseDTO pageResponseDTO = new PageResponseDTO(products);
             pageResponseDTO.setContent(products.getContent().stream().map(ProductDTO.ProductListResDTO::new).collect(Collectors.toList()));
-            if(pageResponseDTO.getContent().size()<1){
+            if (pageResponseDTO.getContent().size() < 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(pageResponseDTO, HttpStatus.OK);
@@ -179,8 +179,8 @@ public class ProductServiceImpl implements ProductService {
             if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Keyword);
             Page<Product> productPage = productRepository
-                    .searchByKeywordAndSorting(pageable,keyword,sort, dateOption, people);
-            if (productPage.getTotalElements()<1){
+                    .searchByKeywordAndSorting(pageable, keyword, sort, dateOption, people);
+            if (productPage.getTotalElements() < 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             PageResponseDTO pageResponseDTO = new PageResponseDTO(productPage);
@@ -189,8 +189,8 @@ public class ProductServiceImpl implements ProductService {
                             .stream()
                             .map(e -> new ProductDTO.ProductListResDTO((Product) e))
                             .collect(Collectors.toList()));
-            return new ResponseEntity<>(pageResponseDTO,HttpStatus.OK);
-        }catch (Exception e){
+            return new ResponseEntity<>(pageResponseDTO, HttpStatus.OK);
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -200,11 +200,11 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<?> findPopularProducts(Long categoryId) {
         try {
             Category category = null;
-            if (categoryId!=null) {
+            if (categoryId != null) {
                 category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
             }
             List<Category> categoryList = null;
-            if (category!=null) {
+            if (category != null) {
                 categoryList = listOfCategory(category);
             }
             List<Product> productList = productRepository.findPopular(categoryList);
@@ -212,9 +212,9 @@ public class ProductServiceImpl implements ProductService {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(productList.stream().map(ProductDTO.ProductListResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -235,8 +235,8 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<?> getProductByType(Long productId) {
         try {
             Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
-            List<Product> productTypeList= productRepository.findAllByTypeAndIdNot(product.getType(),productId);
-            if (productTypeList.size()<1)return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            List<Product> productTypeList = productRepository.findAllByTypeAndIdNot(product.getType(), productId);
+            if (productTypeList.size() < 1) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             return new ResponseEntity<>(productTypeList.stream().map(ProductDTO.ProductDetailResDTO::new).collect(Collectors.toList()), HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
