@@ -141,6 +141,8 @@ public class UserDTO {
         private String userBirth;
         @ApiModelProperty(value = "성별", required = true)
         private String userGender;
+        @ApiModelProperty(value = "여행 유형", required = true)
+        private String userType;
 
 
         public PatchUserResDTO(User user) {
@@ -151,6 +153,11 @@ public class UserDTO {
             this.userGender = user.getGender();
             this.passportFirstName = user.getPassportFirstName();
             this.passportLastName = user.getPassportLastName();
+            if (user.getType()==null){
+                this.userType="none";
+            }else {
+                this.userType = user.getType().getUserType();
+            }
         }
     }
 
