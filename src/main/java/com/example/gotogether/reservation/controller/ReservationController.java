@@ -29,10 +29,10 @@ public class ReservationController {
 
     @ApiOperation(value = "예약 상세 정보 조회", notes = "예약 상세 정보를 조회한다.\n\n"
             + "code: 200 조회 성공, 400 잘못된 reservationId 요청, 403 권한없는 사용자 접근")
-    @GetMapping("/{reservationId}")
-    public ResponseEntity<?> findDetailInfo(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,
-                                            @PathVariable Long reservationId) {
-        return reservationService.findDetailInfo(userAccessDTO, reservationId);
+    @GetMapping("/{reservationDetailId}")
+    public ResponseEntity<?> findDetail(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,
+                                        @PathVariable Long reservationDetailId) {
+        return reservationService.findDetail(userAccessDTO, reservationDetailId);
     }
 
     @ApiOperation(value = "회원 예약 취소", notes = "회원의 예약을 취소한다.\n\n" +
