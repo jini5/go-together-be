@@ -255,30 +255,22 @@ public class UserDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ToString
-    @ApiModel(value = "관리자의 회원정보수정 입력", description = "변경 하지 않는다면 기존 정보 입력 요망.")
+    @ApiModel(value = "관리자의 회원정보수정 입력", description = "변경 할 값만 입력")
     public static class PatchUserByAdminReqDTO {
-        @ApiModelProperty(value = "사용자 이름 입력.", required = true)
+        @ApiModelProperty(value = "사용자 이름 입력.")
         private String userName;
-        @ApiModelProperty(value = "사용자 이메일 입력", required = true)
-        private String userEmail;
-        @ApiModelProperty(value = "사용자 전화번호 입력", required = true)
+        @ApiModelProperty(value = "사용자 전화번호 입력")
         private String userPhoneNumber;
-        @ApiModelProperty(value = "사용자 생년월일 입력", required = true)
+        @ApiModelProperty(value = "사용자 생년월일 입력")
         private String userBirthday;
-        @ApiModelProperty(value = "사용자 여권에 적힌 이름", required = true)
+        @ApiModelProperty(value = "사용자 여권에 적힌 이름")
         private String passportFirstName;
-        @ApiModelProperty(value = "사용자 여권에 적힌 성", required = true)
+        @ApiModelProperty(value = "사용자 여권에 적힌 성")
         private String passportLastName;
-        @ApiModelProperty(value = "사용자 성별 입력\n\n male or female", required = true)
+        @ApiModelProperty(value = "사용자 성별 입력\n\n male or female")
         private String userGender;
-        @ApiModelProperty(value = "사용자 여행 유형 입력", required = true)
-        private String userType;
-        @ApiModelProperty(value = "사용자 권한 입력\n\n ROLE_ADMIN or ROLE_USER", required = true)
-        private String userRole;
-        @ApiModelProperty(value = "사용자 탈퇴여부 입력\n\n available or withdraw", required = true)
+        @ApiModelProperty(value = "사용자 탈퇴여부 입력\n\n available or withdraw")
         private String deleteCheck;
-        @ApiModelProperty(value = "소셜 로그인 여부 입력", required = true)
-        private String sns;
     }
 }
 
