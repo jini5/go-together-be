@@ -20,7 +20,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 
 @Service
@@ -42,14 +41,14 @@ public class CartServiceImpl implements CartService {
             if (cartRepository.existsByUserAndProductAndProductOption(user, product, productOption)) {
                 return new ResponseEntity<>("The product and product options for that product are already in your shopping cart.", HttpStatus.BAD_REQUEST);
             }
-            if (productOption.getProduct().getProductId() != addCartReqDTO.getProductId()){
+            if (productOption.getProduct().getProductId() != addCartReqDTO.getProductId()) {
                 return new ResponseEntity<>("This option does not exist.", HttpStatus.BAD_REQUEST);
             }
-            if(addCartReqDTO.getNumberOfPeople() >( productOption.getMaxPeople() - productOption.getPresentPeopleNumber())){
-                return new ResponseEntity<>("The maximum number of people that can be reserved has been exceeded.",HttpStatus.BAD_REQUEST);
+            if (addCartReqDTO.getNumberOfPeople() > (productOption.getMaxPeople() - productOption.getPresentPeopleNumber())) {
+                return new ResponseEntity<>("The maximum number of people that can be reserved has been exceeded.", HttpStatus.BAD_REQUEST);
             }
-            if(addCartReqDTO.getSingleRoomNumber()>(productOption.getMaxSingleRoom()-productOption.getPresentSingleRoomNumber())){
-                return new ResponseEntity<>("You have exceeded the maximum number of singles that can be booked.",HttpStatus.BAD_REQUEST);
+            if (addCartReqDTO.getSingleRoomNumber() > (productOption.getMaxSingleRoom() - productOption.getPresentSingleRoomNumber())) {
+                return new ResponseEntity<>("You have exceeded the maximum number of singles that can be booked.", HttpStatus.BAD_REQUEST);
             }
             Cart cart = Cart.builder()
                     .user(user)
@@ -68,19 +67,21 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> deleteCart(UserDTO.UserAccessDTO userAccessDTO, Long cartId) {
+    public ResponseEntity<?> deleteCart(UserDTO.UserAccessDTO userAccessDTO, List<Long> cartIdList) {
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
-            Optional<Cart> optionalCart = cartRepository.findById(cartId);
-            if (optionalCart.isPresent()) {
-                Cart cart = optionalCart.get();
+            List<Cart> cartList = cartRepository.findAllById(cartIdList);
+            if (cartList.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            for (Cart cart : cartList) {
                 if (cart.getUser().equals(user)) {
                     cartRepository.delete(cart);
-                    return new ResponseEntity<>(HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -104,7 +105,7 @@ public class CartServiceImpl implements CartService {
                         cart.getNumberOfPeople(),
                         cart.getSingleRoomNumber()));
             }
-            if(cartList.size()<1){
+            if (cartList.size() < 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(CartList, HttpStatus.OK);
@@ -121,29 +122,22 @@ public class CartServiceImpl implements CartService {
             Cart cart = cartRepository.findById(cartId).orElseThrow(NoSuchElementException::new);
             //new 옵션
             ProductOption productOption = productOptionRepository.findById(updateCartReqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
-            if (productOption.getProduct().getProductId() != cart.getProduct().getProductId()){
+            if (productOption.getProduct().getProductId() != cart.getProduct().getProductId()) {
                 return new ResponseEntity<>("This option does not exist.", HttpStatus.BAD_REQUEST);
             }
             // 인원 및 싱글룸 유효성 검사
-            if(updateCartReqDTO.getNumberOfPeople() >( productOption.getMaxPeople() - productOption.getPresentPeopleNumber())){
-                return new ResponseEntity<>("The maximum number of people that can be reserved has been exceeded.",HttpStatus.BAD_REQUEST);
+            if (updateCartReqDTO.getNumberOfPeople() > (productOption.getMaxPeople() - productOption.getPresentPeopleNumber())) {
+                return new ResponseEntity<>("The maximum number of people that can be reserved has been exceeded.", HttpStatus.BAD_REQUEST);
             }
-            if(updateCartReqDTO.getSingleRoomNumber()>(productOption.getMaxSingleRoom()-productOption.getPresentSingleRoomNumber())){
-                return new ResponseEntity<>("You have exceeded the maximum number of singles that can be booked.",HttpStatus.BAD_REQUEST);
+            if (updateCartReqDTO.getSingleRoomNumber() > (productOption.getMaxSingleRoom() - productOption.getPresentSingleRoomNumber())) {
+                return new ResponseEntity<>("You have exceeded the maximum number of singles that can be booked.", HttpStatus.BAD_REQUEST);
             }
-            cart.update(updateCartReqDTO,productOption);
+            cart.update(updateCartReqDTO, productOption);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-
-
-
-
-
-
 
 
 }

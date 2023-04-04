@@ -32,7 +32,7 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 현재 페이지의 게시판별 게시글 목록 조회
      *
-     * @param type 조회할 게시판 타입
+     * @param type       조회할 게시판 타입
      * @param pageNumber 현재 페이지 번호
      */
     @Override
@@ -75,7 +75,7 @@ public class BoardServiceImpl implements BoardService {
      * 게시글 추가
      *
      * @param userAccessDTO 토큰 정보
-     * @param addReqDTO 추가할 게시글 정보
+     * @param addReqDTO     추가할 게시글 정보
      */
     @Override
     public ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.AddReqDTO addReqDTO) {
@@ -99,7 +99,7 @@ public class BoardServiceImpl implements BoardService {
      * 게시글 권한 확인 (게시글 수정 및 삭제 전 선행 동작)
      *
      * @param userAccessDTO 토큰 정보
-     * @param boardId 권한 확인할 게시판 아이디
+     * @param boardId       권한 확인할 게시판 아이디
      */
     @Override
     public ResponseEntity<?> checkAuthority(UserDTO.UserAccessDTO userAccessDTO, Long boardId) {
@@ -123,8 +123,8 @@ public class BoardServiceImpl implements BoardService {
      * 게시글 수정
      *
      * @param userAccessDTO 토큰 정보
-     * @param modifyReqDTO 수정할 게시글 정보
-     * @param boardId 수정할 게시글 아이디
+     * @param modifyReqDTO  수정할 게시글 정보
+     * @param boardId       수정할 게시글 아이디
      */
     @Transactional
     @Override
@@ -153,7 +153,7 @@ public class BoardServiceImpl implements BoardService {
      * 게시글 삭제
      *
      * @param userAccessDTO 토큰 정보
-     * @param boardId 삭제할 게시글 아이디
+     * @param boardId       삭제할 게시글 아이디
      */
     @Override
     public ResponseEntity<?> deletePost(UserDTO.UserAccessDTO userAccessDTO, Long boardId) {
@@ -161,7 +161,7 @@ public class BoardServiceImpl implements BoardService {
         try {
             Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
             boolean hasAuth = hasAuthority(userAccessDTO.getEmail(), userAccessDTO.getRole(), board.getType(), board.getUser().getEmail());
-            if(!hasAuth) {
+            if (!hasAuth) {
 
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
@@ -177,8 +177,8 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 게시글 검색 (범위: 제목)
      *
-     * @param type 검색할 게시판 타입
-     * @param keyword 검색할 단어
+     * @param type       검색할 게시판 타입
+     * @param keyword    검색할 단어
      * @param pageNumber 현 페이지 번호
      */
     @Override
@@ -199,7 +199,7 @@ public class BoardServiceImpl implements BoardService {
      * 로그인 중인 회원의 여행후기 목록 조회
      *
      * @param userAccessDTO 토큰 정보
-     * @param pageNumber 현재 페이지 번호
+     * @param pageNumber    현재 페이지 번호
      */
     @Override
     public ResponseEntity<?> findMyReviewList(UserDTO.UserAccessDTO userAccessDTO, int pageNumber) {
@@ -230,9 +230,9 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 해당 게시글에 대한 로그인 중인 회원의 권한 확인
      *
-     * @param userEmail 로그인 중인 회원의 이메일
-     * @param userRole 로그인 중인 회원의 권한
-     * @param boardType 게시글 타입
+     * @param userEmail        로그인 중인 회원의 이메일
+     * @param userRole         로그인 중인 회원의 권한
+     * @param boardType        게시글 타입
      * @param boardWriterEmail 게시글 작성자 이메일
      */
     public boolean hasAuthority(String userEmail, String userRole, BoardType boardType, String boardWriterEmail) {

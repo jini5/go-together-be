@@ -30,12 +30,14 @@ public class Banner {
     public Banner(String image) {
         this.image = image;
     }
+
     public void setProduct(Product product) {
         this.product = product;
     }
-    public void update(BannerDTO.BannerUpdateReqDTO bannerUpdateReqDTO, Product product){
+
+    public void update(BannerDTO.BannerUpdateReqDTO bannerUpdateReqDTO, Product product) {
         this.image = bannerUpdateReqDTO.getImage();
-        this.product= product;
+        this.product = product;
 
     }
 }

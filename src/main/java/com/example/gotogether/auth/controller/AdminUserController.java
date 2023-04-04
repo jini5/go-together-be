@@ -47,34 +47,40 @@ public class AdminUserController {
     public ResponseEntity<?> updateUserInfo(@PathVariable Long userId, @RequestBody UserDTO.PatchUserByAdminReqDTO dto) {
         return adminService.updateUserInfo(userId, dto);
     }
+
     @PostMapping("/grouping")
     @ApiOperation(value = "그룹화 생성", notes = "관리자가 그룹화 생성.\n\n code: 201 생성 성공, 400 이미 존재하는 사용자 유형")
-    public ResponseEntity<?> createGrouping(@RequestBody GroupDTO groupDTO){
+    public ResponseEntity<?> createGrouping(@RequestBody GroupDTO groupDTO) {
         return adminService.makeGroup(groupDTO);
     }
+
     @GetMapping("/grouping")
     @ApiOperation(value = "그룹화 전체 보기", notes = "관리자가 그룹화 조회.\n\n code: 200 조회 성공, 204 해당 내용 없음.")
-    public ResponseEntity<?> checkGroup(){
+    public ResponseEntity<?> checkGroup() {
         return adminService.findAllGrouping();
     }
+
     @GetMapping("/grouping/type/{type}")
     @ApiOperation(value = "사용자 타입으로 그룹 확인", notes = "타입을 입력하면 그룹 반환\n\n code: 200 조회 성공, 404 해당 그룹 없음")
-    public ResponseEntity<?> checkByType(@PathVariable String type){
+    public ResponseEntity<?> checkByType(@PathVariable String type) {
         return adminService.getGroupingByType(type);
     }
+
     @GetMapping("/grouping/group/{group}")
     @ApiOperation(value = "그룹 이릅으로 그룹핑된 유형 확인", notes = "관리자가 그룹핑된 유형 조회.\n\n code: 200 조회 성공, 204 해당 내용 없음.")
-    public ResponseEntity<?> checkByGroup(@PathVariable String group){
+    public ResponseEntity<?> checkByGroup(@PathVariable String group) {
         return adminService.getGroupingByGroup(group);
     }
+
     @PatchMapping("/grouping")
     @ApiOperation(value = "그룹핑 업데이트", notes = "해당 유형의 그룹을 수정한다.\n\n code: 200 수정 성공, 404 해당 유형 없음.")
-    public ResponseEntity<?> updateGrouping(@RequestBody GroupDTO dto){
+    public ResponseEntity<?> updateGrouping(@RequestBody GroupDTO dto) {
         return adminService.updateGrouping(dto);
     }
+
     @DeleteMapping("/grouping/{type}")
     @ApiOperation(value = "해당 유형의 그룹화 삭제", notes = "관리자가 해당 유형의 그룹화 삭제. \n\n code: 200 삭제 성공, 404 해당 유형 없음,400 해당 유형을 갖고있는 사용자가 있으므로 삭제 불가.")
-    public ResponseEntity<?> deleteGrouping(@PathVariable String type){
+    public ResponseEntity<?> deleteGrouping(@PathVariable String type) {
         return adminService.deleteGrouping(type);
     }
 }

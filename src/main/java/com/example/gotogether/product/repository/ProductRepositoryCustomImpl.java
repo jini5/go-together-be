@@ -6,8 +6,6 @@ import com.example.gotogether.product.entity.ProductStatus;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.BooleanOperation;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +18,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.example.gotogether.product.entity.QProduct.product;
-import static com.example.gotogether.reservation.entity.QReservationDetail.reservationDetail;
 import static com.example.gotogether.product.entity.QProductCategory.productCategory;
 import static com.example.gotogether.product.entity.QProductOption.productOption;
+import static com.example.gotogether.reservation.entity.QReservationDetail.reservationDetail;
+
 public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport implements ProductRepositoryCustom {
 
     @Autowired
@@ -31,14 +30,15 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
     public ProductRepositoryCustomImpl() {
         super(Product.class);
     }
+
     @Override
-    public Page<Product> searchByKeywordAndSorting(Pageable pageable, String keyword, String sort,LocalDate localDate,int people) {
+    public Page<Product> searchByKeywordAndSorting(Pageable pageable, String keyword, String sort, LocalDate localDate, int people) {
         JPQLQuery<Product> query = queryFactory.selectFrom(product)
-                .leftJoin(product.productOptions,productOption)
-                .where(containsName(keyword),isAvailableProduct(),isStartDateAfter(localDate,people))
+                .leftJoin(product.productOptions, productOption)
+                .where(containsName(keyword), isAvailableProduct(), isStartDateAfter(localDate, people))
                 .orderBy(sort(sort));
-        List<Product> productList = this.getQuerydsl().applyPagination(pageable,query).fetch();
-        return new PageImpl<Product>(productList,pageable, query.fetchCount());
+        List<Product> productList = this.getQuerydsl().applyPagination(pageable, query).fetch();
+        return new PageImpl<Product>(productList, pageable, query.fetchCount());
     }
 
     @Override
@@ -47,9 +47,9 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
                 .select(product)
                 .from(product)
                 .leftJoin(product.reservationDetails, reservationDetail)
-                .leftJoin(product.categories,productCategory)
+                .leftJoin(product.categories, productCategory)
                 .groupBy(product.productId)
-                .where(containCategory(categoryList),isAvailableProduct())
+                .where(containCategory(categoryList), isAvailableProduct())
                 .limit(10)
                 .orderBy(reservationDetail.count().desc())
                 .fetch();
@@ -57,48 +57,51 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
 
     @Override
     public Page<Product> searchByCategories(Pageable pageable, List<Category> categoryList) {
-        JPQLQuery<Product> query =  queryFactory
+        JPQLQuery<Product> query = queryFactory
                 .select(product)
                 .from(product)
-                .leftJoin(product.categories,productCategory)
+                .leftJoin(product.categories, productCategory)
                 .groupBy(product.productId)
-                .where(containCategory(categoryList),isAvailableProduct());
-        List<Product> productList = this.getQuerydsl().applyPagination(pageable,query).fetch();
-        return new PageImpl<Product>(productList,pageable,query.fetchCount());
+                .where(containCategory(categoryList), isAvailableProduct());
+        List<Product> productList = this.getQuerydsl().applyPagination(pageable, query).fetch();
+        return new PageImpl<Product>(productList, pageable, query.fetchCount());
     }
 
-    private BooleanExpression containsName(String keyword){
-        if (keyword.isEmpty()){
+    private BooleanExpression containsName(String keyword) {
+        if (keyword.isEmpty()) {
             return null;
         }
         return product.name.contains(keyword).or(containsSummary(keyword)).or(containsArea(keyword)).or(containsFeature(keyword)).or(containsDetail(keyword));
     }
-    private BooleanExpression containsSummary(String keyword){
-        if (keyword.isEmpty()){
+
+    private BooleanExpression containsSummary(String keyword) {
+        if (keyword.isEmpty()) {
             return null;
         }
         return product.summary.contains(keyword);
     }
 
-    private BooleanExpression containsArea(String keyword){
-        if (keyword.isEmpty()){
+    private BooleanExpression containsArea(String keyword) {
+        if (keyword.isEmpty()) {
             return null;
         }
         return product.area.contains(keyword);
     }
 
-    private BooleanExpression containsFeature(String keyword){
-        if (keyword.isEmpty()){
+    private BooleanExpression containsFeature(String keyword) {
+        if (keyword.isEmpty()) {
             return null;
         }
         return product.feature.contains(keyword);
     }
-    private BooleanExpression containsDetail(String keyword){
-        if (keyword.isEmpty()){
+
+    private BooleanExpression containsDetail(String keyword) {
+        if (keyword.isEmpty()) {
             return null;
         }
         return product.detail.contains(keyword);
     }
+
     private OrderSpecifier<?> sort(String sort) {
         switch (sort) {
             case "recent":
@@ -111,23 +114,24 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
         return null;
     }
 
-    private BooleanExpression containCategory(List<Category> categoryList){
+    private BooleanExpression containCategory(List<Category> categoryList) {
         if (categoryList == null) {
             return null;
         }
         return productCategory.category.in(categoryList);
     }
 
-    private BooleanExpression isAvailableProduct(){
+    private BooleanExpression isAvailableProduct() {
         return product.productStatus.eq(ProductStatus.FOR_SALE);
     }
 
-    private BooleanExpression isStartDateAfter(LocalDate localDate,int people){
-        
+    private BooleanExpression isStartDateAfter(LocalDate localDate, int people) {
+
         return productOption.startDate.after(localDate).and(isAvailablePeople(people));
     }
-    private BooleanExpression isAvailablePeople(int people){
-        if (people<1){
+
+    private BooleanExpression isAvailablePeople(int people) {
+        if (people < 1) {
             return null;
         }
         return productOption.maxPeople.subtract(productOption.PresentPeopleNumber).goe(people);

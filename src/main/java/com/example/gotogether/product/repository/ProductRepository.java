@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductRepository extends JpaRepository<Product, Long>,ProductRepositoryCustom {
+public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
 
     Optional<Product> findById(Long productId);
 
@@ -18,6 +18,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>,ProductR
     boolean existsByName(String name);
 
     List<Product> findAllByTypeAndProductStatus(String type, ProductStatus status);
-    
-    List<Product> findAllByType(String type);
+
+    List<Product> findAllByTypeAndIdNot(String type, Long productId);
 }
