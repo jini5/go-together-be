@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(tags = {"장바구니 서비스"}, description = "장바구니 추가, 장바구니수정, 장바구니 삭제, 장바구니 조회")
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +29,9 @@ public class CartController {
         return cartService.addCart(userAccessDTO, addCartReqDTO);
     }
 
-    @DeleteMapping("/cart/{cartId}")
-    @ApiOperation(value = "장바구니 상품 삭제", notes = "상품ID를 통해 장바구니에 상품을 삭제한다. \n\n" +"code: 200 장바구니 삭제 성공, code: 204 장바구니에 없는 상품, code: 400 이미 장바구니에서 삭제됨, code: 500 서버에러")
-    public ResponseEntity<?> deletedCart(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @PathVariable Long cartId){
+    @DeleteMapping("/cart")
+    @ApiOperation(value = "장바구니 상품 삭제", notes = "장바구니 안에 있는 상품들을 삭제한다. \n\n" +"code: 200 장바구니 내 상품들 삭제 성공, code: 204 삭제 대상이 장바구니에 없는 상품, code: 400 잘못된 요청 형식이나 파라미터가 전달, code: 500 서버에러")
+    public ResponseEntity<?> deletedCart(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,@RequestParam List<Long> cartId){
         return cartService.deleteCart(userAccessDTO, cartId);
     }
 

@@ -68,19 +68,21 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> deleteCart(UserDTO.UserAccessDTO userAccessDTO, Long cartId) {
+    public ResponseEntity<?> deleteCart(UserDTO.UserAccessDTO userAccessDTO, List<Long> cartIdList) {
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
-            Optional<Cart> optionalCart = cartRepository.findById(cartId);
-            if (optionalCart.isPresent()) {
-                Cart cart = optionalCart.get();
+            List<Cart> cartList = cartRepository.findAllById(cartIdList);
+            if (cartList.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            for (Cart cart : cartList) {
                 if (cart.getUser().equals(user)) {
                     cartRepository.delete(cart);
-                    return new ResponseEntity<>(HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
