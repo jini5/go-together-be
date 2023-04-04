@@ -153,9 +153,7 @@ public class UserDTO {
             this.userGender = user.getGender();
             this.passportFirstName = user.getPassportFirstName();
             this.passportLastName = user.getPassportLastName();
-            if (user.getType()==null){
-                this.userType="none";
-            }else {
+            if (user.getType()!=null){
                 this.userType = user.getType().getUserType();
             }
         }
@@ -248,9 +246,7 @@ public class UserDTO {
             this.passportFirstName = user.getPassportFirstName();
             this.passportLastName = user.getPassportLastName();
             this.userGender = user.getGender();
-            if (user.getType()==null){
-                this.userType="none";
-            }else {
+            if (user.getType()!=null){
                 this.userType = user.getType().getUserType();
             }
             this.sns = user.getSns();
