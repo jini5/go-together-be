@@ -50,21 +50,21 @@ public class PageContentsAdminController {
 
     //배너
 
-    @PostMapping("/banner")
+    @PostMapping("/page/banner")
     @ApiOperation(value = "배너 추가", notes = "관리자가 배너 추가.  \n\n" +
             "code: 201 추가 성공, 400 추가 불가능")
     public ResponseEntity<?> addBanner(@RequestBody BannerDTO.BannerReqDTO bannerReqDTO) {
         return bannerService.addBanner(bannerReqDTO);
     }
 
-    @PutMapping("/banner/{bannerId}")
+    @PutMapping("/page/banner/{bannerId}")
     @ApiOperation(value = "배너 수정", notes = "관리자가 배너 수정.\n\n" +
             "code: 200 수정 성공, 400 배너 중복, 400 잘못된 요청, 404 잘못된 ID")
     public ResponseEntity<?> updateBanner(@PathVariable Long bannerId, @RequestBody BannerDTO.BannerUpdateReqDTO bannerUpdateReqDTO) {
         return bannerService.updateBanner(bannerId, bannerUpdateReqDTO);
     }
 
-    @DeleteMapping("/banner/{bannerId}")
+    @DeleteMapping("/page/banner/{bannerId}")
     @ApiOperation(value = "배너 삭제", notes = "관리자가 배너 삭제.\n\n" +
             "code: 200 삭제 성공, 404 잘못된 ID, 400 잘못된 요청")
     public ResponseEntity<?> deleteBanner(@PathVariable Long bannerId) {
@@ -72,14 +72,14 @@ public class PageContentsAdminController {
     }
 
 
-    @GetMapping("/bannerlist")
+    @GetMapping("/page/bannerlist")
     @ApiOperation(value = "배너 리스트", notes = "배너 리스트 제공. \n\n" +
             "code: 200 조회 성공, 204 표시할 배너 없음, 400 잘못된 요청")
     public ResponseEntity<?> getBannerList() {
         return bannerService.findAllBanner();
     }
 
-    @GetMapping("/banner/{bannerId}")
+    @GetMapping("/page/banner/{bannerId}")
     @ApiOperation(value = "배너 조회", notes = "개별 배너 제공. \n\n" +
             "code: 200 조회 성공, 204 표시할 배너 없음, 400 잘못된 요청")
     public ResponseEntity<?> getBanner(@PathVariable Long bannerId) {
