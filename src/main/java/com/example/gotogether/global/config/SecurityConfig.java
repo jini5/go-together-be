@@ -36,7 +36,7 @@ public class SecurityConfig {
             "/products/**", "/productOptions",
             "/board", "/board/detail/*", "/board/search",
             "/page/popular/regions", "/page/popular/products",
-
+            "/page/**",
 
             /* swagger v3 */
             "/swagger-resources/**",

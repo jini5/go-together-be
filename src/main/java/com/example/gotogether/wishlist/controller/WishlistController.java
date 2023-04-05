@@ -30,7 +30,7 @@ public class WishlistController {
         return wishlistService.deleteWishlist(userAccessDTO, deletewishReqDTO);
     }
 
-    @GetMapping("/user/wishlist")
+    @GetMapping("/wishlist")
     @ApiOperation(value = "내 위시리스트 목록", notes = "회원의 위시리스트 목록을 확인한다. \n\n" + "code: 200 위시리스트 삭제 성공, code: 400 위시리스트가 없음, code: 500 서버에러")
     public ResponseEntity<?> findAllWishlist(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO) {
         return wishlistService.findAllWishlistDTO(userAccessDTO);
