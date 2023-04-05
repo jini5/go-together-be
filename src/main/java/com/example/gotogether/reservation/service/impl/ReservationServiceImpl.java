@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.example.gotogether.global.config.PageSizeConfig.ADMIN_RESERVATION_LIST_SIZE;
@@ -133,25 +134,32 @@ public class ReservationServiceImpl implements ReservationService {
      * 로그인 중인 회원의 예약 목록 조회
      *
      * @param userAccessDTO 토큰 정보
-     * @param pageNumber    현 페이지 번호
+     * @param page          현 페이지 번호
      */
     @Override
-    public ResponseEntity<?> findList(UserDTO.UserAccessDTO userAccessDTO, int pageNumber) {
+    public ResponseEntity<?> findList(UserDTO.UserAccessDTO userAccessDTO, int page) {
 
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
-            PageRequest pageRequest = PageRequest.of(pageNumber - 1, USER_RESERVATION_LIST_SIZE);
-            Page<Reservation> reservationPage = reservationRepository.findByUser(user, pageRequest);
-            if (reservationPage == null) {
+            PageRequest pageRequest = PageRequest.of(page - 1, USER_RESERVATION_LIST_SIZE);
+            List<Reservation> reservationList = reservationRepository.findByUser(user);
+            Page<ReservationDetail> scheduledTravelPage = reservationDetailRepository.findByUserAndNotReservationStatus(reservationList, ReservationStatus.COMPLETED, pageRequest);
+            Page<ReservationDetail> pastTravelPage = reservationDetailRepository.findByUserAndReservationStatus(reservationList, ReservationStatus.COMPLETED, pageRequest);
+            if (scheduledTravelPage == null || pastTravelPage == null) {
                 throw new NullPointerException();
             }
-            if (reservationPage.getTotalElements() < 1) {
+            if (scheduledTravelPage.getTotalElements() < 1 && pastTravelPage.getTotalElements() < 1) {
 
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            Page<ReservationDTO.UserListResDTO> reservationListResDTO = reservationPage.map(ReservationDTO.UserListResDTO::new);
+            Page<ReservationDetailDTO.UserListResDTO> scheduledTravelListResDTO = scheduledTravelPage.map(ReservationDetailDTO.UserListResDTO::new);
+            Page<ReservationDetailDTO.UserListResDTO> pastTravelListResDTO = pastTravelPage.map(ReservationDetailDTO.UserListResDTO::new);
+            ReservationDetailDTO.UserListByStatusResDTO userListByStatusResDTO = ReservationDetailDTO.UserListByStatusResDTO.builder()
+                    .scheduledTravel(new PageResponseDTO(scheduledTravelListResDTO))
+                    .pastTravel(new PageResponseDTO(pastTravelListResDTO))
+                    .build();
 
-            return new ResponseEntity<>(new PageResponseDTO(reservationListResDTO), HttpStatus.OK);
+            return new ResponseEntity<>(userListByStatusResDTO, HttpStatus.OK);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
