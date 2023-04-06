@@ -17,7 +17,7 @@ public class AdminProductOptionController {
     private final ProductOptionService productOptionService;
 
 
-    @PostMapping("/productOptions/{productId}")
+    @PostMapping("/productoptions/{productId}")
     @ApiOperation(value = "상품 옵션 추가", notes = "상품의 옵션을 추가\n\n" + "code: 200 상품 옵션 추가 성공, code: 400 상품을 찾을 수 없음, code:500: 서버 에러")
     public ResponseEntity<?> createProduct(@PathVariable Long productId, @RequestBody ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
         return productOptionService.createProductOptions(productId, productOptionReqDTO);
@@ -25,19 +25,19 @@ public class AdminProductOptionController {
 
 
     //상품 삭제
-    @DeleteMapping("/productOptions/{productOptionId}")
+    @DeleteMapping("/productoptions/{productOptionId}")
     @ApiOperation(value = "상품 옵션 삭제", notes = "상품의 옵션을 삭제합니다.\n\n" + "code: 200 상품 옵션 삭제 성공, code: 403 권한 없음, code: 404 표시할 상품이 없음, code: 500 서버에러\"")
     public ResponseEntity<?> deleteProduct(@PathVariable Long productOptionId) {
         return productOptionService.deleteProductOption(productOptionId);
     }
 
-    @PatchMapping("/productOptions/{productOptionId}")
+    @PatchMapping("/productoptions/{productOptionId}")
     @ApiOperation(value = "상품 옵션 수정", notes = "상품의 옵션을 수정합니다.\n\n" + "code: 200 상품 옵션 수정 성공, code: 403 권한 없음, code: 404 표시할 상품 옵션이 없음, code: 500 서버에러\"")
     public ResponseEntity<?> updateProducts(@PathVariable Long productOptionId, @RequestBody ProductOptionDTO.OptionUpdateReqDTO optionUpdateReqDTO) {
         return productOptionService.updateProductOptions(productOptionId, optionUpdateReqDTO);
     }
 
-    @GetMapping("/productOptions")
+    @GetMapping("/productoptions")
     @ApiOperation(value = "상품 옵션 전체 목록 조회", notes = "상품의 전체 옵션 목록들을 조회합니다.\n\n" + "code: 200 상품 옵션 전체 조회 성공, code: 204 표시할 상품 옵션이 없음, code: 403 권한 없음, code: 500 서버에러\"")
     public ResponseEntity<?> allProductOptions(Long productId) {
         return productOptionService.getAllProductOptions(productId);

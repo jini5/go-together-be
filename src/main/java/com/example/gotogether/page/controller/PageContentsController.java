@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-@Api(tags = {" 페이지 컨텐츠 서비스"}, description = "인기 지역 리스트, 배너 리스트, 인기 상품 ")
+@Api(tags = {"페이지 컨텐츠 서비스"}, description = "인기 지역 리스트, 배너 리스트, 인기 상품 ")
 public class PageContentsController {
 
     private final PageContentsService pageContentsService;
@@ -47,7 +47,7 @@ public class PageContentsController {
     }
 
     //배너
-    @GetMapping("/page/bannerlist")
+    @GetMapping("/page/banners")
     @ApiOperation(value = "배너 리스트", notes = "배너 리스트 제공. \n\n" +
             "code: 200 조회 성공, 204 표시할 배너 없음, 400 잘못된 요청")
     public ResponseEntity<?> BannerList() {
