@@ -47,7 +47,7 @@ public class PageContentsController {
     }
 
     //배너
-    @GetMapping("/bannerlist")
+    @GetMapping("/page/bannerlist")
     @ApiOperation(value = "배너 리스트", notes = "배너 리스트 제공. \n\n" +
             "code: 200 조회 성공, 204 표시할 배너 없음, 400 잘못된 요청")
     public ResponseEntity<?> BannerList() {
