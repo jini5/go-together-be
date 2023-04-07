@@ -152,13 +152,13 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public ResponseEntity<?> findProductByCategory(Long categoryId, int page) {
+    public ResponseEntity<?> findProductByCategory(Long categoryId, int page, String sort,LocalDate localDate,int people) {
         try {
             if (page < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             PageRequest pageable = PageRequest.of(page - 1, Product_List_By_Category);
             //카테고리 검색
             Category category = categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
-            Page<Product> products = productRepository.searchByCategories(pageable,listOfCategory(category));
+            Page<Product> products = productRepository.searchByCategories(pageable,listOfCategory(category),sort,localDate,people);
             PageResponseDTO pageResponseDTO = new PageResponseDTO(products);
             pageResponseDTO.setContent(products.getContent().stream().map(ProductDTO.ProductListResDTO::new).collect(Collectors.toList()));
             if(pageResponseDTO.getContent().size()<1){
