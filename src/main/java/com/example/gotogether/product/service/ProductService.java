@@ -17,7 +17,7 @@ public interface ProductService {
 
     ResponseEntity<?> findDetailProduct(Long productId);
 
-    ResponseEntity<?> findProductByCategory(Long categoryId, int page);
+    ResponseEntity<?> findProductByCategory(Long categoryId, int page, String sort,LocalDate localDate,int people);
 
     ResponseEntity<?> findProductByKeyword(String keyword, int page, String sort, LocalDate dateOption, int people);
 
