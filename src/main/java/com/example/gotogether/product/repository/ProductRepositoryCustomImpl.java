@@ -35,6 +35,7 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
     public Page<Product> searchByKeywordAndSorting(Pageable pageable, String keyword, String sort, LocalDate localDate, int people) {
         JPQLQuery<Product> query = queryFactory.selectFrom(product)
                 .leftJoin(product.productOptions, productOption)
+                .groupBy(product.productId)
                 .where(containsName(keyword), isAvailableProduct(), isStartDateAfter(localDate, people))
                 .orderBy(sort(sort));
         List<Product> productList = this.getQuerydsl().applyPagination(pageable, query).fetch();
