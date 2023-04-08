@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = {"게시판 서비스"}, description = "게시글 목록 조회, 게시글 상세 정보 조회, 게시글 추가, 게시글 권한 확인, 게시글 수정, 게시글 삭제, 게시글 검색")
+@Api(tags = {"게시판 서비스"}, description = "게시글 목록 조회, 게시글 상세 정보 조회, 게시글 추가, 게시글 권한 확인, 게시글 수정, 게시글 삭제")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RestController
@@ -25,13 +25,14 @@ public class BoardController {
             "code: 200 조회 성공, 204 조회 성공 + 표시할 내용 없음, 500 알 수 없는 서버 오류")
     @GetMapping
     public ResponseEntity<?> findList(@RequestParam BoardType type,
+                                      @RequestParam(required = false, defaultValue = "") String keyword,
                                       @RequestParam(required = false, defaultValue = "1") int pageNumber) {
-        return boardService.findList(type, pageNumber);
+        return boardService.findList(type, keyword, pageNumber);
     }
 
     @ApiOperation(value = "게시글 상세 정보 조회", notes = "게시글 상세 정보를 조회한다.\n\n" +
             "code: 200 조회 성공, 400 잘못된 boardId 요청")
-    @GetMapping("/detail/{boardId}")
+    @GetMapping("/{boardId}")
     public ResponseEntity<?> findDetailInfo(@PathVariable Long boardId) {
         return boardService.findDetailInfo(boardId);
     }
@@ -67,15 +68,6 @@ public class BoardController {
     public ResponseEntity<?> deletePost(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,
                                         @PathVariable Long boardId) {
         return boardService.deletePost(userAccessDTO, boardId);
-    }
-
-    @ApiOperation(value = "게시글 검색", notes = "게시글을 검색한다.\n\n" +
-            "code: 200 검색 성공, 204 조회 성공 + 표시할 내용 없음, 500 알 수 없는 서버 오류")
-    @GetMapping("/search")
-    public ResponseEntity<?> searchPost(@RequestParam BoardType type,
-                                        @RequestParam(required = false, defaultValue = "") String keyword,
-                                        @RequestParam(required = false, defaultValue = "1") int pageNumber) {
-        return boardService.searchPost(type, keyword, pageNumber);
     }
 
     @ApiOperation(value = "회원 여행후기 목록 조회", notes = "회원이 작성한 여행후기 목록을 조회한다.\n\n" +

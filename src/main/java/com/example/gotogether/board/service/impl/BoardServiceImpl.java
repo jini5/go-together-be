@@ -33,16 +33,31 @@ public class BoardServiceImpl implements BoardService {
      * 현재 페이지의 게시판별 게시글 목록 조회
      *
      * @param type       조회할 게시판 타입
-     * @param pageNumber 현재 페이지 번호
+     * @param keyword    검색할 단어 (범위: 제목)
+     * @param pageNumber 현 페이지 번호
      */
     @Override
-    public ResponseEntity<?> findList(BoardType type, int pageNumber) {
+    public ResponseEntity<?> findList(BoardType type, String keyword, int pageNumber) {
 
         try {
             PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
-            Page<Board> boardPage = boardRepository.findByType(type, pageRequest);
+            Page<Board> boardPage = boardRepository.findByTypeAndTitleContaining(type, keyword, pageRequest);
 
-            return getResponseEntityForList(type, boardPage);
+            if (boardPage == null) {
+                throw new NullPointerException();
+            }
+            if (boardPage.getTotalElements() < 1) {
+
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
+            if (type.equals(BoardType.NOTICE)) {
+                for (BoardDTO.ListResDTO resDTO : boardListResDTO.getContent()) {
+                    resDTO.setUserName("관리자");
+                }
+            }
+
+            return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
         } catch (NullPointerException e) {
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -175,27 +190,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     /**
-     * 게시글 검색 (범위: 제목)
-     *
-     * @param type       검색할 게시판 타입
-     * @param keyword    검색할 단어
-     * @param pageNumber 현 페이지 번호
-     */
-    @Override
-    public ResponseEntity<?> searchPost(BoardType type, String keyword, int pageNumber) {
-
-        try {
-            PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
-            Page<Board> boardPage = boardRepository.findByTypeAndTitleContaining(type, keyword, pageRequest);
-
-            return getResponseEntityForList(type, boardPage);
-        } catch (NullPointerException e) {
-
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
      * 로그인 중인 회원의 여행후기 목록 조회
      *
      * @param userAccessDTO 토큰 정보
@@ -244,24 +238,5 @@ public class BoardServiceImpl implements BoardService {
             return true;
         }
         return false;
-    }
-
-    private ResponseEntity<?> getResponseEntityForList(BoardType type, Page<Board> boardPage) {
-
-        if (boardPage == null) {
-            throw new NullPointerException();
-        }
-        if (boardPage.getTotalElements() < 1) {
-
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
-        if (type.equals(BoardType.NOTICE)) {
-            for (BoardDTO.ListResDTO resDTO : boardListResDTO.getContent()) {
-                resDTO.setUserName("관리자");
-            }
-        }
-
-        return new ResponseEntity<>(new PageResponseDTO(boardListResDTO), HttpStatus.OK);
     }
 }
