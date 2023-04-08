@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface BoardService {
 
-    ResponseEntity<?> findList(BoardType type, int pageNumber);
+    ResponseEntity<?> findList(BoardType type, String keyword, int pageNumber);
 
     ResponseEntity<?> findDetailInfo(Long boardId);
 
@@ -18,8 +18,6 @@ public interface BoardService {
     ResponseEntity<?> modifyPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.ModifyReqDTO modifyReqDTO, Long boardId);
 
     ResponseEntity<?> deletePost(UserDTO.UserAccessDTO userAccessDTO, Long boardId);
-
-    ResponseEntity<?> searchPost(BoardType type, String keyword, int pageNumber);
 
     ResponseEntity<?> findMyReviewList(UserDTO.UserAccessDTO userAccessDTO, int pageNumber);
 }
