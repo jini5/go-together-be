@@ -65,10 +65,13 @@ public class WishlistServiceImpl implements WishlistService {
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
             List<Wishlist> wishlists = wishlistRepository.findAllByUser(user);
+            if (wishlists.size()<1){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             List<WishlistDTO.WishlistResDTO> allWishlist = wishlists.stream().map(WishlistDTO.WishlistResDTO::new).collect(Collectors.toList());
             return new ResponseEntity<>(allWishlist, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
