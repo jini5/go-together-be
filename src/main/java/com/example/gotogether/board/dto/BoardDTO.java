@@ -48,7 +48,7 @@ public class BoardDTO {
     @NoArgsConstructor
     @Getter
     @Setter
-    public static class DetailInfoResDTO {
+    public static class DetailResDTO {
 
         @ApiModelProperty(value = "게시글 아이디")
         private Long boardId;
@@ -67,7 +67,7 @@ public class BoardDTO {
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate updatedDate;
 
-        public DetailInfoResDTO(Board board) {
+        public DetailResDTO(Board board) {
             this.boardId = board.getBoardId();
             this.userName = board.getUser().getName();
             this.boardType = board.getType().getValue();
@@ -86,7 +86,7 @@ public class BoardDTO {
     public static class AddReqDTO {
 
         @ApiModelProperty(value = "게시글 타입")
-        private String boardType;
+        private BoardType boardType;
         @ApiModelProperty(value = "게시글 썸네일")
         private String boardThumbnail;
         @ApiModelProperty(value = "게시글 제목")
@@ -98,7 +98,7 @@ public class BoardDTO {
 
             return Board.builder()
                     .user(user)
-                    .type(BoardType.from(boardType))
+                    .type(boardType)
                     .thumbnail(boardThumbnail)
                     .title(boardTitle)
                     .content(boardContent)
@@ -141,8 +141,6 @@ public class BoardDTO {
             this.boardThumbnail = board.getThumbnail();
             this.boardTitle = board.getTitle();
             this.createdDate = board.getCreatedDate().toLocalDate();
-
-            System.out.println("board : " + this.boardId + " ,  " + this.boardThumbnail + " , " + this.boardTitle);
         }
     }
 }
