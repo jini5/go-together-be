@@ -33,14 +33,14 @@ public class BoardController {
     @ApiOperation(value = "게시글 상세 정보 조회", notes = "게시글 상세 정보를 조회한다.\n\n" +
             "code: 200 조회 성공, 400 잘못된 boardId 요청")
     @GetMapping("/{boardId}")
-    public ResponseEntity<?> findDetailInfo(@PathVariable Long boardId) {
-        return boardService.findDetailInfo(boardId);
+    public ResponseEntity<?> findDetail(@PathVariable Long boardId) {
+        return boardService.findDetail(boardId);
     }
 
     @ApiOperation(value = "게시글 추가", notes = "게시글을 추가한다.\n\n" +
             "code: 201 추가 성공, 400 잘못된 user 토큰 정보 요청, 403 권한없는 사용자 접근")
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_USER') and #addReqDTO.boardType == '여행후기')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_USER') and #addReqDTO.boardType.getValue() == '여행후기')")
     public ResponseEntity<?> addPost(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,
                                      @RequestBody BoardDTO.AddReqDTO addReqDTO) {
         return boardService.addPost(userAccessDTO, addReqDTO);

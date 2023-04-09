@@ -42,7 +42,6 @@ public class BoardServiceImpl implements BoardService {
         try {
             PageRequest pageRequest = PageRequest.of(pageNumber - 1, BOARD_LIST_SIZE);
             Page<Board> boardPage = boardRepository.findByTypeAndTitleContaining(type, keyword, pageRequest);
-
             if (boardPage == null) {
                 throw new NullPointerException();
             }
@@ -70,16 +69,16 @@ public class BoardServiceImpl implements BoardService {
      * @param boardId 조회할 게시글 아이디
      */
     @Override
-    public ResponseEntity<?> findDetailInfo(Long boardId) {
+    public ResponseEntity<?> findDetail(Long boardId) {
 
         try {
             Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
-            BoardDTO.DetailInfoResDTO detailInfoResDTO = new BoardDTO.DetailInfoResDTO(board);
-            if (detailInfoResDTO.getBoardType().equals(BoardType.NOTICE.getValue())) {
-                detailInfoResDTO.setUserName("관리자");
+            BoardDTO.DetailResDTO detailResDTO = new BoardDTO.DetailResDTO(board);
+            if (detailResDTO.getBoardType().equals(BoardType.NOTICE.getValue())) {
+                detailResDTO.setUserName("관리자");
             }
 
-            return new ResponseEntity<>(detailInfoResDTO, HttpStatus.OK);
+            return new ResponseEntity<>(detailResDTO, HttpStatus.OK);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -96,7 +95,7 @@ public class BoardServiceImpl implements BoardService {
     public ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.AddReqDTO addReqDTO) {
 
         try {
-            if (addReqDTO.getBoardType().equals(BoardType.NOTICE.getValue())) {
+            if (addReqDTO.getBoardType().equals(BoardType.NOTICE)) {
                 addReqDTO.setBoardThumbnail("");
             }
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
