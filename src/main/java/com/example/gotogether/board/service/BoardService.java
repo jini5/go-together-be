@@ -9,7 +9,7 @@ public interface BoardService {
 
     ResponseEntity<?> findList(BoardType type, String keyword, int pageNumber);
 
-    ResponseEntity<?> findDetailInfo(Long boardId);
+    ResponseEntity<?> findDetail(Long boardId);
 
     ResponseEntity<?> addPost(UserDTO.UserAccessDTO userAccessDTO, BoardDTO.AddReqDTO addReqDTO);
 
