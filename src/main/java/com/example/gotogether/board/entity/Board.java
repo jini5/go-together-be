@@ -28,9 +28,6 @@ public class Board {
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-//    private List<Comment> comments = new ArrayList<>();
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")

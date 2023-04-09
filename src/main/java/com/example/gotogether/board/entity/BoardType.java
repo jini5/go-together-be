@@ -1,5 +1,6 @@
 package com.example.gotogether.board.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,8 +11,9 @@ import java.util.NoSuchElementException;
 public enum BoardType {
     TRAVEL_REVIEW("여행후기"), NOTICE("알려드려요");
 
-    private final String value;
+    private String value;
 
+    @JsonCreator
     public static BoardType from(String type) {
 
         for (BoardType boardType : BoardType.values()) {
