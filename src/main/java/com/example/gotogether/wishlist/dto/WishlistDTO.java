@@ -35,7 +35,7 @@ public class WishlistDTO {
         private Long wishlistId;
         private Long productId;
         private String productName;
-        private String productThubnail;
+        private String productThumbnail ;
         private String productFeature;
 
         @Override
@@ -44,7 +44,7 @@ public class WishlistDTO {
                     "wishlistId=" + wishlistId +
                     ", productId=" + productId +
                     ", productName='" + productName + '\'' +
-                    ", productThubnail='" + productThubnail + '\'' +
+                    ", productThumbnail='" + productThumbnail  + '\'' +
                     ", productFeature='" + productFeature + '\'' +
                     '}';
         }
@@ -53,7 +53,7 @@ public class WishlistDTO {
             wishlistId = wishlist.getWishlistId();
             productId = wishlist.getProduct().getProductId();
             productName = wishlist.getProduct().getName();
-            productThubnail = wishlist.getProduct().getThumbnail();
+            productThumbnail  = wishlist.getProduct().getThumbnail();
             productFeature = wishlist.getProduct().getFeature();
 
         }
