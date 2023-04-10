@@ -15,16 +15,6 @@ public class WishlistDTO {
         private Long productId;
     }
 
-    @NoArgsConstructor
-    @Getter
-    @Setter
-    @ApiModel(value = "위시 삭제")
-    @ToString
-    public static class DeleteWishReqDTO {
-        private Long wishlistId;
-    }
-
-
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter

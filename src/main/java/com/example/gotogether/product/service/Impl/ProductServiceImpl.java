@@ -58,6 +58,9 @@ public class ProductServiceImpl implements ProductService {
             }
             //상품 옵션 생성 후, 상품 엔티티의 옵션 리스트에 넣기
             for (ProductOptionDTO.ProductOptionReqDTO createDto : productCreateReqDTO.getOptions()) {
+                if(createDto.getStartDate()==null||createDto.getEndDate()==null){
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
                 product.getProductOptions().add(ProductOption.builder()
                         .product(product)
                         .startDate(createDto.getStartDate())
