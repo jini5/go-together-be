@@ -19,6 +19,15 @@ public class Banner {
     @Column(name = "banner_id")
     private Long bannerId;
 
+    @Column(name = "tag")
+    private String tag;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "subtitle")
+    private String subtitle;
+
     @Column(name = "image")
     private String image;
 
@@ -27,8 +36,11 @@ public class Banner {
     private Product product;
 
     @Builder
-    public Banner(String image) {
+    public Banner(String image,String tag, String title, String subtitle) {
         this.image = image;
+        this.tag = tag;
+        this.title = title;
+        this.subtitle = subtitle;
     }
 
     public void setProduct(Product product) {
@@ -38,6 +50,8 @@ public class Banner {
     public void update(BannerDTO.BannerUpdateReqDTO bannerUpdateReqDTO, Product product) {
         this.image = bannerUpdateReqDTO.getImage();
         this.product = product;
-
+        this.tag = bannerUpdateReqDTO.getTag();
+        this.title = bannerUpdateReqDTO.getTitle();
+        this.subtitle = bannerUpdateReqDTO.getSubtitle();
     }
 }
