@@ -19,6 +19,15 @@ public class Banner {
     @Column(name = "banner_id")
     private Long bannerId;
 
+    @Column(name = "tag")
+    private String tag;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "subtitle")
+    private String subtitle;
+
     @Column(name = "image")
     private String image;
 
