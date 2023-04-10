@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CartDTO {
 
@@ -70,6 +72,7 @@ public class CartDTO {
         private int numberOfPeople;
         private int singleRoomNumber;
         private ProductOptionDTO.ProductOptionResForCart option;
+        private List<ProductOptionDTO.ProductOptionResForCart> productOptions;
 
         public CartListResDTO(Cart cart){
             this.cartId = cart.getCartId();
@@ -80,6 +83,7 @@ public class CartDTO {
             this.numberOfPeople = cart.getNumberOfPeople();
             this.singleRoomNumber = cart.getSingleRoomNumber();
             this.option = new ProductOptionDTO.ProductOptionResForCart(cart.getProductOption());
+            this.productOptions = cart.getProduct().getProductOptions().stream().map(ProductOptionDTO.ProductOptionResForCart::new).collect(Collectors.toList());
         }
 
     }
