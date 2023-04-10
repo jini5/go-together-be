@@ -17,19 +17,20 @@ public class BannerDTO {
         private String image;
         @ApiModelProperty(value = "상품", required = true)
         private Long productId;
-
-
-        @Builder
-        public BannerReqDTO(String image, Long productId) {
-            this.image = image;
-            this.productId = productId;
-        }
+        @ApiModelProperty(value = "배너 테그", required = true)
+        private String tag;
+        @ApiModelProperty(value = "배너 제목", required = true)
+        private String title;
+        @ApiModelProperty(value = "배너 부제목", required = true)
+        private String subtitle;
 
         public Banner toEntity() {
-            Banner banner = Banner.builder()
+            return Banner.builder()
                     .image(image)
+                    .tag(tag)
+                    .title(title)
+                    .subtitle(subtitle)
                     .build();
-            return banner;
         }
     }
 
