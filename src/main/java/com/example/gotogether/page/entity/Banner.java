@@ -36,8 +36,11 @@ public class Banner {
     private Product product;
 
     @Builder
-    public Banner(String image) {
+    public Banner(String image,String tag, String title, String subtitle) {
         this.image = image;
+        this.tag = tag;
+        this.title = title;
+        this.subtitle = subtitle;
     }
 
     public void setProduct(Product product) {
