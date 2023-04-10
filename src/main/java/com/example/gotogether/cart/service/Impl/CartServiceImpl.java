@@ -35,6 +35,9 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public ResponseEntity<?> addCart(UserDTO.UserAccessDTO userAccessDTO, CartDTO.AddCartReqDTO addCartReqDTO) {
         try {
+            if(addCartReqDTO.getNumberOfPeople()<1){
+                return new ResponseEntity<>("NumberOfPeople must be bigger then 0",HttpStatus.BAD_REQUEST);
+            }
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
             Product product = productRepository.findById(addCartReqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
             ProductOption productOption = productOptionRepository.findById(addCartReqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
@@ -96,14 +99,7 @@ public class CartServiceImpl implements CartService {
             List<CartDTO.CartListResDTO> CartList = new ArrayList<>();
 
             for (Cart cart : cartList) {
-                CartList.add(new CartDTO.CartListResDTO(
-                        cart.getCartId(),
-                        cart.getProduct().getProductId(),
-                        cart.getProductOption().getProductOptionId(),
-                        cart.getProduct().getName(),
-                        cart.getProduct().getThumbnail(),
-                        cart.getNumberOfPeople(),
-                        cart.getSingleRoomNumber()));
+                CartList.add(new CartDTO.CartListResDTO(cart));
             }
             if (cartList.size() < 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
