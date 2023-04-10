@@ -45,9 +45,8 @@ public class ReservationController {
     }
 
     @ApiOperation(value = "회원 예약 추가", notes = "회원의 예약을 추가한다.\n\n" +
-            "code: 201 예약 추가 성공, 400 (1) 잘못된 user 토큰 정보 또는 productId 또는 productOptionId 요청, " +
-            "400 (2) 최대값 이상의 reservationPeopleNumber 또는 reservationSingleRoomNumber 요청, " +
-            "400 (3) 잘못된 paymentMethod 요청")
+            "code: 201 예약 추가 성공, 400 (1) 잘못된 user 토큰 정보 또는 productId 또는 productOptionId 또는 paymentMethod 요청, " +
+            "400 (2) 최대값 이상의 reservationPeopleNumber 또는 reservationSingleRoomNumber 요청")
     @PostMapping
     public ResponseEntity<?> addReservation(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO,
                                             @RequestBody ReservationDTO.AddReqDTO addReqDTO) {
