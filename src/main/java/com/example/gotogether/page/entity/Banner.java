@@ -50,6 +50,8 @@ public class Banner {
     public void update(BannerDTO.BannerUpdateReqDTO bannerUpdateReqDTO, Product product) {
         this.image = bannerUpdateReqDTO.getImage();
         this.product = product;
-
+        this.tag = bannerUpdateReqDTO.getTag();
+        this.title = bannerUpdateReqDTO.getTitle();
+        this.subtitle = bannerUpdateReqDTO.getSubtitle();
     }
 }
