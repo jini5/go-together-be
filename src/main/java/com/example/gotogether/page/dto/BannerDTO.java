@@ -44,6 +44,12 @@ public class BannerDTO {
         private String image;
         @ApiModelProperty(value = "상품", required = true)
         private Long productId;
+        @ApiModelProperty(value = "배너 테그", required = true)
+        private String tag;
+        @ApiModelProperty(value = "배너 제목", required = true)
+        private String title;
+        @ApiModelProperty(value = "배너 부제목", required = true)
+        private String subtitle;
 
     }
 
