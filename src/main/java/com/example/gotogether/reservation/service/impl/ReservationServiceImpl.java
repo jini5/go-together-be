@@ -3,6 +3,9 @@ package com.example.gotogether.reservation.service.impl;
 import com.example.gotogether.auth.dto.UserDTO;
 import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.auth.repository.UserRepository;
+import com.example.gotogether.cart.entity.Cart;
+import com.example.gotogether.cart.repository.CartRepository;
+import com.example.gotogether.cart.service.CartService;
 import com.example.gotogether.global.response.PageResponseDTO;
 import com.example.gotogether.product.entity.Product;
 import com.example.gotogether.product.entity.ProductOption;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -41,6 +45,8 @@ public class ReservationServiceImpl implements ReservationService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
+    private final CartRepository cartRepository;
+    private final CartService cartService;
 
     /**
      * 현 페이지의 전체 예약 목록 조회
@@ -253,6 +259,15 @@ public class ReservationServiceImpl implements ReservationService {
 
         try {
             for (ReservationDetailDTO.AddReqDTO reqDTO : addReqDTO.getReservationList()) {
+                Product product = productRepository.findById(reqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
+                ProductOption productOption = productOptionRepository.findById(reqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
+                if (!productOption.getProduct().equals(product)) {
+
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+            }
+
+            for (ReservationDetailDTO.AddReqDTO reqDTO : addReqDTO.getReservationList()) {
                 ProductOption productOption = productOptionRepository.findById(reqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
                 if (!isPeopleLessThanMax(productOption, reqDTO.getReservationPeopleNumber())
                         || !isSingleRoomLessThanMax(productOption, reqDTO.getReservationSingleRoomNumber())) {
@@ -265,6 +280,7 @@ public class ReservationServiceImpl implements ReservationService {
             Reservation reservation = addReqDTO.toEntity(user);
             reservationRepository.save(reservation);
 
+            List<Long> cartIdList = new ArrayList<>();
             for (ReservationDetailDTO.AddReqDTO reqDTO : addReqDTO.getReservationList()) {
                 Product product = productRepository.findById(reqDTO.getProductId()).orElseThrow(NoSuchElementException::new);
                 ProductOption productOption = productOptionRepository.findById(reqDTO.getProductOptionId()).orElseThrow(NoSuchElementException::new);
@@ -276,6 +292,12 @@ public class ReservationServiceImpl implements ReservationService {
                     reservationDetail = reqDTO.toEntity(reservation, product, productOption, ReservationStatus.PAYMENT_PENDING);
                 }
                 reservationDetailRepository.save(reservationDetail);
+
+                if (cartRepository.existsByUserAndProductAndProductOption(user, product, productOption)) {
+                    Cart cart = cartRepository.findByUserAndProductAndProductOption(user, product, productOption).orElseThrow(NoSuchElementException::new);
+                    cartIdList.add(cart.getCartId());
+                }
+                cartService.deleteCart(userAccessDTO, cartIdList);
             }
 
             for (ReservationDetailDTO.AddReqDTO reqDTO : addReqDTO.getReservationList()) {
