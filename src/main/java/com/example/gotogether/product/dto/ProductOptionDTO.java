@@ -127,4 +127,21 @@ public class ProductOptionDTO {
             this.PresentSingleRoomNumber = productOption.getPresentSingleRoomNumber();
         }
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProductOptionResForCart {
+        private Long productOptionId;
+        private String startDate;
+        private String endDate;
+
+        public ProductOptionResForCart(ProductOption productOption){
+            this.productOptionId = productOption.getProductOptionId();
+            this.startDate = productOption.getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            this.endDate = productOption.getEndDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+    }
+
+
 }
