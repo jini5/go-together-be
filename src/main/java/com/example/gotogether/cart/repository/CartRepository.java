@@ -7,10 +7,12 @@ import com.example.gotogether.product.entity.ProductOption;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
     List<Cart> findAllByUser(User user);
 
     boolean existsByUserAndProductAndProductOption(User user, Product product, ProductOption productOption);
 
+    Optional<Cart> findByUserAndProductAndProductOption(User user, Product product, ProductOption productOption);
 }
