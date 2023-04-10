@@ -1,9 +1,12 @@
 package com.example.gotogether.cart.dto;
 
 import com.example.gotogether.cart.entity.Cart;
+import com.example.gotogether.product.dto.ProductOptionDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+
+import java.time.LocalDate;
 
 public class CartDTO {
 
@@ -61,21 +64,24 @@ public class CartDTO {
     public static class CartListResDTO {
         private Long cartId;
         private Long productId;
-        private Long productOptionId;
         private String productName;
-        private String productThubnail;
+        private String productThumbnail;
+        private int productPrice;
         private int numberOfPeople;
         private int singleRoomNumber;
+        private ProductOptionDTO.ProductOptionResForCart option;
 
-        public CartListResDTO(Long cartId, Long productId, Long productOptionId, String productName, String productThubnail, int numberOfPeople, int singleRoomNumber) {
-            this.cartId = cartId;
-            this.productId = productId;
-            this.productOptionId = productOptionId;
-            this.productName = productName;
-            this.productThubnail = productThubnail;
-            this.numberOfPeople = numberOfPeople;
-            this.singleRoomNumber = singleRoomNumber;
+        public CartListResDTO(Cart cart){
+            this.cartId = cart.getCartId();
+            this.productId = cart.getProduct().getProductId();
+            this.productName = cart.getProduct().getName();
+            this.productThumbnail = cart.getProduct().getThumbnail();
+            this.productPrice = cart.getProduct().getPrice();
+            this.numberOfPeople = cart.getNumberOfPeople();
+            this.singleRoomNumber = cart.getSingleRoomNumber();
+            this.option = new ProductOptionDTO.ProductOptionResForCart(cart.getProductOption());
         }
+
     }
 
 }
