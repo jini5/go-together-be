@@ -96,14 +96,7 @@ public class CartServiceImpl implements CartService {
             List<CartDTO.CartListResDTO> CartList = new ArrayList<>();
 
             for (Cart cart : cartList) {
-                CartList.add(new CartDTO.CartListResDTO(
-                        cart.getCartId(),
-                        cart.getProduct().getProductId(),
-                        cart.getProductOption().getProductOptionId(),
-                        cart.getProduct().getName(),
-                        cart.getProduct().getThumbnail(),
-                        cart.getNumberOfPeople(),
-                        cart.getSingleRoomNumber()));
+                CartList.add(new CartDTO.CartListResDTO(cart));
             }
             if (cartList.size() < 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
