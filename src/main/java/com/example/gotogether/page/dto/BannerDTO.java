@@ -65,11 +65,20 @@ public class BannerDTO {
         private String image;
         @ApiModelProperty(value = "상품", required = true)
         private Long productId;
+        @ApiModelProperty(value = "배너 테그", required = true)
+        private String tag;
+        @ApiModelProperty(value = "배너 제목", required = true)
+        private String title;
+        @ApiModelProperty(value = "배너 부제목", required = true)
+        private String subtitle;
 
         public BannerResDTO(Banner banner) {
             this.bannerId = banner.getBannerId();
             this.image = banner.getImage();
             this.productId = banner.getProduct().getProductId();
+            this.tag = banner.getTag();
+            this.title = banner.getTitle();
+            this.subtitle = banner.getSubtitle();
         }
 
     }
