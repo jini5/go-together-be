@@ -27,6 +27,9 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Transactional
     public ResponseEntity<?> createProductOptions(Long productId, ProductOptionDTO.ProductOptionReqDTO productOptionReqDTO) {
         try {
+            if(productOptionReqDTO.getStartDate()==null||productOptionReqDTO.getEndDate()==null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             Product product = productRepository.findById(productId).orElseThrow(NoSuchElementException::new);
             ProductOption productOption = productOptionReqDTO.toEntity(product);
             product.getProductOptions().add(productOption);
@@ -40,8 +43,10 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Override
     @Transactional
     public ResponseEntity<?> updateProductOptions(Long productOptionId, ProductOptionDTO.OptionUpdateReqDTO optionUpdateReqDTO) {
-
         try {
+            if(optionUpdateReqDTO.getStartDate()==null||optionUpdateReqDTO.getEndDate()==null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             ProductOption productOption = productOptionRepository.findByProductOptionId(productOptionId).orElseThrow(NoSuchElementException::new);
             productOption.update(optionUpdateReqDTO);
             return new ResponseEntity<>(HttpStatus.OK);
