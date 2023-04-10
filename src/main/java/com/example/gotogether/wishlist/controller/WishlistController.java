@@ -24,10 +24,10 @@ public class WishlistController {
         return wishlistService.createWishlist(userAccessDTO, wishReqDTO);
     }
 
-    @DeleteMapping("/wishlist")
+    @DeleteMapping("/wishlist/{wishlistId}")
     @ApiOperation(value = "위시리스트 상품 삭제", notes = "상품ID를 통해 위시리스트 목록에 상품을 추가한다. \n\n" + "code: 200 위시리스트 삭제 성공, code: 400 이미 위시리스트에서 삭제됨, code: 500 서버에러")
-    public ResponseEntity<?> deleteWishlist(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @RequestBody WishlistDTO.DeleteWishReqDTO deletewishReqDTO) {
-        return wishlistService.deleteWishlist(userAccessDTO, deletewishReqDTO);
+    public ResponseEntity<?> deleteWishlist(@AuthenticationPrincipal UserDTO.UserAccessDTO userAccessDTO, @PathVariable Long wishlistId) {
+        return wishlistService.deleteWishlist(userAccessDTO, wishlistId);
     }
 
     @GetMapping("/wishlist")

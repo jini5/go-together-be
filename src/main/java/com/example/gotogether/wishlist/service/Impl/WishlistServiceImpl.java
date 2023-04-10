@@ -46,11 +46,11 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> deleteWishlist(UserDTO.UserAccessDTO userAccessDTO, WishlistDTO.DeleteWishReqDTO deletewishReqDTO) {
+    public ResponseEntity<?> deleteWishlist(UserDTO.UserAccessDTO userAccessDTO, Long wishlistId) {
         try {
             User user = userRepository.findByEmail(userAccessDTO.getEmail()).orElseThrow(NoSuchElementException::new);
-            if (wishlistRepository.existsByUserAndWishlistId(user, deletewishReqDTO.getWishlistId())) {
-                wishlistRepository.deleteByUserAndWishlistId(user, deletewishReqDTO.getWishlistId());
+            if (wishlistRepository.existsByUserAndWishlistId(user, wishlistId)) {
+                wishlistRepository.deleteByUserAndWishlistId(user, wishlistId);
                 return new ResponseEntity<>(HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
