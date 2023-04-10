@@ -69,6 +69,7 @@ public class CartDTO {
         private String productName;
         private String productThumbnail;
         private int productPrice;
+        private int singleRoomPrice;
         private int numberOfPeople;
         private int singleRoomNumber;
         private ProductOptionDTO.ProductOptionResForCart option;
@@ -84,6 +85,7 @@ public class CartDTO {
             this.singleRoomNumber = cart.getSingleRoomNumber();
             this.option = new ProductOptionDTO.ProductOptionResForCart(cart.getProductOption());
             this.productOptions = cart.getProduct().getProductOptions().stream().map(ProductOptionDTO.ProductOptionResForCart::new).collect(Collectors.toList());
+            this.singleRoomPrice = cart.getProduct().getSingleRoomPrice();
         }
 
     }
