@@ -50,9 +50,9 @@ public class BoardServiceImpl implements BoardService {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             Page<BoardDTO.ListResDTO> boardListResDTO = boardPage.map(BoardDTO.ListResDTO::new);
-            if (type.equals(BoardType.NOTICE)) {
-                for (BoardDTO.ListResDTO resDTO : boardListResDTO.getContent()) {
-                    resDTO.setUserName("관리자");
+            for (int i = 0; i < boardPage.getContent().size(); i++) {
+                if (boardPage.getContent().get(i).getRole().equals("ROLE_ADMIN")) {
+                    boardListResDTO.getContent().get(i).setUserName("관리자");
                 }
             }
 
@@ -74,7 +74,7 @@ public class BoardServiceImpl implements BoardService {
         try {
             Board board = boardRepository.findById(boardId).orElseThrow(NoSuchElementException::new);
             BoardDTO.DetailResDTO detailResDTO = new BoardDTO.DetailResDTO(board);
-            if (detailResDTO.getBoardType().equals(BoardType.NOTICE.getValue())) {
+            if (board.getRole().equals("ROLE_ADMIN")) {
                 detailResDTO.setUserName("관리자");
             }
 
@@ -226,14 +226,14 @@ public class BoardServiceImpl implements BoardService {
      * @param userEmail        로그인 중인 회원의 이메일
      * @param userRole         로그인 중인 회원의 권한
      * @param boardType        게시글 타입
-     * @param boardWriterEmail 게시글 작성자 이메일
+     * @param writerEmail      게시글 작성자 이메일
      */
-    public boolean hasAuthority(String userEmail, String userRole, BoardType boardType, String boardWriterEmail) {
+    public boolean hasAuthority(String userEmail, String userRole, BoardType boardType, String writerEmail) {
 
         if (userRole.equals("ROLE_ADMIN")) {
             return true;
         }
-        if (userRole.equals("ROLE_USER") && boardType.equals(BoardType.TRAVEL_REVIEW) && userEmail.equals(boardWriterEmail)) {
+        if (userRole.equals("ROLE_USER") && boardType.equals(BoardType.TRAVEL_REVIEW) && userEmail.equals(writerEmail)) {
             return true;
         }
         return false;
