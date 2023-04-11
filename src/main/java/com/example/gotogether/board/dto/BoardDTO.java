@@ -102,6 +102,7 @@ public class BoardDTO {
                     .thumbnail(boardThumbnail)
                     .title(boardTitle)
                     .content(boardContent)
+                    .role(user.getRole())
                     .build();
         }
     }

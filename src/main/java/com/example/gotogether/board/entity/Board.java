@@ -2,6 +2,7 @@ package com.example.gotogether.board.entity;
 
 import com.example.gotogether.auth.entity.User;
 import com.example.gotogether.board.dto.BoardDTO;
+import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,7 @@ public class Board {
     @Column(name = "board_id")
     private Long boardId;
 
+    @NotNull
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private BoardType type;
@@ -47,6 +49,10 @@ public class Board {
     @Column(name = "content")
     private String content;
 
+    @NotNull
+    @Column(name = "role")
+    private String role;
+
     @CreatedDate
     @Column(name = "created_date")
     private LocalDateTime createdDate;
@@ -56,12 +62,13 @@ public class Board {
     private LocalDateTime updatedDate;
 
     @Builder
-    public Board(User user, BoardType type, String thumbnail, String title, String content) {
+    public Board(User user, BoardType type, String thumbnail, String title, String content, String role) {
         this.user = user;
         this.type = type;
         this.thumbnail = thumbnail;
         this.title = title;
         this.content = content;
+        this.role = role;
     }
 
     public void update(BoardDTO.ModifyReqDTO modifyReqDTO) {
